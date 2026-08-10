@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#d8641c">
+<title>Punggur Geo Data</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  :root{--accent:#d8641c;--bg:#f4f2ed;--card:#fffdf8;--text:#2b2a28;--muted:#77736b;--line:#e2ded4}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text)}
+  header{max-width:1000px;margin:auto;padding:22px 16px 14px}
+  h1{margin:0 0 5px;font-size:clamp(1.35rem,4vw,1.7rem)}
+  .subtitle{margin:0;color:var(--muted);font-size:.92rem}
+  .wrap{max-width:1000px;margin:auto;padding:0 16px}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:8px 0 14px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 12px}
+  .stat b{display:block;font-size:1.2rem}.stat span{font-size:.76rem;color:var(--muted)}
+  .controls{display:grid;grid-template-columns:1fr 150px auto;gap:8px;margin-bottom:10px}
+  input,select,button{font:inherit;border:1px solid var(--line);border-radius:10px;background:#fff;padding:10px 12px;color:var(--text)}
+  input:focus,select:focus{outline:2px solid rgba(216,100,28,.2);border-color:var(--accent)}
+  button{cursor:pointer;font-weight:600}
+  button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+  #map{height:min(58vh,520px);min-height:360px;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,.09);overflow:hidden}
+  .map-tools{display:flex;gap:7px;flex-wrap:wrap;margin:9px 0}
+  .map-tools button{padding:8px 10px;font-size:.82rem}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:14px 0 26px}
+  .panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+  h2{font-size:1.05rem;margin:0;border-left:3px solid var(--accent);padding-left:8px}
+  .count{color:var(--muted);font-size:.8rem}
+  .table-wrap{overflow:auto;margin-top:8px}
+  table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:650px}
+  th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line)}
+  th{color:#8a8578;font-weight:600}
+  tbody tr{cursor:pointer}
+  tbody tr:hover{background:#f7eee7}
+  tbody tr.active{background:#f4e2d5}
+  .badge{display:inline-block;padding:3px 7px;border-radius:999px;background:#eee9df;font-size:.73rem}
+  .empty{text-align:center;color:var(--muted);padding:24px}
+  footer{text-align:center;color:#9a9587;font-size:.78rem;padding:4px 16px 24px}
+  a{color:var(--accent)}
+  .popup-title{font-size:1rem;margin-bottom:5px}.popup-meta{color:#666;font-size:.82rem;line-height:1.55}
+  .popup-actions{display:flex;gap:6px;margin-top:8px}.popup-actions button{padding:6px 8px;font-size:.75rem}
+  @media(max-width:650px){
+    .controls{grid-template-columns:1fr 1fr}
+    .controls button{grid-column:1/-1}
+    .stats{gap:7px}.stat{padding:9px}.stat b{font-size:1.05rem}
+    #map{min-height:390px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>🗺️ Punggur Geo Data</h1>
+  <p class="subtitle">Data geografis Kecamatan Punggur, Kabupaten Lampung Tengah</p>
+</header>
+
+<main class="wrap">
+  <section class="stats" aria-label="Statistik">
+    <div class="stat"><b id="total">0</b><span>Total lokasi</span></div>
+    <div class="stat"><b id="desa">0</b><span>Desa/Kampung</span></div>
+    <div class="stat"><b id="kec">0</b><span>Kecamatan</span></div>
+  </section>
+
+  <section class="controls">
+    <input id="search" type="search" placeholder="🔍 Cari nama lokasi..." autocomplete="off">
+    <select id="filter">
+      <option value="semua">Semua tipe</option>
+      <option value="desa">Desa</option>
+      <option value="kecamatan">Kecamatan</option>
+    </select>
+    <button class="primary" id="locate">📍 Lokasi saya</button>
+  </section>
+
+  <div id="map"></div>
+  <div class="map-tools">
+    <button id="fit">⛶ Tampilkan semua</button>
+    <button id="street">🗺️ Street</button>
+    <button id="satellite">🛰️ Satelit</button>
+  </div>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Titik Lokasi</h2>
+      <span class="count" id="resultCount">0 lokasi</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Nama</th><th>Tipe</th><th>Koordinat</th><th>Aksi</th></tr></thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Lihat detail profil di <a href="docs/profil_punggur.md">docs/profil_punggur.md</a>
+  · source code di <a href="https://github.com/Alfiandi-ux/punggur-geo-data">GitHub</a><br>
+  Punggur Geo Data · Dibuat untuk eksplorasi data geografis
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+const map = L.map('map').setView([-5.0383,105.2762],12);
+
+const street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+  maxZoom:19, attribution:'&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{
+  maxZoom:19, attribution:'Tiles &copy; Esri'
+});
+
+let allFeatures=[], markers=[], userMarker=null;
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const fmt = n => Number(n).toFixed(4);
+
+function popupHtml(p,lat,lng){
+  const mapsUrl=`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+  return `<div class="popup-title"><b>${esc(p.nama)}</b></div>
+    <div class="popup-meta">Tipe: ${esc(p.tipe)}<br>Koordinat: ${fmt(lat)}, ${fmt(lng)}
+    ${p.kode_pos?`<br>Kode pos: ${esc(p.kode_pos)}`:''}
+    ${p.elevasi_m?`<br>Elevasi: ${esc(p.elevasi_m)} m`:''}</div>
+    <div class="popup-actions">
+      <button onclick="copyCoords(${lat},${lng})">📋 Salin</button>
+      <button onclick="window.open('${mapsUrl}','_blank')">🧭 Google Maps</button>
+    </div>`;
+}
+
+function copyCoords(lat,lng){
+  navigator.clipboard?.writeText(`${lat}, ${lng}`).then(()=>alert('Koordinat berhasil disalin.'));
+}
+
+function markerStyle(tipe){
+  return {radius:tipe==='kecamatan'?10:8,fillColor:tipe==='kecamatan'?'#2b2a28':'#d8641c',color:'#fff',weight:2,fillOpacity:.92};
+}
+
+function render(){
+  const q=document.getElementById('search').value.trim().toLowerCase();
+  const type=document.getElementById('filter').value;
+  const filtered=allFeatures.filter(f=>{
+    const p=f.properties||{};
+    return (!q || (p.nama||'').toLowerCase().includes(q)) && (type==='semua'||p.tipe===type);
+  });
+
+  markers.forEach(m=>map.removeLayer(m));
+  markers=[];
+  filtered.forEach((f)=>{
+    const [lng,lat]=f.geometry.coordinates, p=f.properties||{};
+    const m=L.circleMarker([lat,lng],markerStyle(p.tipe)).addTo(map);
+    m.bindPopup(popupHtml(p,lat,lng));
+    m.on('click',()=>highlightRow(p.nama));
+    markers.push(m);
+  });
+
+  const tbody=document.getElementById('table-body');
+  tbody.innerHTML='';
+  filtered.forEach(f=>{
+    const p=f.properties||{}, [lng,lat]=f.geometry.coordinates;
+    const tr=document.createElement('tr');
+    tr.dataset.name=p.nama;
+    tr.innerHTML=`<td><b>${esc(p.nama)}</b></td>
+      <td><span class="badge">${esc(p.tipe)}</span></td>
+      <td>${fmt(lat)}, ${fmt(lng)}</td>
+      <td><button class="primary" style="padding:6px 9px;font-size:.75rem">Lihat</button></td>`;
+    tr.addEventListener('click',()=>focusFeature(f));
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('resultCount').textContent=`${filtered.length} lokasi`;
+  if(!filtered.length) tbody.innerHTML='<tr><td colspan="4" class="empty">Tidak ada lokasi yang cocok.</td></tr>';
+}
+
+function highlightRow(name){
+  document.querySelectorAll('tbody tr').forEach(r=>r.classList.toggle('active',r.dataset.name===name));
+}
+function focusFeature(f){
+  const [lng,lat]=f.geometry.coordinates;
+  map.flyTo([lat,lng],15,{duration:.8});
+  const idx=allFeatures.indexOf(f);
+  const visibleMarkers=markers;
+  // Find marker by position/name through popup content.
+  visibleMarkers.forEach(m=>{
+    const ll=m.getLatLng();
+    if(Math.abs(ll.lat-lat)<1e-9 && Math.abs(ll.lng-lng)<1e-9) m.openPopup();
+  });
+  highlightRow(f.properties.nama);
+}
+function updateStats(){
+  document.getElementById('total').textContent=allFeatures.length;
+  document.getElementById('desa').textContent=allFeatures.filter(f=>f.properties?.tipe==='desa').length;
+  document.getElementById('kec').textContent=allFeatures.filter(f=>f.properties?.tipe==='kecamatan').length;
+}
+function fitAll(){
+  if(!markers.length)return;
+  map.fitBounds(L.featureGroup(markers).getBounds().pad(.12));
+}
+
+document.getElementById('search').addEventListener('input',render);
+document.getElementById('filter').addEventListener('change',render);
+document.getElementById('fit').addEventListener('click',fitAll);
+document.getElementById('street').addEventListener('click',()=>{
+  map.removeLayer(satellite); map.addLayer(street);
+});
+document.getElementById('satellite').addEventListener('click',()=>{
+  map.removeLayer(street); map.addLayer(satellite);
+});
+document.getElementById('locate').addEventListener('click',()=>{
+  if(!navigator.geolocation){alert('Browser tidak mendukung lokasi.');return}
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const {latitude,longitude}=pos.coords;
+    if(userMarker) map.removeLayer(userMarker);
+    userMarker=L.marker([latitude,longitude]).addTo(map).bindPopup('<b>📍 Lokasi saya</b>').openPopup();
+    map.flyTo([latitude,longitude],15,{duration:.8});
+  },()=>alert('Lokasi tidak dapat diakses. Pastikan izin lokasi diberikan.'));
+});
+
+fetch('data/raw/punggur_points.geojson')
+  .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()})
+  .then(data=>{
+    allFeatures=data.features||[];
+    updateStats(); render();
+    setTimeout(fitAll,200);
+  })
+  .catch(err=>{
+    console.error(err);
+    document.getElementById('table-body').innerHTML='<tr><td colspan="4" class="empty">Gagal memuat data GeoJSON.</td></tr>';
+  });
+</script>
+</body>
+</html>

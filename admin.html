@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#c95e1a">
+<title>Admin — Punggur Geo Data V5</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+:root{--a:#c95e1a;--bg:#f3f1ec;--card:#fffdf8;--text:#292824;--muted:#77736b;--line:#dfdbd1;--danger:#b43b3b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+header{max-width:1150px;margin:auto;padding:18px 16px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+h1{margin:0;font-size:1.4rem}.sub{margin:3px 0;color:var(--muted);font-size:.82rem}.wrap{max-width:1150px;margin:auto;padding:0 16px 30px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 5px 20px #0000000b;margin-bottom:12px}
+button,input,select{font:inherit;border:1px solid var(--line);border-radius:9px;background:#fff;padding:9px 11px}button{cursor:pointer;font-weight:650}.primary{background:var(--a);border-color:var(--a);color:#fff}.danger{color:var(--danger);border-color:#e1b6b6;background:#fff7f7}
+.auth{max-width:430px;margin:50px auto}.auth h2{margin-top:0}.field{margin:9px 0}.field label{font-size:.78rem;color:var(--muted);display:block}.field input{width:100%;margin-top:4px}
+#app{display:none}.bar{display:flex;gap:7px;flex-wrap:wrap;justify-content:space-between;align-items:center}.grid{display:grid;grid-template-columns:1fr 360px;gap:12px}#map{height:470px;border-radius:11px}.form{display:grid;grid-template-columns:1fr 1fr;gap:8px}.form .full{grid-column:1/-1}.form label{font-size:.76rem;color:var(--muted)}.form input,.form select{display:block;width:100%;margin-top:4px}
+table{width:100%;border-collapse:collapse;font-size:.82rem}th,td{text-align:left;padding:9px 6px;border-bottom:1px solid var(--line)}th{color:#8a857c}.tablewrap{overflow:auto}.actions{display:flex;gap:5px}.actions button{padding:6px 8px;font-size:.72rem}
+.notice{padding:9px;border-radius:9px;background:#fff2e8;border:1px solid #efd1bd;color:#75431f;font-size:.78rem;margin-bottom:10px}.hidden{display:none}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#282724;color:#fff;padding:9px 13px;border-radius:9px;opacity:0;transition:.2s;z-index:9}.toast.show{opacity:1}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.form{grid-template-columns:1fr}.form .full{grid-column:auto}#map{height:420px}}
+</style>
+</head>
+<body>
+<header><div><h1>🔐 Punggur Geo Data — Admin V5</h1><p class="sub">Kelola lokasi secara online dengan Supabase</p></div><div><a href="index.html"><button>← Publik</button></a> <button id="logout" class="danger">Keluar</button></div></header>
+
+<main class="wrap">
+<section id="login" class="card auth">
+<h2>Login Admin</h2>
+<p class="sub">Gunakan akun yang dibuat di Supabase Authentication.</p>
+<div class="field"><label>Email</label><input id="email" type="email" autocomplete="username"></div>
+<div class="field"><label>Password</label><input id="password" type="password" autocomplete="current-password"></div>
+<button id="loginBtn" class="primary" style="width:100%">Masuk</button>
+</section>
+
+<section id="app">
+<div class="notice">V5 menggunakan Supabase. Pastikan <code>supabase-config.js</code> sudah diisi dan SQL schema sudah dijalankan. Gunakan hanya <b>anon/publishable key</b> di frontend.</div>
+<div class="card bar"><div><b id="who">—</b><div class="sub" id="status">Memuat…</div></div><div><button id="refresh">↻ Refresh</button> <button id="new">＋ Lokasi</button> <button id="export">⬇️ Export GeoJSON</button></div></div>
+<div class="grid">
+<section class="card"><div id="map"></div></section>
+<section class="card">
+<h3 style="margin-top:0">✏️ Editor lokasi</h3>
+<div class="form">
+<label>Nama<input id="fNama"></label><label>Tipe<select id="fTipe"><option value="desa">Desa</option><option value="kecamatan">Kecamatan</option></select></label>
+<label>Latitude<input id="fLat" type="number" step="any"></label><label>Longitude<input id="fLng" type="number" step="any"></label>
+<label>Kode Kemendagri<input id="fKode"></label><label>Kode Pos<input id="fPos"></label>
+<label class="full">Sumber<input id="fSumber"></label>
+</div>
+<div style="margin-top:10px;display:flex;gap:7px;flex-wrap:wrap"><button id="save" class="primary">💾 Simpan</button><button id="cancel">Batal</button><button id="delete" class="danger hidden">🗑️ Hapus</button></div>
+</section>
+</div>
+<section class="card"><h3 style="margin-top:0">📍 Data lokasi</h3><div class="tablewrap"><table><thead><tr><th>Nama</th><th>Tipe</th><th>Koordinat</th><th>Aksi</th></tr></thead><tbody id="tbody"></tbody></table></div></section>
+</section>
+</main>
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="supabase-config.js"></script>
+<script>
+const cfg=window.SUPABASE_CONFIG||{};
+const sb=cfg.url&&cfg.anonKey&&!cfg.url.includes('YOUR-PROJECT')?supabase.createClient(cfg.url,cfg.anonKey):null;
+const $=id=>document.getElementById(id);let rows=[],editing=null,markers=[],map;
+function toast(x){$('toast').textContent=x;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2200)}
+function validCfg(){if(!sb){toast('Isi supabase-config.js dulu');return false}return true}
+function resetForm(){editing=null;$('fNama').value='';$('fTipe').value='desa';$('fLat').value='';$('fLng').value='';$('fKode').value='';$('fPos').value='';$('fSumber').value='';$('delete').classList.add('hidden')}
+function edit(r){editing=r;$('fNama').value=r.nama||'';$('fTipe').value=r.tipe||'desa';$('fLat').value=r.latitude;$('fLng').value=r.longitude;$('fKode').value=r.kode_kemendagri||'';$('fPos').value=r.kode_pos||'';$('fSumber').value=r.sumber||'';$('delete').classList.remove('hidden');focus(r)}
+function focus(r){map.flyTo([r.latitude,r.longitude],15,{duration:.5});markers.forEach(m=>{if(m._id===r.id)m.openPopup()})}
+function render(){
+ markers.forEach(m=>map.removeLayer(m));markers=[];
+ const tb=$('tbody');tb.innerHTML='';
+ rows.forEach(r=>{
+  const m=L.circleMarker([r.latitude,r.longitude],{radius:r.tipe==='kecamatan'?10:8,fillColor:r.tipe==='kecamatan'?'#292824':'#c95e1a',color:'#fff',weight:2,fillOpacity:.9}).addTo(map).bindPopup('<b>'+esc(r.nama)+'</b><br>'+esc(r.tipe));
+  m._id=r.id;markers.push(m);
+  const tr=document.createElement('tr');tr.innerHTML='<td><b>'+esc(r.nama)+'</b></td><td>'+esc(r.tipe)+'</td><td>'+Number(r.latitude).toFixed(5)+', '+Number(r.longitude).toFixed(5)+'</td><td><div class="actions"><button>Edit</button><button class="danger">Hapus</button></div></td>';
+  tr.children[3].children[0].children[0].onclick=()=>edit(r);tr.children[3].children[0].children[1].onclick=()=>remove(r);tr.onclick=e=>{if(e.target.tagName!=='BUTTON')focus(r)};tb.appendChild(tr)
+ });
+ $('status').textContent=rows.length+' lokasi';
+ if(markers.length)map.fitBounds(L.featureGroup(markers).getBounds().pad(.12))
+}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+async function load(){
+ if(!validCfg())return;
+ const {data,error}=await sb.from('locations').select('*').order('nama');
+ if(error){toast(error.message);return}rows=data||[];render()
+}
+async function remove(r){if(!confirm('Hapus '+r.nama+'?'))return;const {error}=await sb.from('locations').delete().eq('id',r.id);if(error)toast(error.message);else{toast('Dihapus');resetForm();load()}}
+$('save').onclick=async()=>{
+ if(!validCfg())return;
+ const payload={nama:$('fNama').value.trim(),tipe:$('fTipe').value,latitude:Number($('fLat').value),longitude:Number($('fLng').value),kode_kemendagri:$('fKode').value.trim()||null,kode_pos:$('fPos').value.trim()||null,sumber:$('fSumber').value.trim()||null};
+ if(!payload.nama||!Number.isFinite(payload.latitude)||!Number.isFinite(payload.longitude))return toast('Nama dan koordinat wajib valid');
+ let res=editing?await sb.from('locations').update(payload).eq('id',editing.id):await sb.from('locations').insert(payload);
+ if(res.error)toast(res.error.message);else{toast('Tersimpan');resetForm();load()}
+};
+$('delete').onclick=()=>editing&&remove(editing);$('cancel').onclick=resetForm;$('new').onclick=resetForm;$('refresh').onclick=load;
+$('logout').onclick=async()=>{if(sb)await sb.auth.signOut();location.reload()};
+$('loginBtn').onclick=async()=>{if(!validCfg())return;const {error}=await sb.auth.signInWithPassword({email:$('email').value,password:$('password').value});if(error)toast(error.message);else init()};
+$('export').onclick=()=>{const geo={type:'FeatureCollection',features:rows.map(r=>({type:'Feature',properties:{nama:r.nama,tipe:r.tipe,kode_kemendagri:r.kode_kemendagri,kode_pos:r.kode_pos,sumber:r.sumber},geometry:{type:'Point',coordinates:[r.longitude,r.latitude]}}))};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(geo,null,2)],{type:'application/geo+json'}));a.download='punggur_points_v5.geojson';a.click()};
+function initMap(){map=L.map('map').setView([-5.0383,105.2762],12);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(map)}
+async function init(){if(!validCfg())return;const {data:{session}}=await sb.auth.getSession();if(!session){$('login').style.display='block';$('app').style.display='none';return}$('login').style.display='none';$('app').style.display='block';$('who').textContent=session.user.email; if(!map)initMap();load()}
+if(sb)sb.auth.onAuthStateChange(()=>init());init();
+</script>
+</body>
+</html>
