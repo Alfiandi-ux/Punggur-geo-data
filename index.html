@@ -1,52 +1,2116 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#c95e1a">
-<title>Punggur Geo Data V5</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+
+<title>Punggur Geo Data V6</title>
+
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
+/>
+
 <style>
-:root{--a:#c95e1a;--bg:#f3f1ec;--card:#fffdf8;--text:#282724;--muted:#77736b;--line:#dfdbd1}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
-header,.wrap{max-width:1180px;margin:auto;padding-left:16px;padding-right:16px}header{padding-top:18px;padding-bottom:12px;display:flex;justify-content:space-between;align-items:start;gap:10px}
-h1{margin:0;font-size:1.5rem}.sub{color:var(--muted);font-size:.85rem;margin:4px 0 0}
-.top{display:grid;grid-template-columns:1fr 150px auto auto;gap:8px;margin-bottom:10px}input,select,button{font:inherit;border:1px solid var(--line);border-radius:10px;padding:10px;background:#fff}button{cursor:pointer;font-weight:650}.primary{background:var(--a);color:#fff;border-color:var(--a)}
-.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px}.stat,.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 5px 20px #0000000b}.stat{padding:11px}.stat b{display:block;font-size:1.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.stat span{color:var(--muted);font-size:.74rem}
-.grid{display:grid;grid-template-columns:1fr 320px;gap:10px}.mapcard{overflow:hidden}.card{padding:13px}.mapcard{background:var(--card);border:1px solid var(--line);border-radius:14px}.maptools{display:flex;gap:6px;flex-wrap:wrap;padding:8px;border-top:1px solid var(--line)}.maptools button{font-size:.76rem;padding:8px}#map{height:min(62vh,620px);min-height:400px}
-.side{display:grid;gap:10px}.near{display:flex;justify-content:space-between;padding:8px;border-radius:9px;background:#faf8f3;margin:6px 0;cursor:pointer}.muted{color:var(--muted);font-size:.8rem}
-.panel{margin-top:10px}.head{display:flex;justify-content:space-between;align-items:center}.table{overflow:auto}table{width:100%;border-collapse:collapse;min-width:700px;font-size:.82rem}th,td{text-align:left;padding:9px;border-bottom:1px solid var(--line)}th{color:var(--muted)}tr:hover{background:#f7eee6}.badge{padding:3px 7px;border-radius:99px;background:#eeeae1;font-size:.7rem}
-footer{text-align:center;color:#999;padding:15px;font-size:.75rem}a{color:var(--a)}
-@media(max-width:850px){.grid{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr}.stats{grid-template-columns:repeat(3,1fr)}}@media(max-width:600px){.top{grid-template-columns:1fr 1fr}.top input{grid-column:1/-1}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:1/-1}.side{grid-template-columns:1fr}#map{min-height:380px}}
+:root{
+  --primary:#c95e1a;
+  --primary-dark:#9f4713;
+  --bg:#f3f1ec;
+  --card:#fffdf8;
+  --text:#292724;
+  --muted:#77736b;
+  --border:#ded9cf;
+  --soft:#f7eee6;
+  --green:#26734d;
+  --blue:#2878b5;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+header{
+  max-width:1200px;
+  margin:auto;
+  padding:18px 16px 12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+}
+
+h1{
+  margin:0;
+  font-size:1.5rem;
+}
+
+.subtitle{
+  margin:4px 0 0;
+  color:var(--muted);
+  font-size:.85rem;
+}
+
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:0 16px 20px;
+}
+
+button,
+input,
+select{
+  font:inherit;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px 12px;
+  background:white;
+}
+
+button{
+  cursor:pointer;
+  font-weight:600;
+}
+
+button:hover{
+  filter:brightness(.97);
+}
+
+.primary{
+  color:white;
+  background:var(--primary);
+  border-color:var(--primary);
+}
+
+.topbar{
+  display:grid;
+  grid-template-columns:1fr 160px auto auto;
+  gap:8px;
+  margin-bottom:10px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:8px;
+  margin-bottom:10px;
+}
+
+.stat{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:12px;
+  box-shadow:0 5px 20px #0000000a;
+}
+
+.stat b{
+  display:block;
+  font-size:1.08rem;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.stat span{
+  display:block;
+  margin-top:3px;
+  color:var(--muted);
+  font-size:.72rem;
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 330px;
+  gap:10px;
+}
+
+.map-card{
+  overflow:hidden;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+}
+
+#map{
+  width:100%;
+  height:min(62vh,620px);
+  min-height:400px;
+}
+
+.map-tools{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  padding:8px;
+  border-top:1px solid var(--border);
+}
+
+.map-tools button{
+  padding:8px 10px;
+  font-size:.76rem;
+}
+
+.sidebar{
+  display:grid;
+  gap:10px;
+  align-content:start;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+  box-shadow:0 5px 20px #0000000a;
+}
+
+.card-title{
+  font-weight:700;
+  margin-bottom:8px;
+}
+
+.muted{
+  color:var(--muted);
+  font-size:.82rem;
+}
+
+.weather-main{
+  font-size:2rem;
+  font-weight:800;
+}
+
+.weather-line{
+  display:flex;
+  justify-content:space-between;
+  padding:7px 0;
+  border-bottom:1px solid var(--border);
+  font-size:.84rem;
+}
+
+.weather-line:last-child{
+  border-bottom:0;
+}
+
+.near{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  padding:9px;
+  margin:6px 0;
+  background:#faf8f3;
+  border-radius:9px;
+  cursor:pointer;
+}
+
+.near:hover{
+  background:var(--soft);
+}
+
+.panel{
+  margin-top:10px;
+}
+
+.panel-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.table-wrap{
+  overflow:auto;
+}
+
+table{
+  width:100%;
+  min-width:900px;
+  border-collapse:collapse;
+  font-size:.82rem;
+}
+
+th,
+td{
+  text-align:left;
+  padding:9px;
+  border-bottom:1px solid var(--border);
+}
+
+th{
+  color:var(--muted);
+  font-weight:600;
+}
+
+tbody tr{
+  cursor:pointer;
+}
+
+tbody tr:hover{
+  background:var(--soft);
+}
+
+.badge{
+  display:inline-block;
+  padding:3px 8px;
+  border-radius:99px;
+  background:#eeeae1;
+  font-size:.7rem;
+}
+
+.detail-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+  margin:14px 0;
+}
+
+.info{
+  padding:11px;
+  border-radius:10px;
+  background:#faf8f3;
+}
+
+.info b{
+  display:block;
+  font-size:1rem;
+}
+
+.info span{
+  display:block;
+  margin-top:3px;
+  color:var(--muted);
+  font-size:.72rem;
+}
+
+.modal-bg{
+  position:fixed;
+  z-index:3000;
+  inset:0;
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  padding:10px;
+  background:#0008;
+}
+
+.modal-bg.show{
+  display:flex;
+}
+
+.modal{
+  width:min(720px,100%);
+  max-height:92vh;
+  overflow:auto;
+  padding:16px;
+  border-radius:16px;
+  background:var(--card);
+}
+
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.modal-head h2{
+  margin:0;
+}
+
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+}
+
+.status-ok{
+  color:var(--green);
+  font-weight:600;
+}
+
+.status-error{
+  color:#b52a2a;
+}
+
+footer{
+  padding:18px;
+  text-align:center;
+  color:#999;
+  font-size:.75rem;
+}
+
+a{
+  color:var(--primary);
+  text-decoration:none;
+}
+
+@media(max-width:950px){
+
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .sidebar{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .stats{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+@media(max-width:600px){
+
+  header{
+    align-items:center;
+  }
+
+  h1{
+    font-size:1.25rem;
+  }
+
+  .topbar{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .topbar input{
+    grid-column:1/-1;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .sidebar{
+    grid-template-columns:1fr;
+  }
+
+  #map{
+    min-height:380px;
+  }
+
+  .detail-grid{
+    grid-template-columns:1fr 1fr;
+  }
+}
 </style>
 </head>
+
 <body>
-<header><div><h1>🗺️ Punggur Geo Data <small>V5</small></h1><p class="sub">Dashboard GIS Kecamatan Punggur, Kabupaten Lampung Tengah</p></div><a href="admin.html"><button>🔐 Admin</button></a></header>
-<main class="wrap">
-<section class="top"><input id="search" placeholder="🔍 Cari desa, kode, atau koordinat"><select id="filter"><option value="semua">Semua tipe</option><option value="desa">Desa</option><option value="kecamatan">Kecamatan</option></select><button class="primary" id="locate">📍 Saya</button><button id="share">🔗 Bagikan</button></section>
-<section class="stats"><div class="stat"><b id="total">0</b><span>Total lokasi</span></div><div class="stat"><b id="desa">0</b><span>Desa</span></div><div class="stat"><b id="kec">0</b><span>Kecamatan</span></div><div class="stat"><b id="nearest">—</b><span>Terdekat</span></div><div class="stat"><b id="dist">—</b><span>Jarak</span></div></section>
-<section class="grid"><div class="mapcard"><div id="map"></div><div class="maptools"><button id="fit">⛶ Semua</button><button id="street">🗺️ Street</button><button id="sat">🛰️ Satelit</button><button id="full">⛶ Fullscreen</button></div></div>
-<aside class="side"><div class="card"><b>📍 Lokasi terdekat</b><div id="nearby" class="muted">Aktifkan lokasi.</div></div><div class="card"><b>☁️ Status data</b><p id="status" class="muted">Menghubungkan…</p></div></aside></section>
-<section class="card panel"><div class="head"><h3>📍 Daftar Lokasi</h3><span id="count" class="muted">0</span></div><div class="table"><table><thead><tr><th>Nama</th><th>Tipe</th><th>Kode</th><th>Koordinat</th><th></th></tr></thead><tbody id="tbody"></tbody></table></div></section>
-<footer>Punggur Geo Data V5 · <a href="admin.html">Dashboard Admin</a></footer>
+
+<header>
+
+  <div>
+    <h1>🗺️ Punggur Geo Data <small>V6</small></h1>
+    <p class="subtitle">
+      Peta interaktif dan informasi wilayah Kecamatan Punggur
+    </p>
+  </div>
+
+  <a href="admin.html">
+    <button>🔐 Admin</button>
+  </a>
+
+</header>
+
+<main class="container">
+
+  <!-- SEARCH -->
+
+  <section class="topbar">
+
+    <input
+      id="search"
+      type="search"
+      placeholder="🔍 Cari desa, kode, atau koordinat..."
+    >
+
+    <select id="filter">
+
+      <option value="semua">
+        Semua tipe
+      </option>
+
+      <option value="desa">
+        Desa
+      </option>
+
+      <option value="kecamatan">
+        Kecamatan
+      </option>
+
+    </select>
+
+    <button
+      id="locate"
+      class="primary"
+    >
+      📍 Saya
+    </button>
+
+    <button
+      id="share"
+    >
+      🔗 Bagikan
+    </button>
+
+  </section>
+
+
+  <!-- STATISTIK -->
+
+  <section class="stats">
+
+    <div class="stat">
+      <b id="total">0</b>
+      <span>Total lokasi</span>
+    </div>
+
+    <div class="stat">
+      <b id="totalDesa">0</b>
+      <span>Desa</span>
+    </div>
+
+    <div class="stat">
+      <b id="totalPenduduk">—</b>
+      <span>Total penduduk</span>
+    </div>
+
+    <div class="stat">
+      <b id="temperature">—</b>
+      <span>Suhu</span>
+    </div>
+
+    <div class="stat">
+      <b id="humidity">—</b>
+      <span>Kelembapan</span>
+    </div>
+
+    <div class="stat">
+      <b id="nearest">—</b>
+      <span>Terdekat</span>
+    </div>
+
+  </section>
+
+
+  <!-- MAP + SIDEBAR -->
+
+  <section class="layout">
+
+    <div class="map-card">
+
+      <div id="map"></div>
+
+      <div class="map-tools">
+
+        <button id="fit">
+          ⛶ Semua
+        </button>
+
+        <button id="street">
+          🗺️ Street
+        </button>
+
+        <button id="satellite">
+          🛰️ Satelit
+        </button>
+
+        <button id="fullscreen">
+          ⛶ Fullscreen
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <aside class="sidebar">
+
+      <!-- WEATHER -->
+
+      <div class="card">
+
+        <div class="card-title">
+          🌦️ Cuaca Punggur
+        </div>
+
+        <div
+          id="weatherIcon"
+          class="weather-main"
+        >
+          ⏳
+        </div>
+
+        <div
+          id="weatherText"
+          class="muted"
+        >
+          Memuat cuaca...
+        </div>
+
+        <div class="weather-line">
+          <span>🌡️ Suhu</span>
+          <b id="weatherTemp">—</b>
+        </div>
+
+        <div class="weather-line">
+          <span>💧 Kelembapan</span>
+          <b id="weatherHumidity">—</b>
+        </div>
+
+        <div class="weather-line">
+          <span>💨 Angin</span>
+          <b id="weatherWind">—</b>
+        </div>
+
+        <p
+          id="weatherUpdated"
+          class="muted"
+        >
+          —
+        </p>
+
+      </div>
+
+
+      <!-- NEARBY -->
+
+      <div class="card">
+
+        <div class="card-title">
+          📍 Lokasi Terdekat
+        </div>
+
+        <div id="nearby">
+          <span class="muted">
+            Aktifkan lokasi untuk melihat lokasi terdekat.
+          </span>
+        </div>
+
+      </div>
+
+
+      <!-- DATABASE -->
+
+      <div class="card">
+
+        <div class="card-title">
+          ☁️ Status Database
+        </div>
+
+        <div
+          id="databaseStatus"
+          class="muted"
+        >
+          Menghubungkan...
+        </div>
+
+      </div>
+
+    </aside>
+
+  </section>
+
+
+  <!-- TABLE -->
+
+  <section class="card panel">
+
+    <div class="panel-head">
+
+      <h3>
+        📊 Data Wilayah
+      </h3>
+
+      <span
+        id="resultCount"
+        class="muted"
+      >
+        0 lokasi
+      </span>
+
+    </div>
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Nama</th>
+            <th>Tipe</th>
+            <th>Penduduk</th>
+            <th>KK</th>
+            <th>Luas</th>
+            <th>Dusun</th>
+            <th>Suhu</th>
+            <th></th>
+
+          </tr>
+
+        </thead>
+
+        <tbody id="tableBody"></tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
 </main>
+
+
+<footer>
+
+  Punggur Geo Data V6 ·
+  Informasi geografis Kecamatan Punggur
+
+</footer>
+
+
+<!-- DETAIL MODAL -->
+
+<div
+  id="modalBg"
+  class="modal-bg"
+>
+
+  <div class="modal">
+
+    <div class="modal-head">
+
+      <h2 id="detailTitle">
+        Detail Lokasi
+      </h2>
+
+      <button id="closeModal">
+        ✕
+      </button>
+
+    </div>
+
+    <div id="detailContent"></div>
+
+    <div class="actions">
+
+      <button
+        id="navigate"
+        class="primary"
+      >
+        🧭 Navigasi
+      </button>
+
+      <button id="copyCoordinates">
+        📋 Salin koordinat
+      </button>
+
+      <button id="shareLocation">
+        🔗 Bagikan
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
 <script src="supabase-config.js"></script>
+
+
 <script>
-const cfg=window.SUPABASE_CONFIG||{}, db=(cfg.url&&cfg.anonKey&&!cfg.url.includes("YOUR-PROJECT"))?supabase.createClient(cfg.url,cfg.anonKey):null;
-const $=x=>document.getElementById(x), esc=x=>String(x??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]||m));
-let map=L.map("map").setView([-5.0383,105.2762],12), street=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(map), sat=L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:19,attribution:"© Esri"}), data=[], markers=[], me=null;
-function filtered(){let q=$("search").value.toLowerCase(),t=$("filter").value;return data.map((x,i)=>({x,i})).filter(o=>(!q||[o.x.nama,o.x.tipe,o.x.kode_pos,o.x.kode_kemendagri,o.x.latitude,o.x.longitude].join(" ").toLowerCase().includes(q))&&(t=="semua"||o.x.tipe==t))}
-function render(){markers.forEach(m=>map.removeLayer(m));markers=[];let rows=filtered();rows.forEach(o=>{let x=o.x,m=L.circleMarker([x.latitude,x.longitude],{radius:x.tipe=="kecamatan"?10:8,fillColor:x.tipe=="kecamatan"?"#292824":"#c95e1a",color:"#fff",weight:2,fillOpacity:.92}).addTo(map).bindPopup("<b>"+esc(x.nama)+"</b><br>"+x.latitude.toFixed(5)+", "+x.longitude.toFixed(5)+"<br><button onclick='focusPoint("+o.i+")'>Detail</button>");m._id=x.id;markers.push(m)});
-$("tbody").innerHTML=rows.map(o=>{let x=o.x;return "<tr onclick='focusPoint("+o.i+")'><td><b>"+esc(x.nama)+"</b></td><td><span class='badge'>"+esc(x.tipe)+"</span></td><td>"+esc(x.kode_pos||x.kode_kemendagri||"—")+"</td><td>"+x.latitude.toFixed(5)+", "+x.longitude.toFixed(5)+"</td><td>👁️</td></tr>"}).join("");
-$("count").textContent=rows.length+" lokasi";$("total").textContent=data.length;$("desa").textContent=data.filter(x=>x.tipe=="desa").length;$("kec").textContent=data.filter(x=>x.tipe=="kecamatan").length;nearby()}
-function focusPoint(i){let x=data[i];map.flyTo([x.latitude,x.longitude],15);let m=markers.find(m=>m._id==x.id);if(m)m.openPopup()}
-function nearby(){if(!me){$("nearby").textContent="Aktifkan lokasi untuk menghitung jarak.";return}let d=data.map((x,i)=>({x,i,d:dist(me.lat,me.lng,x.latitude,x.longitude)})).sort((a,b)=>a.d-b.d).slice(0,5);$("nearby").innerHTML=d.map(o=>"<div class='near' onclick='focusPoint("+o.i+")'><span>📍 "+esc(o.x.nama)+"</span><b>"+o.d.toFixed(1)+" km</b></div>").join("");if(d[0]){$("nearest").textContent=d[0].x.nama;$("dist").textContent=d[0].d.toFixed(1)+" km"}}
-function dist(a,b,c,d){let R=6371,A=(c-a)*Math.PI/180,B=(d-b)*Math.PI/180,x=Math.sin(A/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(B/2)**2;return 2*R*Math.asin(Math.sqrt(x))}
-async function load(){if(!db){$("status").textContent="Konfigurasi Supabase belum benar.";return}let r=await db.from("locations").select("id,nama,tipe,latitude,longitude,kode_kemendagri,kode_pos,sumber").order("nama");if(r.error){$("status").textContent="Gagal: "+r.error.message;return}data=r.data||[];$("status").textContent="✓ Online · "+data.length+" lokasi";render();if(markers.length)map.fitBounds(L.featureGroup(markers).getBounds().pad(.12));let s=new URLSearchParams(location.search).get("lokasi");if(s){let i=data.findIndex(x=>x.nama.toLowerCase()==decodeURIComponent(s).toLowerCase());if(i>=0)setTimeout(()=>focusPoint(i),500)}}
-$("search").oninput=render;$("filter").onchange=render;$("fit").onclick=()=>markers.length&&map.fitBounds(L.featureGroup(markers).getBounds().pad(.12));$("street").onclick=()=>{map.removeLayer(sat);map.addLayer(street)};$("sat").onclick=()=>{map.removeLayer(street);map.addLayer(sat)};$("full").onclick=()=>document.querySelector(".mapcard").requestFullscreen?.();$("locate").onclick=()=>navigator.geolocation?.getCurrentPosition(p=>{me={lat:p.coords.latitude,lng:p.coords.longitude};if(window.meMarker)map.removeLayer(window.meMarker);window.meMarker=L.circleMarker([me.lat,me.lng],{radius:9,fillColor:"#2f6fb0",color:"#fff",weight:2,fillOpacity:.95}).addTo(map).bindPopup("📍 Lokasi saya");map.flyTo([me.lat,me.lng],14);nearby()},()=>alert("Lokasi tidak tersedia"));$("share").onclick=()=>navigator.share?navigator.share({title:"Punggur Geo Data",url:location.href}):navigator.clipboard?.writeText(location.href);
-load();
+
+"use strict";
+
+
+/* =========================================================
+   SUPABASE
+========================================================= */
+
+const CONFIG = window.SUPABASE_CONFIG || {};
+
+let db = null;
+
+if (
+  CONFIG.url &&
+  CONFIG.anonKey &&
+  !CONFIG.url.includes("YOUR-PROJECT")
+) {
+
+  db = supabase.createClient(
+    CONFIG.url,
+    CONFIG.anonKey
+  );
+
+}
+
+
+/* =========================================================
+   HELPER
+========================================================= */
+
+const $ = id => document.getElementById(id);
+
+
+function escapeHTML(value){
+
+  return String(value ?? "")
+    .replace(/[&<>"']/g, char => {
+
+      const map = {
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#039;"
+      };
+
+      return map[char];
+
+    });
+
+}
+
+
+function getValue(row, names){
+
+  for(const name of names){
+
+    if(
+      row[name] !== undefined &&
+      row[name] !== null &&
+      row[name] !== ""
+    ){
+
+      return row[name];
+
+    }
+
+  }
+
+  return null;
+
+}
+
+
+function numberFormat(value){
+
+  if(
+    value === null ||
+    value === undefined ||
+    value === ""
+  ){
+
+    return "—";
+
+  }
+
+  const number = Number(value);
+
+  if(Number.isNaN(number)){
+
+    return value;
+
+  }
+
+  return number.toLocaleString("id-ID");
+
+}
+
+
+/* =========================================================
+   MAP
+========================================================= */
+
+const map = L.map("map")
+  .setView(
+    [-5.0383,105.2762],
+    12
+  );
+
+
+const streetLayer =
+  L.tileLayer(
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+      maxZoom:19,
+      attribution:"© OpenStreetMap"
+    }
+  );
+
+
+const satelliteLayer =
+  L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    {
+      maxZoom:19,
+      attribution:"© Esri"
+    }
+  );
+
+
+streetLayer.addTo(map);
+
+
+let markers = [];
+
+let userLocation = null;
+
+let selectedLocation = null;
+
+
+/* =========================================================
+   DATA
+========================================================= */
+
+let locations = [];
+
+
+/* =========================================================
+   FILTER
+========================================================= */
+
+function getFilteredLocations(){
+
+  const query =
+    $("search")
+      .value
+      .trim()
+      .toLowerCase();
+
+  const type =
+    $("filter").value;
+
+  return locations
+    .map((location,index) => ({
+      location,
+      index
+    }))
+    .filter(item => {
+
+      const x = item.location;
+
+      const text = [
+
+        x.nama,
+        x.tipe,
+        x.kode_pos,
+        x.kode_kemendagri,
+        x.latitude,
+        x.longitude
+
+      ]
+      .join(" ")
+      .toLowerCase();
+
+      const matchSearch =
+        !query ||
+        text.includes(query);
+
+      const matchType =
+        type === "semua" ||
+        String(x.tipe || "").toLowerCase() === type;
+
+      return matchSearch && matchType;
+
+    });
+
+}
+
+
+/* =========================================================
+   RENDER MAP
+========================================================= */
+
+function renderMap(){
+
+  markers.forEach(marker => {
+
+    map.removeLayer(marker);
+
+  });
+
+  markers = [];
+
+
+  const rows =
+    getFilteredLocations();
+
+
+  rows.forEach(item => {
+
+    const x = item.location;
+
+    const lat = Number(x.latitude);
+
+    const lng = Number(x.longitude);
+
+    if(
+      !Number.isFinite(lat) ||
+      !Number.isFinite(lng)
+    ){
+
+      return;
+
+    }
+
+
+    const isKecamatan =
+      String(x.tipe || "").toLowerCase() === "kecamatan";
+
+
+    const marker =
+      L.circleMarker(
+        [lat,lng],
+        {
+          radius:isKecamatan ? 10 : 8,
+          color:"#ffffff",
+          weight:2,
+          fillColor:
+            isKecamatan
+              ? "#292724"
+              : "#c95e1a",
+          fillOpacity:.92
+        }
+      );
+
+
+    marker
+      .addTo(map)
+      .bindPopup(`
+        <b>${escapeHTML(x.nama)}</b>
+        <br>
+        ${escapeHTML(x.tipe || "")}
+        <br>
+        👥 ${numberFormat(
+          getValue(x,[
+            "jumlah_penduduk",
+            "penduduk"
+          ])
+        )}
+        <br><br>
+        <button onclick="openDetail(${item.index})">
+          📊 Detail
+        </button>
+      `);
+
+
+    marker._locationId = x.id;
+
+    markers.push(marker);
+
+  });
+
+
+  updateTable();
+
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+function updateTable(){
+
+  const rows =
+    getFilteredLocations();
+
+
+  $("tableBody").innerHTML =
+    rows.map(item => {
+
+      const x = item.location;
+
+      const population =
+        getValue(
+          x,
+          [
+            "jumlah_penduduk",
+            "penduduk"
+          ]
+        );
+
+
+      const kk =
+        getValue(
+          x,
+          [
+            "jumlah_kk",
+            "kk"
+          ]
+        );
+
+
+      const area =
+        getValue(
+          x,
+          [
+            "luas_km2",
+            "luas"
+          ]
+        );
+
+
+      const dusun =
+        getValue(
+          x,
+          [
+            "jumlah_dusun",
+            "dusun"
+          ]
+        );
+
+
+      const temp =
+        getValue(
+          x,
+          [
+            "suhu"
+          ]
+        );
+
+
+      return `
+        <tr onclick="openDetail(${item.index})">
+
+          <td>
+            <b>
+              ${escapeHTML(x.nama)}
+            </b>
+          </td>
+
+          <td>
+            <span class="badge">
+              ${escapeHTML(x.tipe || "—")}
+            </span>
+          </td>
+
+          <td>
+            ${numberFormat(population)}
+          </td>
+
+          <td>
+            ${numberFormat(kk)}
+          </td>
+
+          <td>
+            ${area !== null ? escapeHTML(area) + " km²" : "—"}
+          </td>
+
+          <td>
+            ${numberFormat(dusun)}
+          </td>
+
+          <td>
+            ${temp !== null ? escapeHTML(temp) + "°C" : "—"}
+          </td>
+
+          <td>
+            👁️
+          </td>
+
+        </tr>
+      `;
+
+    }).join("");
+
+
+  $("resultCount").textContent =
+    rows.length + " lokasi";
+
+
+  $("total").textContent =
+    locations.length;
+
+
+  $("totalDesa").textContent =
+    locations.filter(x =>
+      String(x.tipe || "").toLowerCase() === "desa"
+    ).length;
+
+
+  const totalPopulation =
+    locations.reduce(
+      (total,x) =>
+        total +
+        Number(
+          getValue(
+            x,
+            [
+              "jumlah_penduduk",
+              "penduduk"
+            ]
+          ) || 0
+        ),
+      0
+    );
+
+
+  $("totalPenduduk").textContent =
+    totalPopulation > 0
+      ? numberFormat(totalPopulation)
+      : "—";
+
+}
+
+
+/* =========================================================
+   DETAIL
+========================================================= */
+
+function openDetail(index){
+
+  const x = locations[index];
+
+  selectedLocation = x;
+
+
+  const population =
+    getValue(x,[
+      "jumlah_penduduk",
+      "penduduk"
+    ]);
+
+
+  const kk =
+    getValue(x,[
+      "jumlah_kk",
+      "kk"
+    ]);
+
+
+  const area =
+    getValue(x,[
+      "luas_km2",
+      "luas"
+    ]);
+
+
+  const dusun =
+    getValue(x,[
+      "jumlah_dusun",
+      "dusun"
+    ]);
+
+
+  const schools =
+    getValue(x,[
+      "jumlah_sekolah",
+      "sekolah"
+    ]);
+
+
+  const health =
+    getValue(x,[
+      "fasilitas_kesehatan",
+      "kesehatan"
+    ]);
+
+
+  const temperature =
+    getValue(x,[
+      "suhu"
+    ]);
+
+
+  const humidity =
+    getValue(x,[
+      "kelembapan",
+      "humidity"
+    ]);
+
+
+  $("detailTitle").textContent =
+    "📍 " + (x.nama || "Lokasi");
+
+
+  $("detailContent").innerHTML = `
+
+    <p class="muted">
+      ${escapeHTML(x.tipe || "Lokasi")}
+    </p>
+
+    <div class="detail-grid">
+
+      <div class="info">
+        <b>👥 ${numberFormat(population)}</b>
+        <span>Penduduk</span>
+      </div>
+
+      <div class="info">
+        <b>🏠 ${numberFormat(kk)}</b>
+        <span>Kepala Keluarga</span>
+      </div>
+
+      <div class="info">
+        <b>${area !== null ? escapeHTML(area) : "—"}</b>
+        <span>Luas km²</span>
+      </div>
+
+      <div class="info">
+        <b>🏘️ ${numberFormat(dusun)}</b>
+        <span>Dusun</span>
+      </div>
+
+      <div class="info">
+        <b>🏫 ${numberFormat(schools)}</b>
+        <span>Sekolah</span>
+      </div>
+
+      <div class="info">
+        <b>🏥 ${numberFormat(health)}</b>
+        <span>Fasilitas kesehatan</span>
+      </div>
+
+      <div class="info">
+        <b>🌡️ ${temperature !== null ? escapeHTML(temperature) + "°C" : "—"}</b>
+        <span>Suhu</span>
+      </div>
+
+      <div class="info">
+        <b>💧 ${humidity !== null ? escapeHTML(humidity) + "%" : "—"}</b>
+        <span>Kelembapan</span>
+      </div>
+
+    </div>
+
+    <p>
+      <b>Koordinat</b><br>
+      ${Number(x.latitude).toFixed(6)},
+      ${Number(x.longitude).toFixed(6)}
+    </p>
+
+  `;
+
+
+  $("modalBg").classList.add("show");
+
+
+  if(
+    Number.isFinite(Number(x.latitude)) &&
+    Number.isFinite(Number(x.longitude))
+  ){
+
+    map.flyTo(
+      [
+        Number(x.latitude),
+        Number(x.longitude)
+      ],
+      15
+    );
+
+  }
+
+}
+
+
+window.openDetail = openDetail;
+
+
+/* =========================================================
+   LOAD SUPABASE
+========================================================= */
+
+async function loadLocations(){
+
+  if(!db){
+
+    $("databaseStatus").innerHTML =
+      '<span class="status-error">⚠️ Supabase belum dikonfigurasi.</span>';
+
+    return;
+
+  }
+
+
+  /*
+    Hanya mengambil kolom dasar yang sudah pasti
+    ada pada project V5.
+  */
+
+  const result =
+    await db
+      .from("locations")
+      .select("*")
+      .order("nama");
+
+
+  if(result.error){
+
+    $("databaseStatus").innerHTML =
+      '<span class="status-error">❌ ' +
+      escapeHTML(result.error.message) +
+      "</span>";
+
+    return;
+
+  }
+
+
+  locations =
+    result.data || [];
+
+
+  $("databaseStatus").innerHTML =
+    '<span class="status-ok">✓ Database online · ' +
+    locations.length +
+    " lokasi</span>";
+
+
+  renderMap();
+
+
+  if(markers.length){
+
+    try{
+
+      map.fitBounds(
+        L.featureGroup(markers)
+          .getBounds()
+          .pad(.12)
+      );
+
+    }catch(error){}
+
+  }
+
+}
+
+
+/* =========================================================
+   WEATHER
+========================================================= */
+
+async function loadWeather(){
+
+  /*
+    Titik pusat Kecamatan Punggur.
+    Open-Meteo tidak membutuhkan API key.
+  */
+
+  const latitude = -5.0383;
+
+  const longitude = 105.2762;
+
+
+  try{
+
+    const url =
+      "https://api.open-meteo.com/v1/forecast" +
+      "?latitude=" + latitude +
+      "&longitude=" + longitude +
+      "&current=" +
+      "temperature_2m," +
+      "relative_humidity_2m," +
+      "weather_code," +
+      "wind_speed_10m" +
+      "&timezone=Asia%2FJakarta";
+
+
+    const response =
+      await fetch(url);
+
+
+    if(!response.ok){
+
+      throw new Error(
+        "Weather API error"
+      );
+
+    }
+
+
+    const data =
+      await response.json();
+
+
+    const current =
+      data.current;
+
+
+    const temp =
+      current.temperature_2m;
+
+
+    const humidity =
+      current.relative_humidity_2m;
+
+
+    const wind =
+      current.wind_speed_10m;
+
+
+    const code =
+      current.weather_code;
+
+
+    const weather =
+      weatherDescription(code);
+
+
+    $("temperature").textContent =
+      temp + "°C";
+
+
+    $("humidity").textContent =
+      humidity + "%";
+
+
+    $("weatherTemp").textContent =
+      temp + "°C";
+
+
+    $("weatherHumidity").textContent =
+      humidity + "%";
+
+
+    $("weatherWind").textContent =
+      wind + " km/jam";
+
+
+    $("weatherIcon").textContent =
+      weather.icon;
+
+
+    $("weatherText").textContent =
+      weather.text;
+
+
+    $("weatherUpdated").textContent =
+      "Diperbarui: " +
+      new Date().toLocaleString(
+        "id-ID",
+        {
+          dateStyle:"short",
+          timeStyle:"short"
+        }
+      );
+
+  }
+  catch(error){
+
+    $("weatherText").textContent =
+      "Data cuaca tidak tersedia.";
+
+    $("weatherIcon").textContent =
+      "🌥️";
+
+  }
+
+}
+
+
+/* =========================================================
+   WEATHER DESCRIPTION
+========================================================= */
+
+function weatherDescription(code){
+
+  if(code === 0){
+
+    return {
+      icon:"☀️",
+      text:"Cerah"
+    };
+
+  }
+
+  if([1,2].includes(code)){
+
+    return {
+      icon:"🌤️",
+      text:"Cerah berawan"
+    };
+
+  }
+
+  if(code === 3){
+
+    return {
+      icon:"☁️",
+      text:"Berawan"
+    };
+
+  }
+
+  if([45,48].includes(code)){
+
+    return {
+      icon:"🌫️",
+      text:"Berkabut"
+    };
+
+  }
+
+  if(
+    [51,53,55,56,57].includes(code)
+  ){
+
+    return {
+      icon:"🌦️",
+      text:"Gerimis"
+    };
+
+  }
+
+  if(
+    [61,63,65,66,67].includes(code)
+  ){
+
+    return {
+      icon:"🌧️",
+      text:"Hujan"
+    };
+
+  }
+
+  if(
+    [80,81,82].includes(code)
+  ){
+
+    return {
+      icon:"🌦️",
+      text:"Hujan lokal"
+    };
+
+  }
+
+  if(
+    [95,96,99].includes(code)
+  ){
+
+    return {
+      icon:"⛈️",
+      text:"Badai petir"
+    };
+
+  }
+
+  return {
+    icon:"🌥️",
+    text:"Kondisi tidak diketahui"
+  };
+
+}
+
+
+/* =========================================================
+   NEAREST
+========================================================= */
+
+function distanceKm(
+  lat1,
+  lon1,
+  lat2,
+  lon2
+){
+
+  const R = 6371;
+
+  const dLat =
+    (lat2-lat1) *
+    Math.PI /
+    180;
+
+  const dLon =
+    (lon2-lon1) *
+    Math.PI /
+    180;
+
+
+  const a =
+    Math.sin(dLat/2)**2 +
+    Math.cos(lat1*Math.PI/180) *
+    Math.cos(lat2*Math.PI/180) *
+    Math.sin(dLon/2)**2;
+
+
+  return 2 *
+    R *
+    Math.asin(
+      Math.sqrt(a)
+    );
+
+}
+
+
+function updateNearby(){
+
+  if(!userLocation){
+
+    $("nearby").innerHTML =
+      '<span class="muted">' +
+      'Aktifkan lokasi untuk melihat lokasi terdekat.' +
+      '</span>';
+
+    return;
+
+  }
+
+
+  const result =
+    locations
+      .map((x,index)=>({
+
+        x,
+        index,
+
+        distance:
+          distanceKm(
+            userLocation.lat,
+            userLocation.lng,
+            Number(x.latitude),
+            Number(x.longitude)
+          )
+
+      }))
+      .filter(x =>
+        Number.isFinite(x.distance)
+      )
+      .sort(
+        (a,b) =>
+          a.distance-b.distance
+      )
+      .slice(0,5);
+
+
+  $("nearby").innerHTML =
+    result.map(item=>`
+
+      <div
+        class="near"
+        onclick="openDetail(${item.index})"
+      >
+
+        <span>
+          📍 ${escapeHTML(item.x.nama)}
+        </span>
+
+        <b>
+          ${item.distance.toFixed(1)} km
+        </b>
+
+      </div>
+
+    `).join("");
+
+
+  if(result[0]){
+
+    $("nearest").textContent =
+      result[0].x.nama;
+
+  }
+
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+$("search").addEventListener(
+  "input",
+  renderMap
+);
+
+
+$("filter").addEventListener(
+  "change",
+  renderMap
+);
+
+
+$("fit").addEventListener(
+  "click",
+  ()=>{
+
+    if(!markers.length){
+
+      return;
+
+    }
+
+    try{
+
+      map.fitBounds(
+        L.featureGroup(markers)
+          .getBounds()
+          .pad(.12)
+      );
+
+    }catch(error){}
+
+  }
+);
+
+
+$("street").addEventListener(
+  "click",
+  ()=>{
+
+    map.removeLayer(
+      satelliteLayer
+    );
+
+    map.addLayer(
+      streetLayer
+    );
+
+  }
+);
+
+
+$("satellite").addEventListener(
+  "click",
+  ()=>{
+
+    map.removeLayer(
+      streetLayer
+    );
+
+    map.addLayer(
+      satelliteLayer
+    );
+
+  }
+);
+
+
+$("fullscreen").addEventListener(
+  "click",
+  ()=>{
+
+    document
+      .querySelector(".map-card")
+      ?.requestFullscreen?.();
+
+  }
+);
+
+
+$("locate").addEventListener(
+  "click",
+  ()=>{
+
+    if(!navigator.geolocation){
+
+      alert(
+        "Browser tidak mendukung lokasi."
+      );
+
+      return;
+
+    }
+
+
+    navigator.geolocation.getCurrentPosition(
+
+      position => {
+
+        userLocation = {
+
+          lat:
+            position.coords.latitude,
+
+          lng:
+            position.coords.longitude
+
+        };
+
+
+        if(window.userMarker){
+
+          map.removeLayer(
+            window.userMarker
+          );
+
+        }
+
+
+        window.userMarker =
+          L.circleMarker(
+            [
+              userLocation.lat,
+              userLocation.lng
+            ],
+            {
+              radius:9,
+              color:"#ffffff",
+              weight:2,
+              fillColor:"#2878b5",
+              fillOpacity:.95
+            }
+          )
+          .addTo(map)
+          .bindPopup(
+            "📍 Lokasi saya"
+          );
+
+
+        map.flyTo(
+          [
+            userLocation.lat,
+            userLocation.lng
+          ],
+          14
+        );
+
+
+        updateNearby();
+
+      },
+
+      ()=>{
+        alert(
+          "Lokasi tidak dapat diperoleh. Pastikan izin lokasi browser aktif."
+        );
+      }
+
+    );
+
+  }
+);
+
+
+$("share").addEventListener(
+  "click",
+  async ()=>{
+
+    const shareData = {
+
+      title:
+        "Punggur Geo Data V6",
+
+      text:
+        "Peta interaktif Kecamatan Punggur",
+
+      url:
+        location.href
+
+    };
+
+
+    try{
+
+      if(navigator.share){
+
+        await navigator.share(
+          shareData
+        );
+
+      }else{
+
+        await navigator.clipboard.writeText(
+          location.href
+        );
+
+        alert(
+          "Link berhasil disalin."
+        );
+
+      }
+
+    }catch(error){}
+
+  }
+);
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+$("closeModal").addEventListener(
+  "click",
+  ()=>{
+    $("modalBg")
+      .classList
+      .remove("show");
+  }
+);
+
+
+$("modalBg").addEventListener(
+  "click",
+  event => {
+
+    if(
+      event.target ===
+      $("modalBg")
+    ){
+
+      $("modalBg")
+        .classList
+        .remove("show");
+
+    }
+
+  }
+);
+
+
+$("navigate").addEventListener(
+  "click",
+  ()=>{
+
+    if(!selectedLocation){
+
+      return;
+
+    }
+
+
+    const lat =
+      Number(
+        selectedLocation.latitude
+      );
+
+
+    const lng =
+      Number(
+        selectedLocation.longitude
+      );
+
+
+    window.open(
+      "https://www.google.com/maps/dir/?api=1&destination=" +
+      lat +
+      "," +
+      lng,
+      "_blank"
+    );
+
+  }
+);
+
+
+$("copyCoordinates").addEventListener(
+  "click",
+  async ()=>{
+
+    if(!selectedLocation){
+
+      return;
+
+    }
+
+
+    const text =
+      Number(selectedLocation.latitude)
+      .toFixed(6) +
+      ", " +
+      Number(selectedLocation.longitude)
+      .toFixed(6);
+
+
+    try{
+
+      await navigator.clipboard.writeText(
+        text
+      );
+
+      alert(
+        "Koordinat berhasil disalin."
+      );
+
+    }catch(error){
+
+      alert(text);
+
+    }
+
+  }
+);
+
+
+$("shareLocation").addEventListener(
+  async ()=>{
+
+    if(!selectedLocation){
+
+      return;
+
+    }
+
+
+    const x =
+      selectedLocation;
+
+
+    const url =
+      location.origin +
+      location.pathname +
+      "?lokasi=" +
+      encodeURIComponent(
+        x.nama
+      );
+
+
+    try{
+
+      if(navigator.share){
+
+        await navigator.share({
+
+          title:x.nama,
+
+          text:
+            "Lokasi " +
+            x.nama,
+
+          url
+
+        });
+
+      }else{
+
+        await navigator.clipboard.writeText(
+          url
+        );
+
+        alert(
+          "Link lokasi berhasil disalin."
+        );
+
+      }
+
+    }catch(error){}
+
+  }
+);
+
+
+/* =========================================================
+   START
+========================================================= */
+
+loadLocations();
+
+loadWeather();
+
 </script>
+
 </body>
-</html>
+  </html>
