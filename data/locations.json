@@ -1,0 +1,95 @@
+[
+  {
+    "nama": "Kecamatan Punggur",
+    "tipe": "kecamatan",
+    "kabupaten": "Lampung Tengah",
+    "provinsi": "Lampung",
+    "latitude": -5.0383065874663115,
+    "longitude": 105.27616093702213,
+    "sumber": "Wikipedia"
+  },
+  {
+    "nama": "Asto Mulyo",
+    "tipe": "desa",
+    "kode_kemendagri": "18.02.06.2008",
+    "kode_pos": "34152",
+    "latitude": -5.0034587,
+    "longitude": 105.2737212,
+    "sumber": "kodepos.co.id"
+  },
+  {
+    "nama": "Badran Sari",
+    "tipe": "desa",
+    "kode_kemendagri": "18.02.06.2002",
+    "kode_pos": "34152",
+    "latitude": -5.0552552,
+    "longitude": 105.2994882,
+    "sumber": "Google Maps"
+  },
+  {
+    "nama": "Mojo Pahit",
+    "tipe": "desa",
+    "kode_kemendagri": "18.02.06.2007",
+    "kode_pos": "34152",
+    "latitude": -4.9961666,
+    "longitude": 105.2492546,
+    "sumber": "Google Maps"
+  },
+  {
+    "nama": "Ngesti Rahayu",
+    "tipe": "desa",
+    "kode_kemendagri": "18.02.06.2006",
+    "kode_pos": "34152",
+    "latitude": -5.0229265,
+    "longitude": 105.2570432,
+    "elevasi_m": 43,
+    "sumber": "Google Maps"
+  },
+  {
+    "nama": "Nunggal Rejo",
+    "tipe": "desa",
+    "kode_kemendagri": "18.02.06.2001",
+    "kode_pos": "34152",
+    "latitude": -5.066278,
+    "longitude": 105.279687,
+    "sumber": "Google Maps"
+  },
+  {
+    "nama": "Sido Mulyo",
+    "tipe": "desa",
+    "kode_kemendagri": "18.02.06.2009",
+    "kode_pos": "34152",
+    "latitude": -5.0332688,
+    "longitude": 105.2860963,
+    "sumber": "Google Maps"
+  },
+  {
+    "nama": "Sri Sawahan",
+    "tipe": "desa",
+    "kode_kemendagri": "18.02.06.2003",
+    "kode_pos": "34152",
+    "latitude": -5.0454785,
+    "longitude": 105.3273066,
+    "elevasi_m": 49,
+    "sumber": "kodepos.co.id"
+  },
+  {
+    "nama": "Tanggul Angin",
+    "tipe": "desa",
+    "kode_kemendagri": "18.02.06.2005",
+    "kode_pos": "34152",
+    "latitude": -5.0395882,
+    "longitude": 105.2595653,
+    "elevasi_m": 50,
+    "sumber": "kodepos.co.id"
+  },
+  {
+    "nama": "Toto Katon",
+    "tipe": "desa",
+    "kode_kemendagri": "18.02.06.2004",
+    "kode_pos": "34152",
+    "latitude": -5.0501194,
+    "longitude": 105.2749651,
+    "sumber": "Google Maps"
+  }
+]
