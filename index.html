@@ -5,12 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#c95e1a">
 
-<title>Punggur Geo Data V6</title>
+<title>Punggur Geo Data V7</title>
 
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
-/>
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 
 <style>
 :root{
@@ -24,6 +22,7 @@
   --soft:#f7eee6;
   --green:#26734d;
   --blue:#2878b5;
+  --red:#b52a2a;
 }
 
 *{
@@ -341,7 +340,17 @@ tbody tr:hover{
 }
 
 .status-error{
-  color:#b52a2a;
+  color:var(--red);
+  font-weight:600;
+}
+
+.status-local{
+  color:var(--blue);
+  font-weight:600;
+}
+
+.loading{
+  color:var(--muted);
 }
 
 footer{
@@ -408,14 +417,17 @@ a{
 </style>
 </head>
 
+
 <body>
 
 <header>
 
   <div>
-    <h1>🗺️ Punggur Geo Data <small>V6</small></h1>
+    <h1>🗺️ Punggur Geo Data <small>V7</small></h1>
+
     <p class="subtitle">
-      Peta interaktif dan informasi wilayah Kecamatan Punggur
+      Peta interaktif dan informasi wilayah Kecamatan Punggur,
+      Lampung Tengah
     </p>
   </div>
 
@@ -425,266 +437,273 @@ a{
 
 </header>
 
+
 <main class="container">
 
-  <!-- SEARCH -->
 
-  <section class="topbar">
+<!-- SEARCH -->
 
-    <input
-      id="search"
-      type="search"
-      placeholder="🔍 Cari desa, kode, atau koordinat..."
-    >
+<section class="topbar">
 
-    <select id="filter">
+  <input
+    id="search"
+    type="search"
+    placeholder="🔍 Cari desa, kode, atau koordinat..."
+  >
 
-      <option value="semua">
-        Semua tipe
-      </option>
+  <select id="filter">
 
-      <option value="desa">
-        Desa
-      </option>
+    <option value="semua">
+      Semua tipe
+    </option>
 
-      <option value="kecamatan">
-        Kecamatan
-      </option>
+    <option value="desa">
+      Desa
+    </option>
 
-    </select>
+    <option value="kecamatan">
+      Kecamatan
+    </option>
 
-    <button
-      id="locate"
-      class="primary"
-    >
-      📍 Saya
-    </button>
+  </select>
 
-    <button
-      id="share"
-    >
-      🔗 Bagikan
-    </button>
+  <button
+    id="locate"
+    class="primary"
+  >
+    📍 Saya
+  </button>
 
-  </section>
+  <button id="share">
+    🔗 Bagikan
+  </button>
+
+</section>
 
 
-  <!-- STATISTIK -->
+<!-- STATISTIK -->
 
-  <section class="stats">
+<section class="stats">
 
-    <div class="stat">
-      <b id="total">0</b>
-      <span>Total lokasi</span>
+  <div class="stat">
+    <b id="total">0</b>
+    <span>Total lokasi</span>
+  </div>
+
+  <div class="stat">
+    <b id="totalDesa">0</b>
+    <span>Desa</span>
+  </div>
+
+  <div class="stat">
+    <b id="totalPenduduk">—</b>
+    <span>Total penduduk</span>
+  </div>
+
+  <div class="stat">
+    <b id="temperature">—</b>
+    <span>Suhu</span>
+  </div>
+
+  <div class="stat">
+    <b id="humidity">—</b>
+    <span>Kelembapan</span>
+  </div>
+
+  <div class="stat">
+    <b id="nearest">—</b>
+    <span>Terdekat</span>
+  </div>
+
+</section>
+
+
+<!-- MAP -->
+
+<section class="layout">
+
+  <div class="map-card">
+
+    <div id="map"></div>
+
+    <div class="map-tools">
+
+      <button id="fit">
+        ⛶ Semua
+      </button>
+
+      <button id="street">
+        🗺️ Street
+      </button>
+
+      <button id="satellite">
+        🛰️ Satelit
+      </button>
+
+      <button id="fullscreen">
+        ⛶ Fullscreen
+      </button>
+
     </div>
 
-    <div class="stat">
-      <b id="totalDesa">0</b>
-      <span>Desa</span>
-    </div>
-
-    <div class="stat">
-      <b id="totalPenduduk">—</b>
-      <span>Total penduduk</span>
-    </div>
-
-    <div class="stat">
-      <b id="temperature">—</b>
-      <span>Suhu</span>
-    </div>
-
-    <div class="stat">
-      <b id="humidity">—</b>
-      <span>Kelembapan</span>
-    </div>
-
-    <div class="stat">
-      <b id="nearest">—</b>
-      <span>Terdekat</span>
-    </div>
-
-  </section>
+  </div>
 
 
-  <!-- MAP + SIDEBAR -->
+  <!-- SIDEBAR -->
 
-  <section class="layout">
+  <aside class="sidebar">
 
-    <div class="map-card">
 
-      <div id="map"></div>
+    <!-- WEATHER -->
 
-      <div class="map-tools">
+    <div class="card">
 
-        <button id="fit">
-          ⛶ Semua
-        </button>
-
-        <button id="street">
-          🗺️ Street
-        </button>
-
-        <button id="satellite">
-          🛰️ Satelit
-        </button>
-
-        <button id="fullscreen">
-          ⛶ Fullscreen
-        </button>
-
+      <div class="card-title">
+        🌦️ Cuaca Punggur
       </div>
 
-    </div>
-
-
-    <aside class="sidebar">
-
-      <!-- WEATHER -->
-
-      <div class="card">
-
-        <div class="card-title">
-          🌦️ Cuaca Punggur
-        </div>
-
-        <div
-          id="weatherIcon"
-          class="weather-main"
-        >
-          ⏳
-        </div>
-
-        <div
-          id="weatherText"
-          class="muted"
-        >
-          Memuat cuaca...
-        </div>
-
-        <div class="weather-line">
-          <span>🌡️ Suhu</span>
-          <b id="weatherTemp">—</b>
-        </div>
-
-        <div class="weather-line">
-          <span>💧 Kelembapan</span>
-          <b id="weatherHumidity">—</b>
-        </div>
-
-        <div class="weather-line">
-          <span>💨 Angin</span>
-          <b id="weatherWind">—</b>
-        </div>
-
-        <p
-          id="weatherUpdated"
-          class="muted"
-        >
-          —
-        </p>
-
+      <div
+        id="weatherIcon"
+        class="weather-main"
+      >
+        ⏳
       </div>
 
-
-      <!-- NEARBY -->
-
-      <div class="card">
-
-        <div class="card-title">
-          📍 Lokasi Terdekat
-        </div>
-
-        <div id="nearby">
-          <span class="muted">
-            Aktifkan lokasi untuk melihat lokasi terdekat.
-          </span>
-        </div>
-
-      </div>
-
-
-      <!-- DATABASE -->
-
-      <div class="card">
-
-        <div class="card-title">
-          ☁️ Status Database
-        </div>
-
-        <div
-          id="databaseStatus"
-          class="muted"
-        >
-          Menghubungkan...
-        </div>
-
-      </div>
-
-    </aside>
-
-  </section>
-
-
-  <!-- TABLE -->
-
-  <section class="card panel">
-
-    <div class="panel-head">
-
-      <h3>
-        📊 Data Wilayah
-      </h3>
-
-      <span
-        id="resultCount"
+      <div
+        id="weatherText"
         class="muted"
       >
-        0 lokasi
-      </span>
+        Memuat cuaca...
+      </div>
+
+      <div class="weather-line">
+        <span>🌡️ Suhu</span>
+        <b id="weatherTemp">—</b>
+      </div>
+
+      <div class="weather-line">
+        <span>💧 Kelembapan</span>
+        <b id="weatherHumidity">—</b>
+      </div>
+
+      <div class="weather-line">
+        <span>💨 Angin</span>
+        <b id="weatherWind">—</b>
+      </div>
+
+      <p
+        id="weatherUpdated"
+        class="muted"
+      >
+        —
+      </p>
 
     </div>
 
-    <div class="table-wrap">
 
-      <table>
+    <!-- NEARBY -->
 
-        <thead>
+    <div class="card">
 
-          <tr>
+      <div class="card-title">
+        📍 Lokasi Terdekat
+      </div>
 
-            <th>Nama</th>
-            <th>Tipe</th>
-            <th>Penduduk</th>
-            <th>KK</th>
-            <th>Luas</th>
-            <th>Dusun</th>
-            <th>Suhu</th>
-            <th></th>
+      <div id="nearby">
 
-          </tr>
+        <span class="muted">
+          Aktifkan lokasi untuk melihat lokasi terdekat.
+        </span>
 
-        </thead>
-
-        <tbody id="tableBody"></tbody>
-
-      </table>
+      </div>
 
     </div>
 
-  </section>
+
+    <!-- DATABASE -->
+
+    <div class="card">
+
+      <div class="card-title">
+        ☁️ Status Database
+      </div>
+
+      <div
+        id="databaseStatus"
+        class="loading"
+      >
+        Memuat data lokal...
+      </div>
+
+    </div>
+
+  </aside>
+
+</section>
+
+
+<!-- TABLE -->
+
+<section class="card panel">
+
+  <div class="panel-head">
+
+    <h3>
+      📊 Data Wilayah
+    </h3>
+
+    <span
+      id="resultCount"
+      class="muted"
+    >
+      0 lokasi
+    </span>
+
+  </div>
+
+
+  <div class="table-wrap">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>Nama</th>
+          <th>Tipe</th>
+          <th>Penduduk</th>
+          <th>KK</th>
+          <th>Luas</th>
+          <th>Dusun</th>
+          <th>Suhu</th>
+          <th></th>
+
+        </tr>
+
+      </thead>
+
+      <tbody id="tableBody"></tbody>
+
+    </table>
+
+  </div>
+
+</section>
 
 </main>
 
 
 <footer>
 
-  Punggur Geo Data V6 ·
-  Informasi geografis Kecamatan Punggur
+  Punggur Geo Data V7 ·
+  Informasi geografis Kecamatan Punggur ·
+  Data lokal + Supabase
 
 </footer>
 
 
-<!-- DETAIL MODAL -->
+<!-- DETAIL -->
 
 <div
   id="modalBg"
@@ -731,6 +750,8 @@ a{
 </div>
 
 
+<!-- LIBRARIES -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -744,55 +765,51 @@ a{
 
 
 /* =========================================================
-   SUPABASE
-========================================================= */
-
-const CONFIG = window.SUPABASE_CONFIG || {};
-
-let db = null;
-
-if (
-  CONFIG.url &&
-  CONFIG.anonKey &&
-  !CONFIG.url.includes("YOUR-PROJECT")
-) {
-
-  db = supabase.createClient(
-    CONFIG.url,
-    CONFIG.anonKey
-  );
-
-}
-
-
-/* =========================================================
    HELPER
 ========================================================= */
 
-const $ = id => document.getElementById(id);
+const $ = id =>
+  document.getElementById(id);
 
 
 function escapeHTML(value){
 
   return String(value ?? "")
-    .replace(/[&<>"']/g, char => {
+    .replace(/[&<>"']/g,char=>({
 
-      const map = {
-        "&":"&amp;",
-        "<":"&lt;",
-        ">":"&gt;",
-        '"':"&quot;",
-        "'":"&#039;"
-      };
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#039;"
 
-      return map[char];
-
-    });
+    }[char]));
 
 }
 
 
-function getValue(row, names){
+function numberFormat(value){
+
+  if(
+    value === null ||
+    value === undefined ||
+    value === ""
+  ){
+    return "—";
+  }
+
+  const n = Number(value);
+
+  if(Number.isNaN(n)){
+    return escapeHTML(value);
+  }
+
+  return n.toLocaleString("id-ID");
+
+}
+
+
+function getValue(row,names){
 
   for(const name of names){
 
@@ -813,27 +830,38 @@ function getValue(row, names){
 }
 
 
-function numberFormat(value){
+/* =========================================================
+   SUPABASE
+========================================================= */
 
-  if(
-    value === null ||
-    value === undefined ||
-    value === ""
-  ){
+const CONFIG =
+  window.SUPABASE_CONFIG || {};
 
-    return "—";
+let db = null;
+
+
+if(
+  CONFIG.url &&
+  CONFIG.anonKey &&
+  !CONFIG.url.includes("YOUR-PROJECT")
+){
+
+  try{
+
+    db =
+      window.supabase.createClient(
+        CONFIG.url,
+        CONFIG.anonKey
+      );
+
+  }catch(error){
+
+    console.warn(
+      "Supabase gagal dibuat:",
+      error
+    );
 
   }
-
-  const number = Number(value);
-
-  if(Number.isNaN(number)){
-
-    return value;
-
-  }
-
-  return number.toLocaleString("id-ID");
 
 }
 
@@ -842,11 +870,18 @@ function numberFormat(value){
    MAP
 ========================================================= */
 
-const map = L.map("map")
-  .setView(
-    [-5.0383,105.2762],
-    12
-  );
+const PUNGGUR_CENTER = [
+  -5.0383066,
+  105.2761609
+];
+
+
+const map =
+  L.map("map")
+   .setView(
+     PUNGGUR_CENTER,
+     12
+   );
 
 
 const streetLayer =
@@ -854,7 +889,7 @@ const streetLayer =
     "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
     {
       maxZoom:19,
-      attribution:"© OpenStreetMap"
+      attribution:"© OpenStreetMap contributors"
     }
   );
 
@@ -878,12 +913,411 @@ let userLocation = null;
 
 let selectedLocation = null;
 
+let locations = [];
+
 
 /* =========================================================
-   DATA
+   NORMALIZE DATA
 ========================================================= */
 
-let locations = [];
+function normalizeLocation(x){
+
+  if(!x){
+    return null;
+  }
+
+
+  /*
+    Mendukung data dari:
+    - locations.json
+    - Supabase
+    - GeoJSON
+  */
+
+  if(
+    x.geometry &&
+    x.geometry.coordinates
+  ){
+
+    const coords =
+      x.geometry.coordinates;
+
+    x = {
+      ...x,
+      ...(x.properties || {}),
+      longitude:coords[0],
+      latitude:coords[1]
+    };
+
+  }
+
+
+  const lat =
+    Number(
+      getValue(
+        x,
+        [
+          "latitude",
+          "lat",
+          "y"
+        ]
+      )
+    );
+
+
+  const lng =
+    Number(
+      getValue(
+        x,
+        [
+          "longitude",
+          "lng",
+          "lon",
+          "long",
+          "x"
+        ]
+      )
+    );
+
+
+  if(
+    !Number.isFinite(lat) ||
+    !Number.isFinite(lng)
+  ){
+
+    return null;
+
+  }
+
+
+  return {
+
+    ...x,
+
+    latitude:lat,
+
+    longitude:lng,
+
+    nama:
+      getValue(
+        x,
+        [
+          "nama",
+          "name",
+          "nama_lokasi"
+        ]
+      ) || "Tanpa nama",
+
+    tipe:
+      getValue(
+        x,
+        [
+          "tipe",
+          "type"
+        ]
+      ) || "desa"
+
+  };
+
+}
+
+
+/* =========================================================
+   LOCAL DATA
+========================================================= */
+
+async function loadLocalData(){
+
+  const paths = [
+
+    "./data/locations.json",
+
+    "./data/processed/locations.json",
+
+    "./data/processed/locations.geojson",
+
+    "./data/raw/punggur_points.geojson"
+
+  ];
+
+
+  for(const path of paths){
+
+    try{
+
+      const response =
+        await fetch(
+          path,
+          {
+            cache:"no-store"
+          }
+        );
+
+
+      if(!response.ok){
+
+        continue;
+
+      }
+
+
+      const data =
+        await response.json();
+
+
+      let raw = [];
+
+
+      /*
+        Format JSON biasa:
+        [
+          {...}
+        ]
+      */
+
+      if(Array.isArray(data)){
+
+        raw = data;
+
+      }
+
+
+      /*
+        Format:
+        {
+          locations:[...]
+        }
+      */
+
+      else if(
+        Array.isArray(data.locations)
+      ){
+
+        raw = data.locations;
+
+      }
+
+
+      /*
+        Format GeoJSON
+      */
+
+      else if(
+        data.type === "FeatureCollection" &&
+        Array.isArray(data.features)
+      ){
+
+        raw = data.features;
+
+      }
+
+
+      const normalized =
+        raw
+          .map(normalizeLocation)
+          .filter(Boolean);
+
+
+      if(normalized.length){
+
+        console.log(
+          "Data lokal berhasil:",
+          path,
+          normalized.length
+        );
+
+
+        return {
+
+          data:normalized,
+
+          source:path
+
+        };
+
+      }
+
+    }catch(error){
+
+      console.warn(
+        "Gagal membaca:",
+        path,
+        error
+      );
+
+    }
+
+  }
+
+
+  throw new Error(
+    "Tidak ada file data lokal yang dapat dibaca."
+  );
+
+}
+
+
+/* =========================================================
+   SUPABASE DATA
+========================================================= */
+
+async function loadSupabaseData(){
+
+  if(!db){
+
+    throw new Error(
+      "Supabase belum dikonfigurasi."
+    );
+
+  }
+
+
+  const result =
+    await db
+      .from("locations")
+      .select("*")
+      .order("nama");
+
+
+  if(result.error){
+
+    throw result.error;
+
+  }
+
+
+  const normalized =
+    (result.data || [])
+      .map(normalizeLocation)
+      .filter(Boolean);
+
+
+  if(!normalized.length){
+
+    throw new Error(
+      "Tabel Supabase locations kosong."
+    );
+
+  }
+
+
+  return normalized;
+
+}
+
+
+/* =========================================================
+   LOAD DATA
+========================================================= */
+
+async function loadLocations(){
+
+  /*
+    PRIORITAS:
+    1. DATA LOKAL
+    2. SUPABASE
+  */
+
+
+  $("databaseStatus").innerHTML =
+    '<span class="loading">📂 Membaca data lokal...</span>';
+
+
+  try{
+
+    const local =
+      await loadLocalData();
+
+
+    locations =
+      local.data;
+
+
+    $("databaseStatus").innerHTML =
+
+      '<span class="status-local">' +
+
+      '✓ Data lokal · ' +
+
+      locations.length +
+
+      ' lokasi' +
+
+      '</span>';
+
+
+    renderAll();
+
+
+    return;
+
+  }catch(localError){
+
+    console.warn(
+      "Data lokal gagal:",
+      localError
+    );
+
+  }
+
+
+  /*
+    FALLBACK SUPABASE
+  */
+
+  $("databaseStatus").innerHTML =
+    '<span class="loading">☁️ Mencoba Supabase...</span>';
+
+
+  try{
+
+    locations =
+      await loadSupabaseData();
+
+
+    $("databaseStatus").innerHTML =
+
+      '<span class="status-ok">' +
+
+      '✓ Supabase online · ' +
+
+      locations.length +
+
+      ' lokasi' +
+
+      '</span>';
+
+
+    renderAll();
+
+
+    return;
+
+  }catch(supabaseError){
+
+    console.error(
+      "Supabase gagal:",
+      supabaseError
+    );
+
+
+    locations = [];
+
+
+    $("databaseStatus").innerHTML =
+
+      '<span class="status-error">' +
+
+      '❌ Data lokal & Supabase gagal dimuat.' +
+
+      '</span>';
+
+
+    renderAll();
+
+  }
+
+}
 
 
 /* =========================================================
@@ -898,17 +1332,23 @@ function getFilteredLocations(){
       .trim()
       .toLowerCase();
 
+
   const type =
     $("filter").value;
 
-  return locations
-    .map((location,index) => ({
-      location,
-      index
-    }))
-    .filter(item => {
 
-      const x = item.location;
+  return locations
+    .map(
+      (location,index)=>({
+        location,
+        index
+      })
+    )
+    .filter(item=>{
+
+      const x =
+        item.location;
+
 
       const text = [
 
@@ -923,15 +1363,22 @@ function getFilteredLocations(){
       .join(" ")
       .toLowerCase();
 
+
       const matchSearch =
         !query ||
         text.includes(query);
 
+
       const matchType =
         type === "semua" ||
-        String(x.tipe || "").toLowerCase() === type;
+        String(x.tipe)
+          .toLowerCase() === type;
 
-      return matchSearch && matchType;
+
+      return (
+        matchSearch &&
+        matchType
+      );
 
     });
 
@@ -944,26 +1391,33 @@ function getFilteredLocations(){
 
 function renderMap(){
 
-  markers.forEach(marker => {
+  markers.forEach(marker=>{
 
     map.removeLayer(marker);
 
   });
 
+
   markers = [];
 
 
-  const rows =
+  const filtered =
     getFilteredLocations();
 
 
-  rows.forEach(item => {
+  filtered.forEach(item=>{
 
-    const x = item.location;
+    const x =
+      item.location;
 
-    const lat = Number(x.latitude);
 
-    const lng = Number(x.longitude);
+    const lat =
+      Number(x.latitude);
+
+
+    const lng =
+      Number(x.longitude);
+
 
     if(
       !Number.isFinite(lat) ||
@@ -975,54 +1429,52 @@ function renderMap(){
     }
 
 
-    const isKecamatan =
-      String(x.tipe || "").toLowerCase() === "kecamatan";
-
-
     const marker =
-      L.circleMarker(
-        [lat,lng],
-        {
-          radius:isKecamatan ? 10 : 8,
-          color:"#ffffff",
-          weight:2,
-          fillColor:
-            isKecamatan
-              ? "#292724"
-              : "#c95e1a",
-          fillOpacity:.92
-        }
-      );
+      L.marker([
+        lat,
+        lng
+      ]);
 
 
-    marker
-      .addTo(map)
-      .bindPopup(`
-        <b>${escapeHTML(x.nama)}</b>
+    marker.bindPopup(`
+
+      <div style="min-width:190px">
+
+        <strong>
+          📍 ${escapeHTML(x.nama)}
+        </strong>
+
         <br>
-        ${escapeHTML(x.tipe || "")}
-        <br>
-        👥 ${numberFormat(
-          getValue(x,[
-            "jumlah_penduduk",
-            "penduduk"
-          ])
-        )}
+
+        <span>
+          ${escapeHTML(x.tipe)}
+        </span>
+
         <br><br>
-        <button onclick="openDetail(${item.index})">
-          📊 Detail
+
+        <button
+          onclick="openDetail(${item.index})"
+        >
+          Lihat detail
         </button>
-      `);
+
+      </div>
+
+    `);
 
 
-    marker._locationId = x.id;
+    marker.addTo(map);
+
 
     markers.push(marker);
 
   });
 
 
-  updateTable();
+  updateTable(filtered);
+
+
+  updateStats();
 
 }
 
@@ -1031,146 +1483,195 @@ function renderMap(){
    TABLE
 ========================================================= */
 
-function updateTable(){
+function updateTable(filtered){
 
-  const rows =
-    getFilteredLocations();
-
-
-  $("tableBody").innerHTML =
-    rows.map(item => {
-
-      const x = item.location;
-
-      const population =
-        getValue(
-          x,
-          [
-            "jumlah_penduduk",
-            "penduduk"
-          ]
-        );
+  const body =
+    $("tableBody");
 
 
-      const kk =
-        getValue(
-          x,
-          [
-            "jumlah_kk",
-            "kk"
-          ]
-        );
+  body.innerHTML =
+    filtered
+      .map(item=>{
+
+        const x =
+          item.location;
 
 
-      const area =
-        getValue(
-          x,
-          [
-            "luas_km2",
-            "luas"
-          ]
-        );
-
-
-      const dusun =
-        getValue(
-          x,
-          [
-            "jumlah_dusun",
-            "dusun"
-          ]
-        );
-
-
-      const temp =
-        getValue(
-          x,
-          [
-            "suhu"
-          ]
-        );
-
-
-      return `
-        <tr onclick="openDetail(${item.index})">
-
-          <td>
-            <b>
-              ${escapeHTML(x.nama)}
-            </b>
-          </td>
-
-          <td>
-            <span class="badge">
-              ${escapeHTML(x.tipe || "—")}
-            </span>
-          </td>
-
-          <td>
-            ${numberFormat(population)}
-          </td>
-
-          <td>
-            ${numberFormat(kk)}
-          </td>
-
-          <td>
-            ${area !== null ? escapeHTML(area) + " km²" : "—"}
-          </td>
-
-          <td>
-            ${numberFormat(dusun)}
-          </td>
-
-          <td>
-            ${temp !== null ? escapeHTML(temp) + "°C" : "—"}
-          </td>
-
-          <td>
-            👁️
-          </td>
-
-        </tr>
-      `;
-
-    }).join("");
-
-
-  $("resultCount").textContent =
-    rows.length + " lokasi";
-
-
-  $("total").textContent =
-    locations.length;
-
-
-  $("totalDesa").textContent =
-    locations.filter(x =>
-      String(x.tipe || "").toLowerCase() === "desa"
-    ).length;
-
-
-  const totalPopulation =
-    locations.reduce(
-      (total,x) =>
-        total +
-        Number(
+        const population =
           getValue(
             x,
             [
               "jumlah_penduduk",
               "penduduk"
             ]
-          ) || 0
-        ),
+          );
+
+
+        const kk =
+          getValue(
+            x,
+            [
+              "jumlah_kk",
+              "kk"
+            ]
+          );
+
+
+        const area =
+          getValue(
+            x,
+            [
+              "luas_km2",
+              "luas"
+            ]
+          );
+
+
+        const dusun =
+          getValue(
+            x,
+            [
+              "jumlah_dusun",
+              "dusun"
+            ]
+          );
+
+
+        const suhu =
+          getValue(
+            x,
+            [
+              "suhu",
+              "temperature"
+            ]
+          );
+
+
+        return `
+
+          <tr
+            onclick="openDetail(${item.index})"
+          >
+
+            <td>
+              <strong>
+                ${escapeHTML(x.nama)}
+              </strong>
+            </td>
+
+            <td>
+              <span class="badge">
+                ${escapeHTML(x.tipe)}
+              </span>
+            </td>
+
+            <td>
+              ${numberFormat(population)}
+            </td>
+
+            <td>
+              ${numberFormat(kk)}
+            </td>
+
+            <td>
+              ${
+                area !== null
+                ? escapeHTML(area) + " km²"
+                : "—"
+              }
+            </td>
+
+            <td>
+              ${numberFormat(dusun)}
+            </td>
+
+            <td>
+              ${
+                suhu !== null
+                ? escapeHTML(suhu) + "°C"
+                : "—"
+              }
+            </td>
+
+            <td>
+              👁️
+            </td>
+
+          </tr>
+
+        `;
+
+      })
+      .join("");
+
+
+  $("resultCount").textContent =
+    filtered.length + " lokasi";
+
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+function updateStats(){
+
+  $("total").textContent =
+    locations.length;
+
+
+  $("totalDesa").textContent =
+
+    locations.filter(x=>
+
+      String(x.tipe)
+        .toLowerCase() === "desa"
+
+    ).length;
+
+
+  const totalPopulation =
+    locations.reduce(
+      (sum,x)=>{
+
+        return sum +
+
+          Number(
+            getValue(
+              x,
+              [
+                "jumlah_penduduk",
+                "penduduk"
+              ]
+            )
+          ) || 0;
+
+      },
       0
     );
 
 
   $("totalPenduduk").textContent =
+
     totalPopulation > 0
+
       ? numberFormat(totalPopulation)
+
       : "—";
+
+}
+
+
+/* =========================================================
+   RENDER EVERYTHING
+========================================================= */
+
+function renderAll(){
+
+  renderMap();
+
+  updateNearby();
 
 }
 
@@ -1181,141 +1682,250 @@ function updateTable(){
 
 function openDetail(index){
 
-  const x = locations[index];
+  const x =
+    locations[index];
 
-  selectedLocation = x;
+
+  if(!x){
+    return;
+  }
+
+
+  selectedLocation =
+    x;
 
 
   const population =
-    getValue(x,[
-      "jumlah_penduduk",
-      "penduduk"
-    ]);
+    getValue(
+      x,
+      [
+        "jumlah_penduduk",
+        "penduduk"
+      ]
+    );
 
 
   const kk =
-    getValue(x,[
-      "jumlah_kk",
-      "kk"
-    ]);
+    getValue(
+      x,
+      [
+        "jumlah_kk",
+        "kk"
+      ]
+    );
 
 
   const area =
-    getValue(x,[
-      "luas_km2",
-      "luas"
-    ]);
+    getValue(
+      x,
+      [
+        "luas_km2",
+        "luas"
+      ]
+    );
 
 
   const dusun =
-    getValue(x,[
-      "jumlah_dusun",
-      "dusun"
-    ]);
+    getValue(
+      x,
+      [
+        "jumlah_dusun",
+        "dusun"
+      ]
+    );
 
 
   const schools =
-    getValue(x,[
-      "jumlah_sekolah",
-      "sekolah"
-    ]);
+    getValue(
+      x,
+      [
+        "jumlah_sekolah",
+        "sekolah"
+      ]
+    );
 
 
   const health =
-    getValue(x,[
-      "fasilitas_kesehatan",
-      "kesehatan"
-    ]);
-
-
-  const temperature =
-    getValue(x,[
-      "suhu"
-    ]);
-
-
-  const humidity =
-    getValue(x,[
-      "kelembapan",
-      "humidity"
-    ]);
+    getValue(
+      x,
+      [
+        "fasilitas_kesehatan",
+        "kesehatan"
+      ]
+    );
 
 
   $("detailTitle").textContent =
-    "📍 " + (x.nama || "Lokasi");
+    "📍 " +
+    x.nama;
 
 
   $("detailContent").innerHTML = `
 
     <p class="muted">
+
       ${escapeHTML(x.tipe || "Lokasi")}
+
     </p>
+
 
     <div class="detail-grid">
 
       <div class="info">
-        <b>👥 ${numberFormat(population)}</b>
-        <span>Penduduk</span>
+
+        <b>
+          👥 ${numberFormat(population)}
+        </b>
+
+        <span>
+          Penduduk
+        </span>
+
       </div>
 
-      <div class="info">
-        <b>🏠 ${numberFormat(kk)}</b>
-        <span>Kepala Keluarga</span>
-      </div>
 
       <div class="info">
-        <b>${area !== null ? escapeHTML(area) : "—"}</b>
-        <span>Luas km²</span>
+
+        <b>
+          🏠 ${numberFormat(kk)}
+        </b>
+
+        <span>
+          Kepala Keluarga
+        </span>
+
       </div>
 
-      <div class="info">
-        <b>🏘️ ${numberFormat(dusun)}</b>
-        <span>Dusun</span>
-      </div>
 
       <div class="info">
-        <b>🏫 ${numberFormat(schools)}</b>
-        <span>Sekolah</span>
+
+        <b>
+          ${
+            area !== null
+            ? escapeHTML(area)
+            : "—"
+          }
+        </b>
+
+        <span>
+          Luas km²
+        </span>
+
       </div>
 
-      <div class="info">
-        <b>🏥 ${numberFormat(health)}</b>
-        <span>Fasilitas kesehatan</span>
-      </div>
 
       <div class="info">
-        <b>🌡️ ${temperature !== null ? escapeHTML(temperature) + "°C" : "—"}</b>
-        <span>Suhu</span>
+
+        <b>
+          🏘️ ${numberFormat(dusun)}
+        </b>
+
+        <span>
+          Dusun
+        </span>
+
       </div>
 
+
       <div class="info">
-        <b>💧 ${humidity !== null ? escapeHTML(humidity) + "%" : "—"}</b>
-        <span>Kelembapan</span>
+
+        <b>
+          🏫 ${numberFormat(schools)}
+        </b>
+
+        <span>
+          Sekolah
+        </span>
+
+      </div>
+
+
+      <div class="info">
+
+        <b>
+          🏥 ${numberFormat(health)}
+        </b>
+
+        <span>
+          Fasilitas kesehatan
+        </span>
+
       </div>
 
     </div>
 
+
     <p>
-      <b>Koordinat</b><br>
+
+      <b>Koordinat</b>
+
+      <br>
+
       ${Number(x.latitude).toFixed(6)},
       ${Number(x.longitude).toFixed(6)}
+
     </p>
+
+
+    ${
+      x.kode_kemendagri
+      ? `
+        <p>
+          <b>Kode Kemendagri</b><br>
+          ${escapeHTML(x.kode_kemendagri)}
+        </p>
+      `
+      : ""
+    }
+
+
+    ${
+      x.kode_pos
+      ? `
+        <p>
+          <b>Kode Pos</b><br>
+          ${escapeHTML(x.kode_pos)}
+        </p>
+      `
+      : ""
+    }
+
+
+    ${
+      x.sumber
+      ? `
+        <p class="muted">
+          Sumber: ${escapeHTML(x.sumber)}
+        </p>
+      `
+      : ""
+    }
 
   `;
 
 
-  $("modalBg").classList.add("show");
+  $("modalBg")
+    .classList
+    .add("show");
+
+
+  const lat =
+    Number(x.latitude);
+
+
+  const lng =
+    Number(x.longitude);
 
 
   if(
-    Number.isFinite(Number(x.latitude)) &&
-    Number.isFinite(Number(x.longitude))
+    Number.isFinite(lat) &&
+    Number.isFinite(lng)
   ){
 
     map.flyTo(
       [
-        Number(x.latitude),
-        Number(x.longitude)
+        lat,
+        lng
       ],
       15
     );
@@ -1325,77 +1935,8 @@ function openDetail(index){
 }
 
 
-window.openDetail = openDetail;
-
-
-/* =========================================================
-   LOAD SUPABASE
-========================================================= */
-
-async function loadLocations(){
-
-  if(!db){
-
-    $("databaseStatus").innerHTML =
-      '<span class="status-error">⚠️ Supabase belum dikonfigurasi.</span>';
-
-    return;
-
-  }
-
-
-  /*
-    Hanya mengambil kolom dasar yang sudah pasti
-    ada pada project V5.
-  */
-
-  const result =
-    await db
-      .from("locations")
-      .select("*")
-      .order("nama");
-
-
-  if(result.error){
-
-    $("databaseStatus").innerHTML =
-      '<span class="status-error">❌ ' +
-      escapeHTML(result.error.message) +
-      "</span>";
-
-    return;
-
-  }
-
-
-  locations =
-    result.data || [];
-
-
-  $("databaseStatus").innerHTML =
-    '<span class="status-ok">✓ Database online · ' +
-    locations.length +
-    " lokasi</span>";
-
-
-  renderMap();
-
-
-  if(markers.length){
-
-    try{
-
-      map.fitBounds(
-        L.featureGroup(markers)
-          .getBounds()
-          .pad(.12)
-      );
-
-    }catch(error){}
-
-  }
-
-}
+window.openDetail =
+  openDetail;
 
 
 /* =========================================================
@@ -1404,27 +1945,35 @@ async function loadLocations(){
 
 async function loadWeather(){
 
-  /*
-    Titik pusat Kecamatan Punggur.
-    Open-Meteo tidak membutuhkan API key.
-  */
+  const latitude =
+    PUNGGUR_CENTER[0];
 
-  const latitude = -5.0383;
 
-  const longitude = 105.2762;
+  const longitude =
+    PUNGGUR_CENTER[1];
 
 
   try{
 
     const url =
       "https://api.open-meteo.com/v1/forecast" +
-      "?latitude=" + latitude +
-      "&longitude=" + longitude +
+
+      "?latitude=" +
+      latitude +
+
+      "&longitude=" +
+      longitude +
+
       "&current=" +
+
       "temperature_2m," +
+
       "relative_humidity_2m," +
+
       "weather_code," +
+
       "wind_speed_10m" +
+
       "&timezone=Asia%2FJakarta";
 
 
@@ -1435,7 +1984,7 @@ async function loadWeather(){
     if(!response.ok){
 
       throw new Error(
-        "Weather API error"
+        "Weather API gagal"
       );
 
     }
@@ -1449,81 +1998,65 @@ async function loadWeather(){
       data.current;
 
 
-    const temp =
-      current.temperature_2m;
-
-
-    const humidity =
-      current.relative_humidity_2m;
-
-
-    const wind =
-      current.wind_speed_10m;
-
-
-    const code =
-      current.weather_code;
-
-
-    const weather =
-      weatherDescription(code);
-
-
-    $("temperature").textContent =
-      temp + "°C";
-
-
-    $("humidity").textContent =
-      humidity + "%";
-
-
-    $("weatherTemp").textContent =
-      temp + "°C";
-
-
-    $("weatherHumidity").textContent =
-      humidity + "%";
-
-
-    $("weatherWind").textContent =
-      wind + " km/jam";
+    const description =
+      weatherDescription(
+        current.weather_code
+      );
 
 
     $("weatherIcon").textContent =
-      weather.icon;
+      description.icon;
 
 
     $("weatherText").textContent =
-      weather.text;
+      description.text;
+
+
+    $("weatherTemp").textContent =
+      current.temperature_2m +
+      "°C";
+
+
+    $("weatherHumidity").textContent =
+      current.relative_humidity_2m +
+      "%";
+
+
+    $("weatherWind").textContent =
+      current.wind_speed_10m +
+      " km/j";
+
+
+    $("temperature").textContent =
+      current.temperature_2m +
+      "°C";
+
+
+    $("humidity").textContent =
+      current.relative_humidity_2m +
+      "%";
 
 
     $("weatherUpdated").textContent =
       "Diperbarui: " +
-      new Date().toLocaleString(
-        "id-ID",
-        {
-          dateStyle:"short",
-          timeStyle:"short"
-        }
-      );
+      new Date()
+        .toLocaleString("id-ID");
 
-  }
-  catch(error){
+  }catch(error){
+
+    console.warn(
+      "Cuaca gagal:",
+      error
+    );
+
 
     $("weatherText").textContent =
-      "Data cuaca tidak tersedia.";
-
-    $("weatherIcon").textContent =
-      "🌥️";
+      "Cuaca tidak tersedia";
 
   }
 
 }
 
-
-/* =========================================================
-   WEATHER DESCRIPTION
-========================================================= */
 
 function weatherDescription(code){
 
@@ -1536,7 +2069,10 @@ function weatherDescription(code){
 
   }
 
-  if([1,2].includes(code)){
+
+  if(
+    [1,2].includes(code)
+  ){
 
     return {
       icon:"🌤️",
@@ -1544,6 +2080,7 @@ function weatherDescription(code){
     };
 
   }
+
 
   if(code === 3){
 
@@ -1554,7 +2091,10 @@ function weatherDescription(code){
 
   }
 
-  if([45,48].includes(code)){
+
+  if(
+    [45,48].includes(code)
+  ){
 
     return {
       icon:"🌫️",
@@ -1562,6 +2102,7 @@ function weatherDescription(code){
     };
 
   }
+
 
   if(
     [51,53,55,56,57].includes(code)
@@ -1574,6 +2115,7 @@ function weatherDescription(code){
 
   }
 
+
   if(
     [61,63,65,66,67].includes(code)
   ){
@@ -1584,6 +2126,7 @@ function weatherDescription(code){
     };
 
   }
+
 
   if(
     [80,81,82].includes(code)
@@ -1596,6 +2139,7 @@ function weatherDescription(code){
 
   }
 
+
   if(
     [95,96,99].includes(code)
   ){
@@ -1607,6 +2151,7 @@ function weatherDescription(code){
 
   }
 
+
   return {
     icon:"🌥️",
     text:"Kondisi tidak diketahui"
@@ -1616,7 +2161,7 @@ function weatherDescription(code){
 
 
 /* =========================================================
-   NEAREST
+   DISTANCE
 ========================================================= */
 
 function distanceKm(
@@ -1628,10 +2173,12 @@ function distanceKm(
 
   const R = 6371;
 
+
   const dLat =
     (lat2-lat1) *
     Math.PI /
     180;
+
 
   const dLon =
     (lon2-lon1) *
@@ -1640,9 +2187,17 @@ function distanceKm(
 
 
   const a =
+
     Math.sin(dLat/2)**2 +
-    Math.cos(lat1*Math.PI/180) *
-    Math.cos(lat2*Math.PI/180) *
+
+    Math.cos(
+      lat1*Math.PI/180
+    ) *
+
+    Math.cos(
+      lat2*Math.PI/180
+    ) *
+
     Math.sin(dLon/2)**2;
 
 
@@ -1655,13 +2210,20 @@ function distanceKm(
 }
 
 
+/* =========================================================
+   NEARBY
+========================================================= */
+
 function updateNearby(){
 
   if(!userLocation){
 
     $("nearby").innerHTML =
+
       '<span class="muted">' +
+
       'Aktifkan lokasi untuk melihat lokasi terdekat.' +
+
       '</span>';
 
     return;
@@ -1670,50 +2232,73 @@ function updateNearby(){
 
 
   const result =
+
     locations
-      .map((x,index)=>({
 
-        x,
-        index,
+      .map(
+        (x,index)=>({
 
-        distance:
-          distanceKm(
-            userLocation.lat,
-            userLocation.lng,
-            Number(x.latitude),
-            Number(x.longitude)
-          )
+          x,
 
-      }))
-      .filter(x =>
-        Number.isFinite(x.distance)
+          index,
+
+          distance:
+
+            distanceKm(
+
+              userLocation.lat,
+
+              userLocation.lng,
+
+              Number(x.latitude),
+
+              Number(x.longitude)
+
+            )
+
+        })
       )
+
+      .filter(x=>
+
+        Number.isFinite(
+          x.distance
+        )
+
+      )
+
       .sort(
-        (a,b) =>
+        (a,b)=>
           a.distance-b.distance
       )
+
       .slice(0,5);
 
 
   $("nearby").innerHTML =
-    result.map(item=>`
 
-      <div
-        class="near"
-        onclick="openDetail(${item.index})"
-      >
+    result
 
-        <span>
-          📍 ${escapeHTML(item.x.nama)}
-        </span>
+      .map(item=>`
 
-        <b>
-          ${item.distance.toFixed(1)} km
-        </b>
+        <div
+          class="near"
+          onclick="openDetail(${item.index})"
+        >
 
-      </div>
+          <span>
+            📍 ${escapeHTML(item.x.nama)}
+          </span>
 
-    `).join("");
+          <b>
+            ${item.distance.toFixed(1)} km
+          </b>
+
+        </div>
+
+      `)
+
+      .join("");
 
 
   if(result[0]){
@@ -1727,388 +2312,540 @@ function updateNearby(){
 
 
 /* =========================================================
-   BUTTONS
+   SEARCH
 ========================================================= */
 
-$("search").addEventListener(
-  "input",
-  renderMap
-);
+$("search")
+  .addEventListener(
+    "input",
+    renderMap
+  );
 
 
-$("filter").addEventListener(
-  "change",
-  renderMap
-);
+$("filter")
+  .addEventListener(
+    "change",
+    renderMap
+  );
 
 
-$("fit").addEventListener(
-  "click",
-  ()=>{
+/* =========================================================
+   FIT MAP
+========================================================= */
 
-    if(!markers.length){
+$("fit")
+  .addEventListener(
+    "click",
+    ()=>{
 
-      return;
+      if(!markers.length){
 
-    }
+        map.setView(
+          PUNGGUR_CENTER,
+          12
+        );
 
-    try{
+        return;
 
-      map.fitBounds(
-        L.featureGroup(markers)
-          .getBounds()
-          .pad(.12)
-      );
-
-    }catch(error){}
-
-  }
-);
+      }
 
 
-$("street").addEventListener(
-  "click",
-  ()=>{
+      try{
 
-    map.removeLayer(
-      satelliteLayer
-    );
+        map.fitBounds(
+          L.featureGroup(markers)
+            .getBounds()
+            .pad(.12)
+        );
 
-    map.addLayer(
-      streetLayer
-    );
+      }catch(error){
 
-  }
-);
+        console.warn(error);
 
-
-$("satellite").addEventListener(
-  "click",
-  ()=>{
-
-    map.removeLayer(
-      streetLayer
-    );
-
-    map.addLayer(
-      satelliteLayer
-    );
-
-  }
-);
-
-
-$("fullscreen").addEventListener(
-  "click",
-  ()=>{
-
-    document
-      .querySelector(".map-card")
-      ?.requestFullscreen?.();
-
-  }
-);
-
-
-$("locate").addEventListener(
-  "click",
-  ()=>{
-
-    if(!navigator.geolocation){
-
-      alert(
-        "Browser tidak mendukung lokasi."
-      );
-
-      return;
+      }
 
     }
+  );
 
 
-    navigator.geolocation.getCurrentPosition(
+/* =========================================================
+   STREET
+========================================================= */
 
-      position => {
+$("street")
+  .addEventListener(
+    "click",
+    ()=>{
 
-        userLocation = {
+      map.removeLayer(
+        satelliteLayer
+      );
 
-          lat:
-            position.coords.latitude,
+      map.addLayer(
+        streetLayer
+      );
 
-          lng:
-            position.coords.longitude
-
-        };
+    }
+  );
 
 
-        if(window.userMarker){
+/* =========================================================
+   SATELLITE
+========================================================= */
 
-          map.removeLayer(
-            window.userMarker
+$("satellite")
+  .addEventListener(
+    "click",
+    ()=>{
+
+      map.removeLayer(
+        streetLayer
+      );
+
+      map.addLayer(
+        satelliteLayer
+      );
+
+    }
+  );
+
+
+/* =========================================================
+   FULLSCREEN
+========================================================= */
+
+$("fullscreen")
+  .addEventListener(
+    "click",
+    ()=>{
+
+      document
+        .querySelector(".map-card")
+        ?.requestFullscreen?.();
+
+    }
+  );
+
+
+/* =========================================================
+   LOCATION
+========================================================= */
+
+$("locate")
+  .addEventListener(
+    "click",
+    ()=>{
+
+      if(
+        !navigator.geolocation
+      ){
+
+        alert(
+          "Browser tidak mendukung lokasi."
+        );
+
+        return;
+
+      }
+
+
+      navigator.geolocation
+        .getCurrentPosition(
+
+          position=>{
+
+            userLocation = {
+
+              lat:
+                position.coords.latitude,
+
+              lng:
+                position.coords.longitude
+
+            };
+
+
+            if(window.userMarker){
+
+              map.removeLayer(
+                window.userMarker
+              );
+
+            }
+
+
+            window.userMarker =
+
+              L.circleMarker(
+
+                [
+                  userLocation.lat,
+                  userLocation.lng
+                ],
+
+                {
+                  radius:9,
+                  color:"#ffffff",
+                  weight:2,
+                  fillColor:"#2878b5",
+                  fillOpacity:.95
+                }
+
+              )
+
+              .addTo(map)
+
+              .bindPopup(
+                "📍 Lokasi saya"
+              );
+
+
+            map.flyTo(
+
+              [
+                userLocation.lat,
+                userLocation.lng
+              ],
+
+              14
+
+            );
+
+
+            updateNearby();
+
+          },
+
+
+          error=>{
+
+            console.warn(error);
+
+            alert(
+              "Lokasi tidak dapat diperoleh. " +
+              "Pastikan izin lokasi browser aktif."
+            );
+
+          },
+
+          {
+            enableHighAccuracy:true,
+            timeout:10000,
+            maximumAge:60000
+          }
+
+        );
+
+    }
+  );
+
+
+/* =========================================================
+   SHARE WEBSITE
+========================================================= */
+
+$("share")
+  .addEventListener(
+    "click",
+    async()=>{
+
+      const shareData = {
+
+        title:
+          "Punggur Geo Data V7",
+
+        text:
+          "Peta interaktif Kecamatan Punggur",
+
+        url:
+          window.location.href
+
+      };
+
+
+      try{
+
+        if(
+          navigator.share
+        ){
+
+          await navigator.share(
+            shareData
+          );
+
+        }else{
+
+          await navigator.clipboard.writeText(
+            window.location.href
+          );
+
+          alert(
+            "Link berhasil disalin."
           );
 
         }
 
+      }catch(error){
 
-        window.userMarker =
-          L.circleMarker(
-            [
-              userLocation.lat,
-              userLocation.lng
-            ],
-            {
-              radius:9,
-              color:"#ffffff",
-              weight:2,
-              fillColor:"#2878b5",
-              fillOpacity:.95
-            }
-          )
-          .addTo(map)
-          .bindPopup(
-            "📍 Lokasi saya"
-          );
-
-
-        map.flyTo(
-          [
-            userLocation.lat,
-            userLocation.lng
-          ],
-          14
-        );
-
-
-        updateNearby();
-
-      },
-
-      ()=>{
-        alert(
-          "Lokasi tidak dapat diperoleh. Pastikan izin lokasi browser aktif."
-        );
-      }
-
-    );
-
-  }
-);
-
-
-$("share").addEventListener(
-  "click",
-  async ()=>{
-
-    const shareData = {
-
-      title:
-        "Punggur Geo Data V6",
-
-      text:
-        "Peta interaktif Kecamatan Punggur",
-
-      url:
-        location.href
-
-    };
-
-
-    try{
-
-      if(navigator.share){
-
-        await navigator.share(
-          shareData
-        );
-
-      }else{
-
-        await navigator.clipboard.writeText(
-          location.href
-        );
-
-        alert(
-          "Link berhasil disalin."
-        );
+        console.warn(error);
 
       }
 
-    }catch(error){}
-
-  }
-);
+    }
+  );
 
 
 /* =========================================================
    MODAL
 ========================================================= */
 
-$("closeModal").addEventListener(
-  "click",
-  ()=>{
-    $("modalBg")
-      .classList
-      .remove("show");
-  }
-);
-
-
-$("modalBg").addEventListener(
-  "click",
-  event => {
-
-    if(
-      event.target ===
-      $("modalBg")
-    ){
+$("closeModal")
+  .addEventListener(
+    "click",
+    ()=>{
 
       $("modalBg")
         .classList
         .remove("show");
 
     }
-
-  }
-);
+  );
 
 
-$("navigate").addEventListener(
-  "click",
-  ()=>{
+$("modalBg")
+  .addEventListener(
+    "click",
+    event=>{
 
-    if(!selectedLocation){
+      if(
+        event.target ===
+        $("modalBg")
+      ){
 
-      return;
+        $("modalBg")
+          .classList
+          .remove("show");
 
-    }
-
-
-    const lat =
-      Number(
-        selectedLocation.latitude
-      );
-
-
-    const lng =
-      Number(
-        selectedLocation.longitude
-      );
-
-
-    window.open(
-      "https://www.google.com/maps/dir/?api=1&destination=" +
-      lat +
-      "," +
-      lng,
-      "_blank"
-    );
-
-  }
-);
-
-
-$("copyCoordinates").addEventListener(
-  "click",
-  async ()=>{
-
-    if(!selectedLocation){
-
-      return;
+      }
 
     }
+  );
 
 
-    const text =
-      Number(selectedLocation.latitude)
-      .toFixed(6) +
-      ", " +
-      Number(selectedLocation.longitude)
-      .toFixed(6);
+/* =========================================================
+   NAVIGATE
+========================================================= */
+
+$("navigate")
+  .addEventListener(
+    "click",
+    ()=>{
+
+      if(!selectedLocation){
+
+        return;
+
+      }
 
 
-    try{
-
-      await navigator.clipboard.writeText(
-        text
-      );
-
-      alert(
-        "Koordinat berhasil disalin."
-      );
-
-    }catch(error){
-
-      alert(text);
-
-    }
-
-  }
-);
-
-
-$("shareLocation").addEventListener(
-  async ()=>{
-
-    if(!selectedLocation){
-
-      return;
-
-    }
-
-
-    const x =
-      selectedLocation;
-
-
-    const url =
-      location.origin +
-      location.pathname +
-      "?lokasi=" +
-      encodeURIComponent(
-        x.nama
-      );
-
-
-    try{
-
-      if(navigator.share){
-
-        await navigator.share({
-
-          title:x.nama,
-
-          text:
-            "Lokasi " +
-            x.nama,
-
-          url
-
-        });
-
-      }else{
-
-        await navigator.clipboard.writeText(
-          url
+      const lat =
+        Number(
+          selectedLocation.latitude
         );
 
+
+      const lng =
+        Number(
+          selectedLocation.longitude
+        );
+
+
+      if(
+        !Number.isFinite(lat) ||
+        !Number.isFinite(lng)
+      ){
+
+        return;
+
+      }
+
+
+      const url =
+        "https://www.google.com/maps/dir/?api=1" +
+        "&destination=" +
+        lat +
+        "," +
+        lng;
+
+
+      window.open(
+        url,
+        "_blank"
+      );
+
+    }
+  );
+
+
+/* =========================================================
+   COPY COORDINATES
+========================================================= */
+
+$("copyCoordinates")
+  .addEventListener(
+    "click",
+    async()=>{
+
+      if(!selectedLocation){
+
+        return;
+
+      }
+
+
+      const text =
+
+        Number(
+          selectedLocation.latitude
+        ).toFixed(6)
+
+        +
+
+        ", " +
+
+        Number(
+          selectedLocation.longitude
+        ).toFixed(6);
+
+
+      try{
+
+        await navigator.clipboard
+          .writeText(text);
+
+
         alert(
-          "Link lokasi berhasil disalin."
+          "Koordinat berhasil disalin."
+        );
+
+      }catch(error){
+
+        prompt(
+          "Salin koordinat:",
+          text
         );
 
       }
 
-    }catch(error){}
+    }
+  );
 
-  }
-);
+
+/* =========================================================
+   SHARE LOCATION
+========================================================= */
+
+$("shareLocation")
+  .addEventListener(
+    "click",
+    async()=>{
+
+      if(!selectedLocation){
+
+        return;
+
+      }
+
+
+      const x =
+        selectedLocation;
+
+
+      const lat =
+        Number(x.latitude);
+
+
+      const lng =
+        Number(x.longitude);
+
+
+      const url =
+        "https://www.google.com/maps/search/?api=1" +
+        "&query=" +
+        lat +
+        "," +
+        lng;
+
+
+      try{
+
+        if(
+          navigator.share
+        ){
+
+          await navigator.share({
+
+            title:
+              x.nama,
+
+            text:
+              "Lokasi " +
+              x.nama,
+
+            url:url
+
+          });
+
+        }else{
+
+          await navigator.clipboard
+            .writeText(url);
+
+          alert(
+            "Link lokasi berhasil disalin."
+          );
+
+        }
+
+      }catch(error){
+
+        console.warn(error);
+
+      }
+
+    }
+  );
 
 
 /* =========================================================
    START
 ========================================================= */
 
-loadLocations();
+(async function(){
 
-loadWeather();
+  /*
+    Render peta lebih dulu.
+    Jadi kalau data gagal,
+    peta tetap muncul.
+  */
+
+  setTimeout(
+    ()=>{
+      map.invalidateSize();
+    },
+    300
+  );
+
+
+  await Promise.allSettled([
+
+    loadLocations(),
+
+    loadWeather()
+
+  ]);
+
+})();
 
 </script>
 
