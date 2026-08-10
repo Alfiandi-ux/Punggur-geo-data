@@ -1,7 +1,12 @@
 {
   "type": "FeatureCollection",
   "name": "punggur_points",
-  "crs": { "type": "name", "properties": { "name": "EPSG:4326" } },
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "EPSG:4326"
+    }
+  },
   "features": [
     {
       "type": "Feature",
@@ -12,7 +17,13 @@
         "provinsi": "Lampung",
         "sumber": "Wikipedia (koordinat pusat kecamatan)"
       },
-      "geometry": { "type": "Point", "coordinates": [105.27616093702213, -5.0383065874663115] }
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.27616093702213,
+          -5.0383065874663115
+        ]
+      }
     },
     {
       "type": "Feature",
@@ -23,7 +34,13 @@
         "kode_pos": "34152",
         "sumber": "kodepos.co.id"
       },
-      "geometry": { "type": "Point", "coordinates": [105.2737212, -5.0034587] }
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.2737212,
+          -5.0034587
+        ]
+      }
     },
     {
       "type": "Feature",
@@ -32,9 +49,15 @@
         "tipe": "desa",
         "kode_kemendagri": "18.02.06.2002",
         "kode_pos": "34152",
-        "sumber": "kodepos.co.id"
+        "sumber": "Google Maps"
       },
-      "geometry": { "type": "Point", "coordinates": [105.3017, -5.0585] }
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.2994882,
+          -5.0552552
+        ]
+      }
     },
     {
       "type": "Feature",
@@ -44,9 +67,15 @@
         "kode_kemendagri": "18.02.06.2006",
         "kode_pos": "34152",
         "elevasi_m": 43,
-        "sumber": "Wikidata"
+        "sumber": "Google Maps"
       },
-      "geometry": { "type": "Point", "coordinates": [105.24908, -5.01714] }
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.2570432,
+          -5.0229265
+        ]
+      }
     },
     {
       "type": "Feature",
@@ -55,9 +84,15 @@
         "tipe": "desa",
         "kode_kemendagri": "18.02.06.2009",
         "kode_pos": "34152",
-        "sumber": "Wikidata"
+        "sumber": "Google Maps"
       },
-      "geometry": { "type": "Point", "coordinates": [105.28537, -5.02174] }
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.2860963,
+          -5.0332688
+        ]
+      }
     },
     {
       "type": "Feature",
@@ -66,9 +101,49 @@
         "tipe": "desa",
         "kode_kemendagri": "18.02.06.2004",
         "kode_pos": "34152",
-        "sumber": "Wikidata"
+        "sumber": "Google Maps"
       },
-      "geometry": { "type": "Point", "coordinates": [105.27940, -5.05700] }
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.2749651,
+          -5.0501194
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nama": "Mojo Pahit",
+        "tipe": "desa",
+        "kode_kemendagri": "18.02.06.2007",
+        "kode_pos": "34152",
+        "sumber": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.2492546,
+          -4.9961666
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nama": "Nunggal Rejo",
+        "tipe": "desa",
+        "kode_kemendagri": "18.02.06.2001",
+        "kode_pos": "34152",
+        "sumber": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.279687,
+          -5.066278
+        ]
+      }
     },
     {
       "type": "Feature",
@@ -80,7 +155,13 @@
         "elevasi_m": 49,
         "sumber": "kodepos.co.id"
       },
-      "geometry": { "type": "Point", "coordinates": [105.3273066, -5.0454785] }
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.3273066,
+          -5.0454785
+        ]
+      }
     },
     {
       "type": "Feature",
@@ -92,7 +173,13 @@
         "elevasi_m": 50,
         "sumber": "kodepos.co.id"
       },
-      "geometry": { "type": "Point", "coordinates": [105.2595653, -5.0395882] }
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.2595653,
+          -5.0395882
+        ]
+      }
     }
   ]
 }
