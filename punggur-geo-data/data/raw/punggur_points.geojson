@@ -1,0 +1,50 @@
+{
+  "type": "FeatureCollection",
+  "name": "punggur_points",
+  "crs": { "type": "name", "properties": { "name": "EPSG:4326" } },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "nama": "Kecamatan Punggur",
+        "tipe": "kecamatan",
+        "kabupaten": "Lampung Tengah",
+        "provinsi": "Lampung",
+        "sumber": "Wikipedia (koordinat pusat kecamatan)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [105.27616093702213, -5.0383065874663115]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nama": "Sri Sawahan",
+        "tipe": "desa",
+        "kode_kemendagri": "18.02.06.2003",
+        "elevasi_m": 49,
+        "sumber": "kodepos.co.id"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [105.3273066, -5.0454785]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nama": "Tanggul Angin",
+        "tipe": "desa",
+        "kode_kemendagri": "18.02.06.2005",
+        "kode_pos": "34152",
+        "elevasi_m": 50,
+        "sumber": "kodepos.co.id"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [105.2595653, -5.0395882]
+      }
+    }
+  ]
+}
