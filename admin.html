@@ -1,103 +1,1393 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#c95e1a">
-<title>Admin — Punggur Geo Data V5</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Punggur Geo Data</title>
+
 <style>
-:root{--a:#c95e1a;--bg:#f3f1ec;--card:#fffdf8;--text:#292824;--muted:#77736b;--line:#dfdbd1;--danger:#b43b3b}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
-header{max-width:1150px;margin:auto;padding:18px 16px;display:flex;justify-content:space-between;gap:10px;align-items:center}
-h1{margin:0;font-size:1.4rem}.sub{margin:3px 0;color:var(--muted);font-size:.82rem}.wrap{max-width:1150px;margin:auto;padding:0 16px 30px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 5px 20px #0000000b;margin-bottom:12px}
-button,input,select{font:inherit;border:1px solid var(--line);border-radius:9px;background:#fff;padding:9px 11px}button{cursor:pointer;font-weight:650}.primary{background:var(--a);border-color:var(--a);color:#fff}.danger{color:var(--danger);border-color:#e1b6b6;background:#fff7f7}
-.auth{max-width:430px;margin:50px auto}.auth h2{margin-top:0}.field{margin:9px 0}.field label{font-size:.78rem;color:var(--muted);display:block}.field input{width:100%;margin-top:4px}
-#app{display:none}.bar{display:flex;gap:7px;flex-wrap:wrap;justify-content:space-between;align-items:center}.grid{display:grid;grid-template-columns:1fr 360px;gap:12px}#map{height:470px;border-radius:11px}.form{display:grid;grid-template-columns:1fr 1fr;gap:8px}.form .full{grid-column:1/-1}.form label{font-size:.76rem;color:var(--muted)}.form input,.form select{display:block;width:100%;margin-top:4px}
-table{width:100%;border-collapse:collapse;font-size:.82rem}th,td{text-align:left;padding:9px 6px;border-bottom:1px solid var(--line)}th{color:#8a857c}.tablewrap{overflow:auto}.actions{display:flex;gap:5px}.actions button{padding:6px 8px;font-size:.72rem}
-.notice{padding:9px;border-radius:9px;background:#fff2e8;border:1px solid #efd1bd;color:#75431f;font-size:.78rem;margin-bottom:10px}.hidden{display:none}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#282724;color:#fff;padding:9px 13px;border-radius:9px;opacity:0;transition:.2s;z-index:9}.toast.show{opacity:1}
-@media(max-width:800px){.grid{grid-template-columns:1fr}.form{grid-template-columns:1fr}.form .full{grid-column:auto}#map{height:420px}}
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, Arial, sans-serif;
+    background: #f4f6f9;
+    color: #1f2937;
+}
+
+header {
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 16px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.header-inner {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.logo span {
+    color: #2563eb;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 25px auto;
+    padding: 0 16px;
+}
+
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,.05);
+}
+
+.login-box {
+    max-width: 420px;
+    margin: 80px auto;
+}
+
+h1, h2, h3 {
+    margin-top: 0;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 14px;
+    background: #fff;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+button {
+    border: 0;
+    border-radius: 10px;
+    padding: 11px 16px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: white;
+}
+
+.btn-success {
+    background: #16a34a;
+    color: white;
+}
+
+.btn-danger {
+    background: #dc2626;
+    color: white;
+}
+
+.btn-secondary {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+button:hover {
+    opacity: .9;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.stat {
+    background: white;
+    padding: 18px;
+    border-radius: 14px;
+    box-shadow: 0 4px 15px rgba(0,0,0,.04);
+}
+
+.stat small {
+    color: #6b7280;
+}
+
+.stat strong {
+    display: block;
+    font-size: 25px;
+    margin-top: 6px;
+}
+
+.search-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.search-row input {
+    flex: 1;
+}
+
+.desa-list {
+    display: grid;
+    gap: 10px;
+}
+
+.desa-item {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.desa-info strong {
+    display: block;
+    font-size: 16px;
+}
+
+.desa-info small {
+    color: #6b7280;
+}
+
+.actions {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+.notice {
+    padding: 12px 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    display: none;
+}
+
+.notice.success {
+    display: block;
+    background: #dcfce7;
+    color: #166534;
+}
+
+.notice.error {
+    display: block;
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.top-actions {
+    display: flex;
+    gap: 8px;
+}
+
+@media(max-width: 800px) {
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .desa-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media(max-width: 520px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .header-inner {
+        align-items: flex-start;
+    }
+
+    .top-actions {
+        flex-direction: column;
+    }
+}
 </style>
 </head>
+
 <body>
-<header><div><h1>🔐 Punggur Geo Data — Admin V5</h1><p class="sub">Kelola lokasi secara online dengan Supabase</p></div><div><a href="index.html"><button>← Publik</button></a> <button id="logout" class="danger">Keluar</button></div></header>
 
-<main class="wrap">
-<section id="login" class="card auth">
-<h2>Login Admin</h2>
-<p class="sub">Gunakan akun yang dibuat di Supabase Authentication.</p>
-<div class="field"><label>Email</label><input id="email" type="email" autocomplete="username"></div>
-<div class="field"><label>Password</label><input id="password" type="password" autocomplete="current-password"></div>
-<button id="loginBtn" class="primary" style="width:100%">Masuk</button>
-</section>
+<header>
+    <div class="header-inner">
+        <div class="logo">
+            Punggur <span>Geo Data</span>
+        </div>
 
-<section id="app">
-<div class="notice">V5 menggunakan Supabase. Pastikan <code>supabase-config.js</code> sudah diisi dan SQL schema sudah dijalankan. Gunakan hanya <b>anon/publishable key</b> di frontend.</div>
-<div class="card bar"><div><b id="who">—</b><div class="sub" id="status">Memuat…</div></div><div><button id="refresh">↻ Refresh</button> <button id="new">＋ Lokasi</button> <button id="export">⬇️ Export GeoJSON</button></div></div>
-<div class="grid">
-<section class="card"><div id="map"></div></section>
-<section class="card">
-<h3 style="margin-top:0">✏️ Editor lokasi</h3>
-<div class="form">
-<label>Nama<input id="fNama"></label><label>Tipe<select id="fTipe"><option value="desa">Desa</option><option value="kecamatan">Kecamatan</option></select></label>
-<label>Latitude<input id="fLat" type="number" step="any"></label><label>Longitude<input id="fLng" type="number" step="any"></label>
-<label>Kode Kemendagri<input id="fKode"></label><label>Kode Pos<input id="fPos"></label>
-<label class="full">Sumber<input id="fSumber"></label>
+        <div class="top-actions">
+            <a href="index.html">
+                <button class="btn-secondary">🌐 Website</button>
+            </a>
+
+            <button class="btn-danger" onclick="logout()">
+                Keluar
+            </button>
+        </div>
+    </div>
+</header>
+
+<div id="loginPage" class="container">
+
+    <div class="card login-box">
+
+        <h1>🔐 Admin Panel</h1>
+
+        <p style="color:#6b7280">
+            Masuk untuk mengelola data Punggur Geo Data.
+        </p>
+
+        <div id="loginNotice" class="notice"></div>
+
+        <div class="form-group">
+            <label>Password Admin</label>
+            <input
+                type="password"
+                id="password"
+                placeholder="Masukkan password"
+            >
+        </div>
+
+        <button
+            class="btn-primary"
+            style="width:100%"
+            onclick="login()"
+        >
+            Masuk
+        </button>
+
+    </div>
 </div>
-<div style="margin-top:10px;display:flex;gap:7px;flex-wrap:wrap"><button id="save" class="primary">💾 Simpan</button><button id="cancel">Batal</button><button id="delete" class="danger hidden">🗑️ Hapus</button></div>
-</section>
-</div>
-<section class="card"><h3 style="margin-top:0">📍 Data lokasi</h3><div class="tablewrap"><table><thead><tr><th>Nama</th><th>Tipe</th><th>Koordinat</th><th>Aksi</th></tr></thead><tbody id="tbody"></tbody></table></div></section>
-</section>
-</main>
-<div id="toast" class="toast"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="supabase-config.js"></script>
+<div id="adminPage" class="container hidden">
+
+    <div id="notice" class="notice"></div>
+
+    <div class="stats">
+
+        <div class="stat">
+            <small>Total Desa</small>
+            <strong id="totalDesa">0</strong>
+        </div>
+
+        <div class="stat">
+            <small>Total Penduduk</small>
+            <strong id="totalPenduduk">0</strong>
+        </div>
+
+        <div class="stat">
+            <small>Total Luas</small>
+            <strong id="totalLuas">0</strong>
+        </div>
+
+        <div class="stat">
+            <small>Tahun Data</small>
+            <strong id="tahunData">-</strong>
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
+
+            <div>
+                <h2>Data Desa</h2>
+                <p style="color:#6b7280">
+                    Kelola data lokasi Punggur.
+                </p>
+            </div>
+
+            <button
+                class="btn-success"
+                onclick="newVillage()"
+            >
+                + Tambah Desa
+            </button>
+
+        </div>
+
+        <div class="search-row">
+            <input
+                id="search"
+                placeholder="🔎 Cari nama desa..."
+                oninput="renderList()"
+            >
+        </div>
+
+        <div id="desaList" class="desa-list"></div>
+
+    </div>
+
+    <div id="editor" class="card hidden">
+
+        <h2 id="editorTitle">Edit Desa</h2>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>ID</label>
+                <input id="f_id">
+            </div>
+
+            <div class="form-group">
+                <label>Nama Desa</label>
+                <input id="f_nama">
+            </div>
+
+            <div class="form-group">
+                <label>Tipe</label>
+                <input id="f_tipe">
+            </div>
+
+            <div class="form-group">
+                <label>Kode Kemendagri</label>
+                <input id="f_kode_kemendagri">
+            </div>
+
+            <div class="form-group">
+                <label>Kode Pos</label>
+                <input id="f_kode_pos">
+            </div>
+
+            <div class="form-group">
+                <label>Kabupaten</label>
+                <input id="f_kabupaten">
+            </div>
+
+            <div class="form-group">
+                <label>Provinsi</label>
+                <input id="f_provinsi">
+            </div>
+
+            <div class="form-group">
+                <label>Latitude</label>
+                <input type="number" step="any" id="f_latitude">
+            </div>
+
+            <div class="form-group">
+                <label>Longitude</label>
+                <input type="number" step="any" id="f_longitude">
+            </div>
+
+            <div class="form-group">
+                <label>Elevasi (m)</label>
+                <input type="number" step="any" id="f_elevasi_m">
+            </div>
+
+            <div class="form-group">
+                <label>Jumlah Penduduk</label>
+                <input type="number" id="f_jumlah_penduduk">
+            </div>
+
+            <div class="form-group">
+                <label>Laki-laki</label>
+                <input type="number" id="f_laki_laki">
+            </div>
+
+            <div class="form-group">
+                <label>Perempuan</label>
+                <input type="number" id="f_perempuan">
+            </div>
+
+            <div class="form-group">
+                <label>Jumlah KK</label>
+                <input type="number" id="f_jumlah_kk">
+            </div>
+
+            <div class="form-group">
+                <label>Keluarga Pengguna Listrik</label>
+                <input type="number" id="f_jumlah_keluarga_pengguna_listrik">
+            </div>
+
+            <div class="form-group">
+                <label>Luas km²</label>
+                <input type="number" step="any" id="f_luas_km2">
+            </div>
+
+            <div class="form-group">
+                <label>Luas ha</label>
+                <input type="number" step="any" id="f_luas_ha">
+            </div>
+
+            <div class="form-group">
+                <label>Jumlah RT</label>
+                <input type="number" id="f_jumlah_rt">
+            </div>
+
+            <div class="form-group">
+                <label>Jumlah RW</label>
+                <input type="number" id="f_jumlah_rw">
+            </div>
+
+            <div class="form-group">
+                <label>Tempat Ibadah</label>
+                <input type="number" id="f_tempat_ibadah">
+            </div>
+
+            <div class="form-group">
+                <label>Masjid</label>
+                <input type="number" id="f_masjid">
+            </div>
+
+            <div class="form-group">
+                <label>Mushola</label>
+                <input type="number" id="f_mushola">
+            </div>
+
+            <div class="form-group">
+                <label>Gereja</label>
+                <input type="number" id="f_gereja">
+            </div>
+
+            <div class="form-group">
+                <label>Pasar</label>
+                <input type="number" id="f_pasar">
+            </div>
+
+            <div class="form-group">
+                <label>Mini Market</label>
+                <input type="number" id="f_mini_market">
+            </div>
+
+            <div class="form-group">
+                <label>Restoran / Rumah Makan</label>
+                <input type="number" id="f_restoran_rumah_makan">
+            </div>
+
+            <div class="form-group">
+                <label>Koperasi</label>
+                <input type="number" id="f_koperasi">
+            </div>
+
+            <div class="form-group">
+                <label>Bank</label>
+                <input type="number" id="f_bank">
+            </div>
+
+            <div class="form-group">
+                <label>BPR</label>
+                <input type="number" id="f_bpr">
+            </div>
+
+            <div class="form-group">
+                <label>BTS</label>
+                <input type="number" id="f_bts">
+            </div>
+
+            <div class="form-group">
+                <label>Operator Seluler</label>
+                <input type="number" id="f_operator_seluler">
+            </div>
+
+            <div class="form-group">
+                <label>Kepadatan Penduduk</label>
+                <input type="number" step="any" id="f_kepadatan_penduduk">
+            </div>
+
+            <div class="form-group">
+                <label>Persentase Penduduk</label>
+                <input type="number" step="any" id="f_persentase_penduduk">
+            </div>
+
+            <div class="form-group">
+                <label>Rasio Jenis Kelamin</label>
+                <input type="number" step="any" id="f_rasio_jenis_kelamin">
+            </div>
+
+            <div class="form-group">
+                <label>Kekuatan Sinyal</label>
+                <input id="f_kekuatan_sinyal">
+            </div>
+
+            <div class="form-group">
+                <label>Jenis Internet</label>
+                <input id="f_jenis_sinyal_internet">
+            </div>
+
+            <div class="form-group">
+                <label>Angkutan Umum</label>
+                <input id="f_angkutan_umum">
+            </div>
+
+            <div class="form-group">
+                <label>Jenis Jalan</label>
+                <input id="f_jenis_jalan">
+            </div>
+
+            <div class="form-group">
+                <label>Akses Jalan Sepanjang Tahun</label>
+                <select id="f_akses_jalan_sepanjang_tahun">
+                    <option value="true">Ya</option>
+                    <option value="false">Tidak</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Kantor Pos</label>
+                <input id="f_kantor_pos">
+            </div>
+
+            <div class="form-group">
+                <label>Agen Ekspedisi</label>
+                <input id="f_agen_ekspedisi_swasta">
+            </div>
+
+            <div class="form-group">
+                <label>Tahun Data</label>
+                <input type="number" id="f_tahun_data">
+            </div>
+
+            <div class="form-group full">
+                <label>Sumber</label>
+                <input id="f_sumber">
+            </div>
+
+            <div class="form-group full">
+                <label>Catatan Data</label>
+                <textarea id="f_catatan_data"></textarea>
+            </div>
+
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:15px">
+
+            <button
+                class="btn-success"
+                onclick="saveVillage()"
+            >
+                💾 Simpan
+            </button>
+
+            <button
+                class="btn-secondary"
+                onclick="closeEditor()"
+            >
+                Batal
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
 <script>
-const cfg=window.SUPABASE_CONFIG||{};
-const sb=cfg.url&&cfg.anonKey&&!cfg.url.includes('YOUR-PROJECT')?supabase.createClient(cfg.url,cfg.anonKey):null;
-const $=id=>document.getElementById(id);let rows=[],editing=null,markers=[],map;
-function toast(x){$('toast').textContent=x;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2200)}
-function validCfg(){if(!sb){toast('Isi supabase-config.js dulu');return false}return true}
-function resetForm(){editing=null;$('fNama').value='';$('fTipe').value='desa';$('fLat').value='';$('fLng').value='';$('fKode').value='';$('fPos').value='';$('fSumber').value='';$('delete').classList.add('hidden')}
-function edit(r){editing=r;$('fNama').value=r.nama||'';$('fTipe').value=r.tipe||'desa';$('fLat').value=r.latitude;$('fLng').value=r.longitude;$('fKode').value=r.kode_kemendagri||'';$('fPos').value=r.kode_pos||'';$('fSumber').value=r.sumber||'';$('delete').classList.remove('hidden');focus(r)}
-function focus(r){map.flyTo([r.latitude,r.longitude],15,{duration:.5});markers.forEach(m=>{if(m._id===r.id)m.openPopup()})}
-function render(){
- markers.forEach(m=>map.removeLayer(m));markers=[];
- const tb=$('tbody');tb.innerHTML='';
- rows.forEach(r=>{
-  const m=L.circleMarker([r.latitude,r.longitude],{radius:r.tipe==='kecamatan'?10:8,fillColor:r.tipe==='kecamatan'?'#292824':'#c95e1a',color:'#fff',weight:2,fillOpacity:.9}).addTo(map).bindPopup('<b>'+esc(r.nama)+'</b><br>'+esc(r.tipe));
-  m._id=r.id;markers.push(m);
-  const tr=document.createElement('tr');tr.innerHTML='<td><b>'+esc(r.nama)+'</b></td><td>'+esc(r.tipe)+'</td><td>'+Number(r.latitude).toFixed(5)+', '+Number(r.longitude).toFixed(5)+'</td><td><div class="actions"><button>Edit</button><button class="danger">Hapus</button></div></td>';
-  tr.children[3].children[0].children[0].onclick=()=>edit(r);tr.children[3].children[0].children[1].onclick=()=>remove(r);tr.onclick=e=>{if(e.target.tagName!=='BUTTON')focus(r)};tb.appendChild(tr)
- });
- $('status').textContent=rows.length+' lokasi';
- if(markers.length)map.fitBounds(L.featureGroup(markers).getBounds().pad(.12))
+
+/*
+=========================================================
+KONFIGURASI
+=========================================================
+*/
+
+const API_URL = "https://GANTI-DENGAN-WORKER-ANDA.workers.dev";
+
+/*
+=========================================================
+STATE
+=========================================================
+*/
+
+let villages = [];
+let editingIndex = -1;
+
+/*
+=========================================================
+LOGIN
+=========================================================
+*/
+
+function login() {
+
+    const password =
+        document.getElementById("password").value.trim();
+
+    if (!password) {
+        showLoginNotice(
+            "Masukkan password admin.",
+            "error"
+        );
+        return;
+    }
+
+    sessionStorage.setItem(
+        "punggur_admin_password",
+        password
+    );
+
+    loadData();
 }
-function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-async function load(){
- if(!validCfg())return;
- const {data,error}=await sb.from('locations').select('*').order('nama');
- if(error){toast(error.message);return}rows=data||[];render()
+
+/*
+=========================================================
+LOAD DATA
+=========================================================
+*/
+
+async function loadData() {
+
+    try {
+
+        const password =
+            sessionStorage.getItem(
+                "punggur_admin_password"
+            );
+
+        const response = await fetch(
+            API_URL + "/data",
+            {
+                headers: {
+                    "Authorization":
+                        "Bearer " + password
+                }
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                "Password salah atau server tidak tersedia."
+            );
+        }
+
+        villages = await response.json();
+
+        document
+            .getElementById("loginPage")
+            .classList.add("hidden");
+
+        document
+            .getElementById("adminPage")
+            .classList.remove("hidden");
+
+        updateStats();
+        renderList();
+
+    } catch (error) {
+
+        sessionStorage.removeItem(
+            "punggur_admin_password"
+        );
+
+        showLoginNotice(
+            error.message,
+            "error"
+        );
+    }
 }
-async function remove(r){if(!confirm('Hapus '+r.nama+'?'))return;const {error}=await sb.from('locations').delete().eq('id',r.id);if(error)toast(error.message);else{toast('Dihapus');resetForm();load()}}
-$('save').onclick=async()=>{
- if(!validCfg())return;
- const payload={nama:$('fNama').value.trim(),tipe:$('fTipe').value,latitude:Number($('fLat').value),longitude:Number($('fLng').value),kode_kemendagri:$('fKode').value.trim()||null,kode_pos:$('fPos').value.trim()||null,sumber:$('fSumber').value.trim()||null};
- if(!payload.nama||!Number.isFinite(payload.latitude)||!Number.isFinite(payload.longitude))return toast('Nama dan koordinat wajib valid');
- let res=editing?await sb.from('locations').update(payload).eq('id',editing.id):await sb.from('locations').insert(payload);
- if(res.error)toast(res.error.message);else{toast('Tersimpan');resetForm();load()}
-};
-$('delete').onclick=()=>editing&&remove(editing);$('cancel').onclick=resetForm;$('new').onclick=resetForm;$('refresh').onclick=load;
-$('logout').onclick=async()=>{if(sb)await sb.auth.signOut();location.reload()};
-$('loginBtn').onclick=async()=>{if(!validCfg())return;const {error}=await sb.auth.signInWithPassword({email:$('email').value,password:$('password').value});if(error)toast(error.message);else init()};
-$('export').onclick=()=>{const geo={type:'FeatureCollection',features:rows.map(r=>({type:'Feature',properties:{nama:r.nama,tipe:r.tipe,kode_kemendagri:r.kode_kemendagri,kode_pos:r.kode_pos,sumber:r.sumber},geometry:{type:'Point',coordinates:[r.longitude,r.latitude]}}))};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(geo,null,2)],{type:'application/geo+json'}));a.download='punggur_points_v5.geojson';a.click()};
-function initMap(){map=L.map('map').setView([-5.0383,105.2762],12);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(map)}
-async function init(){if(!validCfg())return;const {data:{session}}=await sb.auth.getSession();if(!session){$('login').style.display='block';$('app').style.display='none';return}$('login').style.display='none';$('app').style.display='block';$('who').textContent=session.user.email; if(!map)initMap();load()}
-if(sb)sb.auth.onAuthStateChange(()=>init());init();
+
+/*
+=========================================================
+STATS
+=========================================================
+*/
+
+function updateStats() {
+
+    document.getElementById(
+        "totalDesa"
+    ).textContent = villages.length;
+
+    const penduduk =
+        villages.reduce(
+            (total, v) =>
+                total + Number(v.jumlah_penduduk || 0),
+            0
+        );
+
+    const luas =
+        villages.reduce(
+            (total, v) =>
+                total + Number(v.luas_km2 || 0),
+            0
+        );
+
+    document.getElementById(
+        "totalPenduduk"
+    ).textContent =
+        penduduk.toLocaleString("id-ID");
+
+    document.getElementById(
+        "totalLuas"
+    ).textContent =
+        luas.toFixed(2) + " km²";
+
+    const tahun =
+        villages
+        .map(v => v.tahun_data)
+        .filter(Boolean)
+        .sort()
+        .pop();
+
+    document.getElementById(
+        "tahunData"
+    ).textContent = tahun || "-";
+}
+
+/*
+=========================================================
+LIST
+=========================================================
+*/
+
+function renderList() {
+
+    const container =
+        document.getElementById("desaList");
+
+    const keyword =
+        document
+        .getElementById("search")
+        .value
+        .toLowerCase();
+
+    const filtered =
+        villages
+        .map((v, index) => ({
+            ...v,
+            _index: index
+        }))
+        .filter(v =>
+            String(v.nama || "")
+            .toLowerCase()
+            .includes(keyword)
+        );
+
+    if (!filtered.length) {
+
+        container.innerHTML =
+            "<p>Data desa tidak ditemukan.</p>";
+
+        return;
+    }
+
+    container.innerHTML =
+        filtered.map(v => `
+
+            <div class="desa-item">
+
+                <div class="desa-info">
+
+                    <strong>
+                        ${escapeHtml(v.nama || "-")}
+                    </strong>
+
+                    <small>
+                        ${escapeHtml(v.kode_kemendagri || "-")}
+                        ·
+                        ${(v.jumlah_penduduk || 0)
+                            .toLocaleString("id-ID")}
+                        penduduk
+                    </small>
+
+                </div>
+
+                <div class="actions">
+
+                    <button
+                        class="btn-primary"
+                        onclick="editVillage(${v._index})"
+                    >
+                        ✏️ Edit
+                    </button>
+
+                    <button
+                        class="btn-danger"
+                        onclick="deleteVillage(${v._index})"
+                    >
+                        🗑️ Hapus
+                    </button>
+
+                </div>
+
+            </div>
+
+        `).join("");
+}
+
+/*
+=========================================================
+NEW
+=========================================================
+*/
+
+function newVillage() {
+
+    editingIndex = -1;
+
+    document.getElementById(
+        "editorTitle"
+    ).textContent = "Tambah Desa";
+
+    clearForm();
+
+    document
+        .getElementById("editor")
+        .classList.remove("hidden");
+
+    window.scrollTo({
+        top: document
+            .getElementById("editor")
+            .offsetTop - 80,
+        behavior: "smooth"
+    });
+}
+
+/*
+=========================================================
+EDIT
+=========================================================
+*/
+
+function editVillage(index) {
+
+    editingIndex = index;
+
+    const v = villages[index];
+
+    document.getElementById(
+        "editorTitle"
+    ).textContent =
+        "Edit — " + (v.nama || "Desa");
+
+    Object.keys(v).forEach(key => {
+
+        if (key.startsWith("_")) return;
+
+        const element =
+            document.getElementById("f_" + key);
+
+        if (!element) return;
+
+        if (key === "akses_jalan_sepanjang_tahun") {
+
+            element.value =
+                v[key] ? "true" : "false";
+
+        } else {
+
+            element.value =
+                v[key] === null ||
+                v[key] === undefined
+                    ? ""
+                    : v[key];
+
+        }
+
+    });
+
+    document
+        .getElementById("editor")
+        .classList.remove("hidden");
+
+    window.scrollTo({
+        top: document
+            .getElementById("editor")
+            .offsetTop - 80,
+        behavior: "smooth"
+    });
+}
+
+/*
+=========================================================
+CLEAR FORM
+=========================================================
+*/
+
+function clearForm() {
+
+    document
+        .querySelectorAll("#editor input, #editor textarea")
+        .forEach(el => el.value = "");
+
+    document.getElementById(
+        "f_akses_jalan_sepanjang_tahun"
+    ).value = "true";
+}
+
+/*
+=========================================================
+GET FORM DATA
+=========================================================
+*/
+
+function getFormData() {
+
+    const old =
+        editingIndex >= 0
+            ? villages[editingIndex]
+            : {};
+
+    const data = {
+        ...old
+    };
+
+    Object.keys(data).forEach(key => {
+
+        if (key.startsWith("_")) {
+            delete data[key];
+        }
+
+    });
+
+    const fields = [
+        "id",
+        "nama",
+        "tipe",
+        "kode_kemendagri",
+        "kode_pos",
+        "kabupaten",
+        "provinsi",
+        "latitude",
+        "longitude",
+        "elevasi_m",
+        "jumlah_penduduk",
+        "laki_laki",
+        "perempuan",
+        "jumlah_kk",
+        "jumlah_keluarga_pengguna_listrik",
+        "luas_km2",
+        "luas_ha",
+        "jumlah_rt",
+        "jumlah_rw",
+        "tempat_ibadah",
+        "masjid",
+        "mushola",
+        "gereja",
+        "pasar",
+        "mini_market",
+        "restoran_rumah_makan",
+        "koperasi",
+        "bank",
+        "bpr",
+        "bts",
+        "operator_seluler",
+        "kepadatan_penduduk",
+        "persentase_penduduk",
+        "rasio_jenis_kelamin",
+        "kekuatan_sinyal",
+        "jenis_sinyal_internet",
+        "angkutan_umum",
+        "jenis_jalan",
+        "akses_jalan_sepanjang_tahun",
+        "kantor_pos",
+        "agen_ekspedisi_swasta",
+        "tahun_data",
+        "sumber",
+        "catatan_data"
+    ];
+
+    const numericFields = [
+        "latitude",
+        "longitude",
+        "elevasi_m",
+        "jumlah_penduduk",
+        "laki_laki",
+        "perempuan",
+        "jumlah_kk",
+        "jumlah_keluarga_pengguna_listrik",
+        "luas_km2",
+        "luas_ha",
+        "jumlah_rt",
+        "jumlah_rw",
+        "tempat_ibadah",
+        "masjid",
+        "mushola",
+        "gereja",
+        "pasar",
+        "mini_market",
+        "restoran_rumah_makan",
+        "koperasi",
+        "bank",
+        "bpr",
+        "bts",
+        "operator_seluler",
+        "kepadatan_penduduk",
+        "persentase_penduduk",
+        "rasio_jenis_kelamin",
+        "tahun_data"
+    ];
+
+    fields.forEach(key => {
+
+        const el =
+            document.getElementById("f_" + key);
+
+        if (!el) return;
+
+        if (
+            numericFields.includes(key)
+        ) {
+
+            data[key] =
+                el.value === ""
+                    ? null
+                    : Number(el.value);
+
+        } else if (
+            key ===
+            "akses_jalan_sepanjang_tahun"
+        ) {
+
+            data[key] =
+                el.value === "true";
+
+        } else {
+
+            data[key] =
+                el.value.trim() === ""
+                    ? null
+                    : el.value.trim();
+
+        }
+
+    });
+
+    return data;
+}
+
+/*
+=========================================================
+SAVE
+=========================================================
+*/
+
+async function saveVillage() {
+
+    const password =
+        sessionStorage.getItem(
+            "punggur_admin_password"
+        );
+
+    if (!password) {
+
+        logout();
+        return;
+    }
+
+    const data = getFormData();
+
+    if (!data.nama) {
+
+        showNotice(
+            "Nama desa wajib diisi.",
+            "error"
+        );
+
+        return;
+    }
+
+    if (
+        !data.latitude ||
+        !data.longitude
+    ) {
+
+        showNotice(
+            "Latitude dan longitude wajib diisi.",
+            "error"
+        );
+
+        return;
+    }
+
+    if (editingIndex >= 0) {
+
+        villages[editingIndex] = data;
+
+    } else {
+
+        villages.push(data);
+
+    }
+
+    try {
+
+        const response = await fetch(
+            API_URL + "/data",
+            {
+                method: "PUT",
+
+                headers: {
+                    "Content-Type":
+                        "application/json",
+
+                    "Authorization":
+                        "Bearer " + password
+                },
+
+                body: JSON.stringify(
+                    villages
+                )
+            }
+        );
+
+        const result =
+            await response.json();
+
+        if (!response.ok) {
+
+            throw new Error(
+                result.error ||
+                "Gagal menyimpan data."
+            );
+        }
+
+        showNotice(
+            "Data berhasil disimpan ke GitHub.",
+            "success"
+        );
+
+        updateStats();
+        renderList();
+        closeEditor();
+
+    } catch (error) {
+
+        showNotice(
+            error.message,
+            "error"
+        );
+    }
+}
+
+/*
+=========================================================
+DELETE
+=========================================================
+*/
+
+async function deleteVillage(index) {
+
+    const village =
+        villages[index];
+
+    if (
+        !confirm(
+            `Hapus data "${village.nama}"?`
+        )
+    ) {
+        return;
+    }
+
+    villages.splice(index, 1);
+
+    await saveAll();
+
+}
+
+/*
+=========================================================
+SAVE ALL
+=========================================================
+*/
+
+async function saveAll() {
+
+    const password =
+        sessionStorage.getItem(
+            "punggur_admin_password"
+        );
+
+    try {
+
+        const response = await fetch(
+            API_URL + "/data",
+            {
+                method: "PUT",
+
+                headers: {
+                    "Content-Type":
+                        "application/json",
+
+                    "Authorization":
+                        "Bearer " + password
+                },
+
+                body: JSON.stringify(
+                    villages
+                )
+            }
+        );
+
+        const result =
+            await response.json();
+
+        if (!response.ok) {
+
+            throw new Error(
+                result.error ||
+                "Gagal menyimpan."
+            );
+        }
+
+        showNotice(
+            "Perubahan berhasil disimpan ke GitHub.",
+            "success"
+        );
+
+        updateStats();
+        renderList();
+
+    } catch (error) {
+
+        showNotice(
+            error.message,
+            "error"
+        );
+    }
+}
+
+/*
+=========================================================
+CLOSE
+=========================================================
+*/
+
+function closeEditor() {
+
+    document
+        .getElementById("editor")
+        .classList.add("hidden");
+
+}
+
+/*
+=========================================================
+LOGOUT
+=========================================================
+*/
+
+function logout() {
+
+    sessionStorage.removeItem(
+        "punggur_admin_password"
+    );
+
+    location.reload();
+}
+
+/*
+=========================================================
+NOTICE
+=========================================================
+*/
+
+function showNotice(message, type) {
+
+    const el =
+        document.getElementById("notice");
+
+    el.textContent = message;
+
+    el.className =
+        "notice " + type;
+
+    setTimeout(() => {
+
+        el.className = "notice";
+
+    }, 5000);
+}
+
+function showLoginNotice(message, type) {
+
+    const el =
+        document.getElementById(
+            "loginNotice"
+        );
+
+    el.textContent = message;
+
+    el.className =
+        "notice " + type;
+}
+
+/*
+=========================================================
+ESCAPE HTML
+=========================================================
+*/
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+/*
+=========================================================
+AUTO LOGIN
+=========================================================
+*/
+
+if (
+    sessionStorage.getItem(
+        "punggur_admin_password"
+    )
+) {
+    loadData();
+}
+
 </script>
+
 </body>
-</html>
+                 </html>
