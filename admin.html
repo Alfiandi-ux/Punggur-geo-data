@@ -33,10 +33,7 @@ body{
   color:var(--text);
 }
 
-button,
-input,
-select,
-textarea{
+button,input,select,textarea{
   font:inherit;
 }
 
@@ -88,6 +85,7 @@ button{
 
 .login-card h1{
   margin:0 0 8px;
+  font-size:25px;
 }
 
 .login-card p{
@@ -138,6 +136,11 @@ textarea{
   transition:.2s;
 }
 
+.btn:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
+
 .btn-primary{
   background:var(--primary);
   color:white;
@@ -175,14 +178,27 @@ textarea{
   margin-bottom:15px;
 }
 
+.success{
+  background:#dcfce7;
+  color:#166534;
+  padding:11px;
+  border-radius:10px;
+  font-size:14px;
+  margin-bottom:15px;
+}
+
 /* =========================
-   TOPBAR
+   APP
 ========================= */
 
+.app{
+  min-height:100vh;
+}
+
 .topbar{
-  height:70px;
   background:white;
   border-bottom:1px solid var(--border);
+  height:70px;
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -200,14 +216,15 @@ textarea{
 }
 
 .brand-icon{
-  width:40px;
-  height:40px;
+  width:42px;
+  height:42px;
   border-radius:12px;
-  background:var(--primary);
-  color:white;
   display:flex;
   align-items:center;
   justify-content:center;
+  background:var(--primary);
+  color:white;
+  font-size:20px;
 }
 
 .user-area{
@@ -217,13 +234,9 @@ textarea{
 }
 
 .user-email{
-  color:var(--muted);
   font-size:13px;
+  color:var(--muted);
 }
-
-/* =========================
-   MAIN
-========================= */
 
 .container{
   max-width:1400px;
@@ -312,8 +325,8 @@ textarea{
 
 table{
   width:100%;
-  min-width:900px;
   border-collapse:collapse;
+  min-width:1000px;
 }
 
 th,
@@ -331,6 +344,10 @@ th{
   text-transform:uppercase;
 }
 
+tr:hover td{
+  background:#f8fafc;
+}
+
 .actions{
   display:flex;
   gap:7px;
@@ -341,6 +358,7 @@ th{
   border-radius:8px;
   padding:7px 10px;
   font-size:13px;
+  font-weight:600;
 }
 
 .edit{
@@ -364,15 +382,15 @@ th{
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:15px;
+  padding:20px;
   z-index:100;
 }
 
 .modal-card{
   background:white;
   width:100%;
-  max-width:1050px;
-  max-height:94vh;
+  max-width:1000px;
+  max-height:92vh;
   overflow:auto;
   border-radius:22px;
   padding:25px;
@@ -380,8 +398,8 @@ th{
 
 .modal-header{
   display:flex;
-  justify-content:space-between;
   align-items:center;
+  justify-content:space-between;
   margin-bottom:20px;
 }
 
@@ -393,38 +411,28 @@ th{
   border:0;
   background:#f1f5f9;
   border-radius:9px;
-  width:38px;
-  height:38px;
+  width:36px;
+  height:36px;
   font-size:20px;
-}
-
-.section-title{
-  font-size:15px;
-  font-weight:800;
-  margin:25px 0 14px;
-  padding-bottom:8px;
-  border-bottom:1px solid var(--border);
 }
 
 .form-grid{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:14px;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
 }
 
-.full{
+.form-grid .full{
   grid-column:1/-1;
 }
 
-.checkbox-wrap{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding-top:27px;
-}
-
-.checkbox-wrap input{
-  width:auto;
+.section-title{
+  grid-column:1/-1;
+  margin-top:12px;
+  padding-bottom:8px;
+  border-bottom:1px solid var(--border);
+  font-weight:800;
+  color:var(--primary);
 }
 
 .modal-footer{
@@ -441,40 +449,23 @@ th{
 ========================= */
 
 .loading{
-  position:fixed;
-  inset:0;
-  background:rgba(255,255,255,.7);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:200;
-}
-
-.loading-box{
-  background:white;
-  padding:22px 28px;
-  border-radius:16px;
-  box-shadow:0 15px 40px rgba(0,0,0,.12);
-  font-weight:700;
+  text-align:center;
+  padding:30px;
+  color:var(--muted);
 }
 
 /* =========================
    MOBILE
 ========================= */
 
-@media(max-width:850px){
+@media(max-width:900px){
 
   .stats{
     grid-template-columns:repeat(2,1fr);
   }
-
-  .form-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
 }
 
-@media(max-width:600px){
+@media(max-width:700px){
 
   .topbar{
     padding:0 15px;
@@ -488,13 +479,13 @@ th{
     padding:15px;
   }
 
-  .dashboard-header{
-    flex-direction:column;
-    align-items:flex-start;
-  }
-
   .stats{
     grid-template-columns:1fr;
+  }
+
+  .dashboard-header{
+    align-items:flex-start;
+    flex-direction:column;
   }
 
   .toolbar{
@@ -505,10 +496,18 @@ th{
     grid-template-columns:1fr;
   }
 
-  .full{
+  .form-grid .full,
+  .section-title{
     grid-column:auto;
   }
 
+  .modal{
+    padding:10px;
+  }
+
+  .modal-card{
+    padding:18px;
+  }
 }
 </style>
 </head>
@@ -528,7 +527,7 @@ th{
     <h1>Admin Punggur Geo Data</h1>
 
     <p>
-      Masuk untuk mengelola seluruh data desa Kecamatan Punggur.
+      Masuk untuk mengelola data desa Kecamatan Punggur.
     </p>
 
     <div id="loginError" class="error hidden"></div>
@@ -541,6 +540,7 @@ th{
           id="email"
           type="email"
           placeholder="admin@email.com"
+          autocomplete="email"
           required
         >
       </div>
@@ -551,11 +551,13 @@ th{
           id="password"
           type="password"
           placeholder="Password"
+          autocomplete="current-password"
           required
         >
       </div>
 
       <button
+        id="loginBtn"
         class="btn btn-primary btn-full"
         type="submit"
       >
@@ -570,138 +572,139 @@ th{
 
 
 <!-- =========================
-     APP
+     ADMIN APP
 ========================= -->
 
-<section id="app" class="hidden">
+<section id="app" class="app hidden">
 
-<header class="topbar">
+  <header class="topbar">
 
-  <div class="brand">
+    <div class="brand">
 
-    <div class="brand-icon">📍</div>
+      <div class="brand-icon">📍</div>
 
-    <div>
-      Punggur Geo Data
-      <div style="font-size:11px;color:#64748b">
-        Admin Panel
+      <div>
+        Punggur Geo Data
+
+        <div style="font-size:11px;color:#64748b">
+          Admin Panel
+        </div>
+
       </div>
-    </div>
-
-  </div>
-
-  <div class="user-area">
-
-    <span id="userEmail" class="user-email"></span>
-
-    <button
-      id="logoutBtn"
-      class="btn btn-secondary"
-    >
-      Keluar
-    </button>
-
-  </div>
-
-</header>
-
-
-<main class="container">
-
-  <div class="dashboard-header">
-
-    <div>
-
-      <h1>Dashboard</h1>
-
-      <p>
-        Kelola seluruh data desa Punggur.
-      </p>
 
     </div>
 
-    <button
-      id="addBtn"
-      class="btn btn-primary"
-    >
-      + Tambah Desa
-    </button>
+    <div class="user-area">
 
-  </div>
+      <span id="userEmail" class="user-email"></span>
 
-
-  <div class="stats">
-
-    <div class="stat">
-      <div class="stat-label">Jumlah Desa</div>
-      <div id="totalDesa" class="stat-value">0</div>
-    </div>
-
-    <div class="stat">
-      <div class="stat-label">Total Penduduk</div>
-      <div id="totalPenduduk" class="stat-value">0</div>
-    </div>
-
-    <div class="stat">
-      <div class="stat-label">Luas Wilayah</div>
-      <div id="totalLuas" class="stat-value">0 km²</div>
-    </div>
-
-    <div class="stat">
-      <div class="stat-label">Tahun Data</div>
-      <div id="tahunData" class="stat-value">-</div>
-    </div>
-
-  </div>
-
-
-  <div class="toolbar">
-
-    <input
-      id="search"
-      type="search"
-      placeholder="🔎 Cari nama desa, kode, atau kabupaten..."
-    >
-
-    <button
-      id="refreshBtn"
-      class="btn btn-secondary"
-    >
-      ↻ Refresh
-    </button>
-
-  </div>
-
-
-  <div class="table-card">
-
-    <div class="table-wrap">
-
-      <table>
-
-        <thead>
-
-          <tr>
-            <th>Desa</th>
-            <th>Kode</th>
-            <th>Penduduk</th>
-            <th>Luas</th>
-            <th>Koordinat</th>
-            <th>Tahun</th>
-            <th>Aksi</th>
-          </tr>
-
-        </thead>
-
-        <tbody id="tableBody"></tbody>
-
-      </table>
+      <button
+        id="logoutBtn"
+        class="btn btn-secondary"
+      >
+        Keluar
+      </button>
 
     </div>
 
-  </div>
+  </header>
 
-</main>
+
+  <main class="container">
+
+    <div class="dashboard-header">
+
+      <div>
+        <h1>Dashboard</h1>
+        <p>
+          Kelola database Punggur Geo Data.
+        </p>
+      </div>
+
+      <button
+        id="addBtn"
+        class="btn btn-primary"
+      >
+        + Tambah Desa
+      </button>
+
+    </div>
+
+
+    <div class="stats">
+
+      <div class="stat">
+        <div class="stat-label">Jumlah Desa</div>
+        <div id="totalDesa" class="stat-value">0</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">Total Penduduk</div>
+        <div id="totalPenduduk" class="stat-value">0</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">Total RT</div>
+        <div id="totalRT" class="stat-value">0</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">Tahun Data</div>
+        <div id="tahunData" class="stat-value">-</div>
+      </div>
+
+    </div>
+
+
+    <div class="toolbar">
+
+      <input
+        id="search"
+        type="search"
+        placeholder="🔎 Cari nama desa, kode, atau kabupaten..."
+      >
+
+      <button
+        id="refreshBtn"
+        class="btn btn-secondary"
+      >
+        ↻ Refresh
+      </button>
+
+    </div>
+
+
+    <div class="table-card">
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>Desa</th>
+              <th>Kode</th>
+              <th>Penduduk</th>
+              <th>RT</th>
+              <th>Koordinat</th>
+              <th>Tahun</th>
+              <th>Aksi</th>
+            </tr>
+
+          </thead>
+
+          <tbody id="tableBody">
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </main>
 
 </section>
 
@@ -712,554 +715,452 @@ th{
 
 <div id="modal" class="modal hidden">
 
-<div class="modal-card">
+  <div class="modal-card">
+
+    <div class="modal-header">
 
-<div class="modal-header">
+      <h2 id="modalTitle">
+        Tambah Desa
+      </h2>
 
-  <h2 id="modalTitle">
-    Tambah Desa
-  </h2>
+      <button
+        id="closeModal"
+        class="close"
+        type="button"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <form id="locationForm">
+
+      <div class="form-grid">
+
+        <div class="section-title">
+          Identitas Wilayah
+        </div>
+
+        <div>
+          <label>ID</label>
+          <input id="f_id" required>
+        </div>
+
+        <div>
+          <label>Nama Desa</label>
+          <input id="f_nama" required>
+        </div>
+
+        <div>
+          <label>Tipe</label>
+          <input id="f_tipe" value="desa">
+        </div>
+
+        <div>
+          <label>Kode Kemendagri</label>
+          <input id="f_kode_kemendagri">
+        </div>
+
+        <div>
+          <label>Kode Pos</label>
+          <input id="f_kode_pos">
+        </div>
+
+        <div>
+          <label>Kabupaten</label>
+          <input id="f_kabupaten" value="Lampung Tengah">
+        </div>
+
+        <div>
+          <label>Provinsi</label>
+          <input id="f_provinsi" value="Lampung">
+        </div>
+
+
+        <div class="section-title">
+          Geografis
+        </div>
+
+        <div>
+          <label>Latitude</label>
+          <input id="f_latitude" type="number" step="any">
+        </div>
+
+        <div>
+          <label>Longitude</label>
+          <input id="f_longitude" type="number" step="any">
+        </div>
+
+        <div>
+          <label>Elevasi (m)</label>
+          <input id="f_elevasi_m" type="number" step="any">
+        </div>
+
+        <div>
+          <label>Luas (km²)</label>
+          <input id="f_luas_km2" type="number" step="any">
+        </div>
+
+        <div>
+          <label>Luas (ha)</label>
+          <input id="f_luas_ha" type="number" step="any">
+        </div>
+
+
+        <div class="section-title">
+          Kependudukan
+        </div>
+
+        <div>
+          <label>Jumlah Penduduk</label>
+          <input id="f_jumlah_penduduk" type="number">
+        </div>
+
+        <div>
+          <label>Laki-laki</label>
+          <input id="f_laki_laki" type="number">
+        </div>
+
+        <div>
+          <label>Perempuan</label>
+          <input id="f_perempuan" type="number">
+        </div>
+
+        <div>
+          <label>Jumlah KK</label>
+          <input id="f_jumlah_kk" type="number">
+        </div>
+
+        <div>
+          <label>Keluarga Pengguna Listrik</label>
+          <input id="f_jumlah_keluarga_pengguna_listrik" type="number">
+        </div>
+
+        <div>
+          <label>Jumlah Dusun</label>
+          <input id="f_jumlah_dusun" type="number">
+        </div>
+
+        <div>
+          <label>Jumlah RT</label>
+          <input id="f_jumlah_rt" type="number">
+        </div>
+
+        <div>
+          <label>Jumlah RW</label>
+          <input id="f_jumlah_rw" type="number">
+        </div>
+
+        <div>
+          <label>Kepadatan Penduduk</label>
+          <input id="f_kepadatan_penduduk" type="number" step="any">
+        </div>
+
+        <div>
+          <label>Persentase Penduduk</label>
+          <input id="f_persentase_penduduk" type="number" step="any">
+        </div>
+
+        <div>
+          <label>Rasio Jenis Kelamin</label>
+          <input id="f_rasio_jenis_kelamin" type="number" step="any">
+        </div>
+
+
+        <div class="section-title">
+          Pendidikan
+        </div>
+
+        <div>
+          <label>Jumlah Sekolah</label>
+          <input id="f_jumlah_sekolah" type="number">
+        </div>
+
+        <div>
+          <label>TK</label>
+          <input id="f_sekolah_tk" type="number">
+        </div>
+
+        <div>
+          <label>SD</label>
+          <input id="f_sekolah_sd" type="number">
+        </div>
+
+        <div>
+          <label>SMP</label>
+          <input id="f_sekolah_smp" type="number">
+        </div>
+
+        <div>
+          <label>SMA</label>
+          <input id="f_sekolah_sma" type="number">
+        </div>
+
+        <div>
+          <label>SMK</label>
+          <input id="f_sekolah_smk" type="number">
+        </div>
+
+        <div>
+          <label>MI</label>
+          <input id="f_sekolah_mi" type="number">
+        </div>
+
+        <div>
+          <label>MTs</label>
+          <input id="f_sekolah_mts" type="number">
+        </div>
+
+        <div>
+          <label>MA</label>
+          <input id="f_sekolah_ma" type="number">
+        </div>
+
+
+        <div class="section-title">
+          Kesehatan & Tempat Ibadah
+        </div>
+
+        <div>
+          <label>Fasilitas Kesehatan</label>
+          <input id="f_fasilitas_kesehatan" type="number">
+        </div>
+
+        <div>
+          <label>Puskesmas</label>
+          <input id="f_puskesmas" type="number">
+        </div>
+
+        <div>
+          <label>Posyandu</label>
+          <input id="f_posyandu" type="number">
+        </div>
+
+        <div>
+          <label>Tempat Ibadah</label>
+          <input id="f_tempat_ibadah" type="number">
+        </div>
+
+        <div>
+          <label>Masjid</label>
+          <input id="f_masjid" type="number">
+        </div>
+
+        <div>
+          <label>Mushola</label>
+          <input id="f_mushola" type="number">
+        </div>
+
+        <div>
+          <label>Gereja</label>
+          <input id="f_gereja" type="number">
+        </div>
+
+        <div>
+          <label>Gereja Protestan</label>
+          <input id="f_gereja_protestan" type="number">
+        </div>
+
+        <div>
+          <label>Gereja Katholik</label>
+          <input id="f_gereja_katholik" type="number">
+        </div>
+
+        <div>
+          <label>Pura</label>
+          <input id="f_pura" type="number">
+        </div>
+
+        <div>
+          <label>Vihara</label>
+          <input id="f_vihara" type="number">
+        </div>
+
+
+        <div class="section-title">
+          Ekonomi & Fasilitas
+        </div>
+
+        <div>
+          <label>Pasar</label>
+          <input id="f_pasar" type="number">
+        </div>
+
+        <div>
+          <label>Pasar Bangunan Permanen</label>
+          <input id="f_pasar_dengan_bangunan_permanen" type="number">
+        </div>
+
+        <div>
+          <label>Pasar Semi Permanen</label>
+          <input id="f_pasar_dengan_bangunan_semi_permanen" type="number">
+        </div>
+
+        <div>
+          <label>Kelompok Pertokoan</label>
+          <input id="f_kelompok_pertokoan" type="number">
+        </div>
+
+        <div>
+          <label>Mini Market</label>
+          <input id="f_mini_market" type="number">
+        </div>
+
+        <div>
+          <label>Restoran / Rumah Makan</label>
+          <input id="f_restoran_rumah_makan" type="number">
+        </div>
+
+        <div>
+          <label>Koperasi</label>
+          <input id="f_koperasi" type="number">
+        </div>
+
+        <div>
+          <label>Koperasi KUD</label>
+          <input id="f_koperasi_kud" type="number">
+        </div>
+
+        <div>
+          <label>Koperasi Simpan Pinjam</label>
+          <input id="f_koperasi_simpan_pinjam" type="number">
+        </div>
+
+        <div>
+          <label>Koperasi Lainnya</label>
+          <input id="f_koperasi_lainnya" type="number">
+        </div>
+
+        <div>
+          <label>Bank</label>
+          <input id="f_bank" type="number">
+        </div>
+
+        <div>
+          <label>BPR</label>
+          <input id="f_bpr" type="number">
+        </div>
+
+
+        <div class="section-title">
+          Pertanian
+        </div>
+
+        <div>
+          <label>Jumlah Petani</label>
+          <input id="f_jumlah_petani" type="number">
+        </div>
+
+        <div>
+          <label>Luas Sawah (ha)</label>
+          <input id="f_luas_sawah_ha" type="number" step="any">
+        </div>
+
+
+        <div class="section-title">
+          Telekomunikasi & Transportasi
+        </div>
+
+        <div>
+          <label>BTS</label>
+          <input id="f_bts" type="number">
+        </div>
+
+        <div>
+          <label>Operator Seluler</label>
+          <input id="f_operator_seluler" type="number">
+        </div>
+
+        <div>
+          <label>Kekuatan Sinyal</label>
+          <input id="f_kekuatan_sinyal">
+        </div>
+
+        <div>
+          <label>Jenis Sinyal Internet</label>
+          <input id="f_jenis_sinyal_internet">
+        </div>
+
+        <div>
+          <label>Angkutan Umum</label>
+          <input id="f_angkutan_umum">
+        </div>
+
+        <div>
+          <label>Jenis Jalan</label>
+          <input id="f_jenis_jalan">
+        </div>
+
+        <div>
+          <label>Akses Jalan Sepanjang Tahun</label>
+          <select id="f_akses_jalan_sepanjang_tahun">
+            <option value="">Tidak diketahui</option>
+            <option value="true">Ya</option>
+            <option value="false">Tidak</option>
+          </select>
+        </div>
+
+
+        <div class="section-title">
+          Pos & Layanan
+        </div>
+
+        <div>
+          <label>Kantor Pos</label>
+          <input id="f_kantor_pos">
+        </div>
+
+        <div>
+          <label>Agen Ekspedisi Swasta</label>
+          <input id="f_agen_ekspedisi_swasta">
+        </div>
+
+
+        <div class="section-title">
+          Sumber Data
+        </div>
+
+        <div>
+          <label>Tahun Data</label>
+          <input id="f_tahun_data" type="number">
+        </div>
+
+        <div class="full">
+          <label>Sumber</label>
+          <input id="f_sumber">
+        </div>
+
+        <div class="full">
+          <label>Catatan Data</label>
+          <textarea id="f_catatan_data"></textarea>
+        </div>
+
+      </div>
+
+
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          id="cancelBtn"
+          class="btn btn-secondary"
+        >
+          Batal
+        </button>
+
+        <button
+          type="submit"
+          id="saveBtn"
+          class="btn btn-primary"
+        >
+          💾 Simpan
+        </button>
+
+      </div>
+
+    </form>
 
-  <button
-    id="closeModal"
-    class="close"
-    type="button"
-  >
-    ×
-  </button>
-
-</div>
-
-
-<form id="locationForm">
-
-<!-- IDENTITAS -->
-
-<div class="section-title">
-  📋 Identitas Desa
-</div>
-
-<div class="form-grid">
-
-  <div>
-    <label>ID</label>
-    <input id="f_id" required>
-  </div>
-
-  <div>
-    <label>Nama Desa</label>
-    <input id="f_nama" required>
-  </div>
-
-  <div>
-    <label>Tipe</label>
-    <input id="f_tipe" value="desa">
-  </div>
-
-  <div>
-    <label>Kode Kemendagri</label>
-    <input id="f_kode_kemendagri">
-  </div>
-
-  <div>
-    <label>Kode Pos</label>
-    <input id="f_kode_pos">
-  </div>
-
-  <div>
-    <label>Kabupaten</label>
-    <input id="f_kabupaten" value="Lampung Tengah">
-  </div>
-
-  <div>
-    <label>Provinsi</label>
-    <input id="f_provinsi" value="Lampung">
-  </div>
-
-</div>
-
-
-<!-- GEOGRAFIS -->
-
-<div class="section-title">
-  🗺️ Data Geografis
-</div>
-
-<div class="form-grid">
-
-  <div>
-    <label>Latitude</label>
-    <input id="f_latitude" type="number" step="any">
-  </div>
-
-  <div>
-    <label>Longitude</label>
-    <input id="f_longitude" type="number" step="any">
-  </div>
-
-  <div>
-    <label>Elevasi (meter)</label>
-    <input id="f_elevasi_m" type="number" step="any">
-  </div>
-
-  <div>
-    <label>Luas km²</label>
-    <input id="f_luas_km2" type="number" step="any">
-  </div>
-
-  <div>
-    <label>Luas hektare</label>
-    <input id="f_luas_ha" type="number" step="any">
-  </div>
-
-</div>
-
-
-<!-- PENDUDUK -->
-
-<div class="section-title">
-  👥 Kependudukan
-</div>
-
-<div class="form-grid">
-
-  <div>
-    <label>Jumlah Penduduk</label>
-    <input id="f_jumlah_penduduk" type="number">
-  </div>
-
-  <div>
-    <label>Laki-laki</label>
-    <input id="f_laki_laki" type="number">
-  </div>
-
-  <div>
-    <label>Perempuan</label>
-    <input id="f_perempuan" type="number">
-  </div>
-
-  <div>
-    <label>Jumlah KK</label>
-    <input id="f_jumlah_kk" type="number">
-  </div>
-
-  <div>
-    <label>Keluarga Pengguna Listrik</label>
-    <input id="f_jumlah_keluarga_pengguna_listrik" type="number">
-  </div>
-
-  <div>
-    <label>Kepadatan Penduduk</label>
-    <input id="f_kepadatan_penduduk" type="number" step="any">
-  </div>
-
-  <div>
-    <label>Persentase Penduduk</label>
-    <input id="f_persentase_penduduk" type="number" step="any">
-  </div>
-
-  <div>
-    <label>Rasio Jenis Kelamin</label>
-    <input id="f_rasio_jenis_kelamin" type="number" step="any">
-  </div>
-
-</div>
-
-
-<!-- PEMERINTAHAN -->
-
-<div class="section-title">
-  🏘️ Administrasi
-</div>
-
-<div class="form-grid">
-
-  <div>
-    <label>Jumlah Dusun</label>
-    <input id="f_jumlah_dusun" type="number">
-  </div>
-
-  <div>
-    <label>Jumlah RT</label>
-    <input id="f_jumlah_rt" type="number">
-  </div>
-
-  <div>
-    <label>Jumlah RW</label>
-    <input id="f_jumlah_rw" type="number">
-  </div>
-
-</div>
-
-
-<!-- PENDIDIKAN -->
-
-<div class="section-title">
-  🏫 Pendidikan
-</div>
-
-<div class="form-grid">
-
-  <div>
-    <label>Jumlah Sekolah</label>
-    <input id="f_jumlah_sekolah" type="number">
-  </div>
-
-  <div>
-    <label>TK</label>
-    <input id="f_sekolah_tk" type="number">
-  </div>
-
-  <div>
-    <label>SD</label>
-    <input id="f_sekolah_sd" type="number">
-  </div>
-
-  <div>
-    <label>SMP</label>
-    <input id="f_sekolah_smp" type="number">
-  </div>
-
-  <div>
-    <label>SMA</label>
-    <input id="f_sekolah_sma" type="number">
-  </div>
-
-  <div>
-    <label>SMK</label>
-    <input id="f_sekolah_smk" type="number">
-  </div>
-
-  <div>
-    <label>MI</label>
-    <input id="f_sekolah_mi" type="number">
-  </div>
-
-  <div>
-    <label>MTs</label>
-    <input id="f_sekolah_mts" type="number">
-  </div>
-
-  <div>
-    <label>MA</label>
-    <input id="f_sekolah_ma" type="number">
-  </div>
-
-</div>
-
-
-<!-- KESEHATAN -->
-
-<div class="section-title">
-  🏥 Kesehatan
-</div>
-
-<div class="form-grid">
-
-  <div>
-    <label>Fasilitas Kesehatan</label>
-    <input id="f_fasilitas_kesehatan" type="number">
-  </div>
-
-  <div>
-    <label>Puskesmas</label>
-    <input id="f_puskesmas" type="number">
-  </div>
-
-  <div>
-    <label>Posyandu</label>
-    <input id="f_posyandu" type="number">
-  </div>
-
-</div>
-
-
-<!-- IBADAH -->
-
-<div class="section-title">
-  🕌 Tempat Ibadah
-</div>
-
-<div class="form-grid">
-
-  <div>
-    <label>Total Tempat Ibadah</label>
-    <input id="f_tempat_ibadah" type="number">
-  </div>
-
-  <div>
-    <label>Masjid</label>
-    <input id="f_masjid" type="number">
-  </div>
-
-  <div>
-    <label>Mushola</label>
-    <input id="f_mushola" type="number">
-  </div>
-
-  <div>
-    <label>Gereja</label>
-    <input id="f_gereja" type="number">
-  </div>
-
-  <div>
-    <label>Gereja Protestan</label>
-    <input id="f_gereja_protestan" type="number">
-  </div>
-
-  <div>
-    <label>Gereja Katholik</label>
-    <input id="f_gereja_katholik" type="number">
-  </div>
-
-  <div>
-    <label>Pura</label>
-    <input id="f_pura" type="number">
-  </div>
-
-  <div>
-    <label>Vihara</label>
-    <input id="f_vihara" type="number">
-  </div>
-
-</div>
-
-
-<!-- EKONOMI -->
-
-<div class="section-title">
-  🏪 Ekonomi & Perdagangan
-</div>
-
-<div class="form-grid">
-
-  <div>
-    <label>Pasar</label>
-    <input id="f_pasar" type="number">
-  </div>
-
-  <div>
-    <label>Pasar Bangunan Permanen</label>
-    <input id="f_pasar_dengan_bangunan_permanen" type="number">
-  </div>
-
-  <div>
-    <label>Pasar Semi Permanen</label>
-    <input id="f_pasar_dengan_bangunan_semi_permanen" type="number">
-  </div>
-
-  <div>
-    <label>Kelompok Pertokoan</label>
-    <input id="f_kelompok_pertokoan" type="number">
-  </div>
-
-  <div>
-    <label>Mini Market</label>
-    <input id="f_mini_market" type="number">
-  </div>
-
-  <div>
-    <label>Restoran / Rumah Makan</label>
-    <input id="f_restoran_rumah_makan" type="number">
-  </div>
-
-  <div>
-    <label>Koperasi</label>
-    <input id="f_koperasi" type="number">
-  </div>
-
-  <div>
-    <label>Koperasi KUD</label>
-    <input id="f_koperasi_kud" type="number">
-  </div>
-
-  <div>
-    <label>Koperasi Simpan Pinjam</label>
-    <input id="f_koperasi_simpan_pinjam" type="number">
-  </div>
-
-  <div>
-    <label>Koperasi Lainnya</label>
-    <input id="f_koperasi_lainnya" type="number">
-  </div>
-
-  <div>
-    <label>Bank</label>
-    <input id="f_bank" type="number">
-  </div>
-
-  <div>
-    <label>BPR</label>
-    <input id="f_bpr" type="number">
-  </div>
-
-</div>
-
-
-<!-- PERTANIAN -->
-
-<div class="section-title">
-  🌾 Pertanian
-</div>
-
-<div class="form-grid">
-
-  <div>
-    <label>Jumlah Petani</label>
-    <input id="f_jumlah_petani" type="number">
-  </div>
-
-  <div>
-    <label>Luas Sawah (ha)</label>
-    <input id="f_luas_sawah_ha" type="number" step="any">
-  </div>
-
-</div>
-
-
-<!-- TELEKOMUNIKASI -->
-
-<div class="section-title">
-  📡 Telekomunikasi
-</div>
-
-<div class="form-grid">
-
-  <div>
-    <label>Jumlah BTS</label>
-    <input id="f_bts" type="number">
-  </div>
-
-  <div>
-    <label>Operator Seluler</label>
-    <input id="f_operator_seluler" type="number">
-  </div>
-
-  <div>
-    <label>Kekuatan Sinyal</label>
-    <input id="f_kekuatan_sinyal">
-  </div>
-
-  <div>
-    <label>Jenis Sinyal Internet</label>
-    <input id="f_jenis_sinyal_internet">
-  </div>
-
-</div>
-
-
-<!-- TRANSPORTASI -->
-
-<div class="section-title">
-  🚗 Transportasi & Jalan
-</div>
-
-<div class="form-grid">
-
-  <div class="full">
-    <label>Angkutan Umum</label>
-    <input id="f_angkutan_umum">
-  </div>
-
-  <div>
-    <label>Jenis Jalan</label>
-    <input id="f_jenis_jalan">
-  </div>
-
-  <div class="checkbox-wrap">
-
-    <input
-      id="f_akses_jalan_sepanjang_tahun"
-      type="checkbox"
-    >
-
-    <label for="f_akses_jalan_sepanjang_tahun">
-      Jalan dapat diakses sepanjang tahun
-    </label>
-
-  </div>
-
-</div>
-
-
-<!-- POS -->
-
-<div class="section-title">
-  📦 Pos & Ekspedisi
-</div>
-
-<div class="form-grid">
-
-  <div>
-    <label>Kantor Pos</label>
-    <input id="f_kantor_pos">
-  </div>
-
-  <div>
-    <label>Agen Ekspedisi Swasta</label>
-    <input id="f_agen_ekspedisi_swasta">
-  </div>
-
-</div>
-
-
-<!-- SUMBER -->
-
-<div class="section-title">
-  📝 Sumber Data
-</div>
-
-<div class="form-grid">
-
-  <div>
-    <label>Tahun Data</label>
-    <input id="f_tahun_data" type="number">
-  </div>
-
-  <div class="full">
-    <label>Sumber</label>
-    <input id="f_sumber">
-  </div>
-
-  <div class="full">
-    <label>Catatan Data</label>
-    <textarea id="f_catatan_data"></textarea>
-  </div>
-
-</div>
-
-
-<div class="modal-footer">
-
-  <button
-    type="button"
-    id="cancelBtn"
-    class="btn btn-secondary"
-  >
-    Batal
-  </button>
-
-  <button
-    type="submit"
-    class="btn btn-primary"
-  >
-    💾 Simpan Data
-  </button>
-
-</div>
-
-</form>
-
-</div>
-</div>
-
-
-<!-- LOADING -->
-
-<div id="loading" class="loading hidden">
-
-  <div class="loading-box">
-    ⏳ Memproses data...
   </div>
 
 </div>
@@ -1323,106 +1224,59 @@ const modal =
 const locationForm =
   document.getElementById("locationForm");
 
-const loading =
-  document.getElementById("loading");
+const loginBtn =
+  document.getElementById("loginBtn");
 
-
-/* =====================================================
-   HELPERS
-===================================================== */
-
-function showLoading(show){
-
-  loading.classList.toggle(
-    "hidden",
-    !show
-  );
-
-}
-
-
-function value(id){
-
-  const el =
-    document.getElementById(id);
-
-  return el ? el.value.trim() : "";
-
-}
-
-
-function numeric(id){
-
-  const v = value(id);
-
-  if(v === "") return null;
-
-  const n = Number(v);
-
-  return Number.isFinite(n)
-    ? n
-    : null;
-
-}
-
-
-function escapeHtml(value){
-
-  return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
+const saveBtn =
+  document.getElementById("saveBtn");
 
 
 /* =====================================================
    LOGIN
 ===================================================== */
 
-loginForm.addEventListener(
-  "submit",
-  async function(e){
+loginForm.addEventListener("submit", async function(e){
 
-    e.preventDefault();
+  e.preventDefault();
 
-    loginError.classList.add("hidden");
+  loginError.classList.add("hidden");
 
-    showLoading(true);
+  const email =
+    document.getElementById("email")
+      .value
+      .trim();
 
-    const email =
-      value("email");
+  const password =
+    document.getElementById("password")
+      .value;
 
-    const password =
-      document.getElementById("password").value;
+  loginBtn.disabled = true;
 
-    const {
-      error
-    } =
-      await supabaseClient.auth.signInWithPassword({
-        email,
-        password
-      });
+  loginBtn.textContent = "⏳ Memeriksa...";
 
-    showLoading(false);
+  const { error } =
+    await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
 
-    if(error){
+  loginBtn.disabled = false;
 
-      loginError.textContent =
-        "Login gagal: " +
-        error.message;
+  loginBtn.textContent = "🔐 Masuk";
 
-      loginError.classList.remove("hidden");
+  if(error){
 
-      return;
-    }
+    loginError.textContent =
+      "Login gagal: " + error.message;
 
-    await checkAdmin();
+    loginError.classList.remove("hidden");
 
+    return;
   }
-);
+
+  await checkAdmin();
+
+});
 
 
 /* =====================================================
@@ -1451,12 +1305,10 @@ async function checkSession(){
 
 
 /* =====================================================
-   ADMIN
+   ADMIN CHECK
 ===================================================== */
 
 async function checkAdmin(){
-
-  showLoading(true);
 
   const {
     data:{
@@ -1466,8 +1318,6 @@ async function checkAdmin(){
     await supabaseClient.auth.getUser();
 
   if(!user){
-
-    showLoading(false);
 
     showLogin();
 
@@ -1487,16 +1337,30 @@ async function checkAdmin(){
       .maybeSingle();
 
 
-  if(error || !data){
+  if(error){
+
+    console.error(error);
 
     await supabaseClient.auth.signOut();
 
-    showLoading(false);
+    loginError.textContent =
+      "Gagal memeriksa hak admin: " +
+      error.message;
+
+    loginError.classList.remove("hidden");
+
+    showLogin();
+
+    return;
+  }
+
+
+  if(!data){
+
+    await supabaseClient.auth.signOut();
 
     loginError.textContent =
-      error
-        ? "Gagal memeriksa admin: " + error.message
-        : "Akun ini bukan admin.";
+      "Akun berhasil login, tetapi akun tersebut belum terdaftar sebagai admin.";
 
     loginError.classList.remove("hidden");
 
@@ -1508,14 +1372,12 @@ async function checkAdmin(){
 
   document.getElementById("userEmail")
     .textContent =
-      user.email || data.email || "";
+      user.email || "";
 
 
   showApp();
 
   await loadLocations();
-
-  showLoading(false);
 
 }
 
@@ -1548,7 +1410,14 @@ function showApp(){
 
 async function loadLocations(){
 
-  showLoading(true);
+  tableBody.innerHTML = `
+    <tr>
+      <td colspan="7" class="loading">
+        ⏳ Memuat data...
+      </td>
+    </tr>
+  `;
+
 
   const {
     data,
@@ -1557,13 +1426,20 @@ async function loadLocations(){
     await supabaseClient
       .from("locations")
       .select("*")
-      .order("nama");
-
-
-  showLoading(false);
+      .order("nama",{
+        ascending:true
+      });
 
 
   if(error){
+
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="7" class="loading">
+          ❌ Gagal memuat data.
+        </td>
+      </tr>
+    `;
 
     alert(
       "Gagal mengambil data:\n\n" +
@@ -1574,8 +1450,7 @@ async function loadLocations(){
   }
 
 
-  locations =
-    data || [];
+  locations = data || [];
 
   renderLocations();
 
@@ -1599,15 +1474,16 @@ function renderLocations(){
   const filtered =
     locations.filter(item => {
 
-      const text =
-        [
-          item.nama,
-          item.id,
-          item.kode_kemendagri,
-          item.kabupaten
-        ]
-        .join(" ")
-        .toLowerCase();
+      const text = [
+        item.nama,
+        item.kode_kemendagri,
+        item.kabupaten,
+        item.provinsi,
+        item.kode_pos
+      ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
 
       return text.includes(keyword);
 
@@ -1617,14 +1493,11 @@ function renderLocations(){
   tableBody.innerHTML = "";
 
 
-  if(!filtered.length){
+  if(filtered.length === 0){
 
     tableBody.innerHTML = `
       <tr>
-        <td
-          colspan="7"
-          style="text-align:center;padding:35px;color:#64748b"
-        >
+        <td colspan="7" class="loading">
           Data tidak ditemukan.
         </td>
       </tr>
@@ -1640,35 +1513,54 @@ function renderLocations(){
       document.createElement("tr");
 
 
+    const nama =
+      escapeHtml(item.nama || "-");
+
+    const kode =
+      escapeHtml(item.kode_kemendagri || "-");
+
+    const penduduk =
+      Number(item.jumlah_penduduk || 0)
+        .toLocaleString("id-ID");
+
+    const rt =
+      Number(item.jumlah_rt || 0)
+        .toLocaleString("id-ID");
+
+    const lat =
+      item.latitude ?? "-";
+
+    const lng =
+      item.longitude ?? "-";
+
+    const tahun =
+      item.tahun_data ?? "-";
+
+
     tr.innerHTML = `
 
       <td>
-        <strong>
-          ${escapeHtml(item.nama || "-")}
-        </strong>
+        <strong>${nama}</strong>
       </td>
 
       <td>
-        ${escapeHtml(item.kode_kemendagri || "-")}
+        ${kode}
       </td>
 
       <td>
-        ${Number(
-          item.jumlah_penduduk || 0
-        ).toLocaleString("id-ID")}
+        ${penduduk}
       </td>
 
       <td>
-        ${item.luas_km2 ?? "-"} km²
+        ${rt}
       </td>
 
       <td>
-        ${item.latitude ?? "-"},
-        ${item.longitude ?? "-"}
+        ${lat}, ${lng}
       </td>
 
       <td>
-        ${item.tahun_data ?? "-"}
+        ${tahun}
       </td>
 
       <td>
@@ -1677,14 +1569,14 @@ function renderLocations(){
 
           <button
             class="action-btn edit"
-            onclick="editLocation('${escapeHtml(item.id)}')"
+            data-edit="${escapeAttr(item.id)}"
           >
             ✏️ Edit
           </button>
 
           <button
             class="action-btn delete"
-            onclick="deleteLocation('${escapeHtml(item.id)}')"
+            data-delete="${escapeAttr(item.id)}"
           >
             🗑️ Hapus
           </button>
@@ -1692,12 +1584,36 @@ function renderLocations(){
         </div>
 
       </td>
-
     `;
+
 
     tableBody.appendChild(tr);
 
   });
+
+
+  document
+    .querySelectorAll("[data-edit]")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => editLocation(button.dataset.edit)
+      );
+
+    });
+
+
+  document
+    .querySelectorAll("[data-delete]")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => deleteLocation(button.dataset.delete)
+      );
+
+    });
 
 }
 
@@ -1708,8 +1624,10 @@ function renderLocations(){
 
 function updateStats(){
 
-  const totalDesa =
-    locations.length;
+  document.getElementById("totalDesa")
+    .textContent =
+      locations.length
+        .toLocaleString("id-ID");
 
 
   const totalPenduduk =
@@ -1721,39 +1639,31 @@ function updateStats(){
     );
 
 
-  const totalLuas =
+  document.getElementById("totalPenduduk")
+    .textContent =
+      totalPenduduk
+        .toLocaleString("id-ID");
+
+
+  const totalRT =
     locations.reduce(
       (sum,item) =>
         sum +
-        Number(item.luas_km2 || 0),
+        Number(item.jumlah_rt || 0),
       0
     );
+
+
+  document.getElementById("totalRT")
+    .textContent =
+      totalRT
+        .toLocaleString("id-ID");
 
 
   const years =
     locations
       .map(item => Number(item.tahun_data))
       .filter(Boolean);
-
-
-  document.getElementById("totalDesa")
-    .textContent =
-      totalDesa.toLocaleString("id-ID");
-
-
-  document.getElementById("totalPenduduk")
-    .textContent =
-      totalPenduduk.toLocaleString("id-ID");
-
-
-  document.getElementById("totalLuas")
-    .textContent =
-      totalLuas.toLocaleString(
-        "id-ID",
-        {
-          maximumFractionDigits:2
-        }
-      ) + " km²";
 
 
   document.getElementById("tahunData")
@@ -1766,178 +1676,52 @@ function updateStats(){
 
 
 /* =====================================================
-   FIELD MAP
-===================================================== */
-
-const fieldMap = {
-
-  id:"f_id",
-  nama:"f_nama",
-  tipe:"f_tipe",
-  kode_kemendagri:"f_kode_kemendagri",
-  kode_pos:"f_kode_pos",
-  kabupaten:"f_kabupaten",
-  provinsi:"f_provinsi",
-
-  latitude:"f_latitude",
-  longitude:"f_longitude",
-  elevasi_m:"f_elevasi_m",
-
-  jumlah_penduduk:"f_jumlah_penduduk",
-  laki_laki:"f_laki_laki",
-  perempuan:"f_perempuan",
-  jumlah_kk:"f_jumlah_kk",
-  jumlah_keluarga_pengguna_listrik:
-    "f_jumlah_keluarga_pengguna_listrik",
-
-  luas_km2:"f_luas_km2",
-  luas_ha:"f_luas_ha",
-
-  jumlah_dusun:"f_jumlah_dusun",
-  jumlah_rt:"f_jumlah_rt",
-  jumlah_rw:"f_jumlah_rw",
-
-  jumlah_sekolah:"f_jumlah_sekolah",
-  sekolah_tk:"f_sekolah_tk",
-  sekolah_sd:"f_sekolah_sd",
-  sekolah_smp:"f_sekolah_smp",
-  sekolah_sma:"f_sekolah_sma",
-  sekolah_smk:"f_sekolah_smk",
-  sekolah_mi:"f_sekolah_mi",
-  sekolah_mts:"f_sekolah_mts",
-  sekolah_ma:"f_sekolah_ma",
-
-  fasilitas_kesehatan:
-    "f_fasilitas_kesehatan",
-
-  puskesmas:"f_puskesmas",
-  posyandu:"f_posyandu",
-
-  tempat_ibadah:"f_tempat_ibadah",
-  masjid:"f_masjid",
-  mushola:"f_mushola",
-  gereja:"f_gereja",
-  gereja_protestan:"f_gereja_protestan",
-  gereja_katholik:"f_gereja_katholik",
-  pura:"f_pura",
-  vihara:"f_vihara",
-
-  pasar:"f_pasar",
-  pasar_dengan_bangunan_permanen:
-    "f_pasar_dengan_bangunan_permanen",
-
-  pasar_dengan_bangunan_semi_permanen:
-    "f_pasar_dengan_bangunan_semi_permanen",
-
-  kelompok_pertokoan:
-    "f_kelompok_pertokoan",
-
-  mini_market:"f_mini_market",
-
-  restoran_rumah_makan:
-    "f_restoran_rumah_makan",
-
-  koperasi:"f_koperasi",
-  koperasi_kud:"f_koperasi_kud",
-
-  koperasi_simpan_pinjam:
-    "f_koperasi_simpan_pinjam",
-
-  koperasi_lainnya:
-    "f_koperasi_lainnya",
-
-  bank:"f_bank",
-  bpr:"f_bpr",
-
-  jumlah_petani:"f_jumlah_petani",
-  luas_sawah_ha:"f_luas_sawah_ha",
-
-  kepadatan_penduduk:
-    "f_kepadatan_penduduk",
-
-  persentase_penduduk:
-    "f_persentase_penduduk",
-
-  rasio_jenis_kelamin:
-    "f_rasio_jenis_kelamin",
-
-  bts:"f_bts",
-  operator_seluler:"f_operator_seluler",
-
-  kekuatan_sinyal:
-    "f_kekuatan_sinyal",
-
-  jenis_sinyal_internet:
-    "f_jenis_sinyal_internet",
-
-  angkutan_umum:
-    "f_angkutan_umum",
-
-  jenis_jalan:
-    "f_jenis_jalan",
-
-  akses_jalan_sepanjang_tahun:
-    "f_akses_jalan_sepanjang_tahun",
-
-  kantor_pos:"f_kantor_pos",
-
-  agen_ekspedisi_swasta:
-    "f_agen_ekspedisi_swasta",
-
-  tahun_data:"f_tahun_data",
-  sumber:"f_sumber",
-  catatan_data:"f_catatan_data"
-
-};
-
-
-/* =====================================================
    ADD
 ===================================================== */
 
-document.getElementById("addBtn")
-  .addEventListener(
-    "click",
-    function(){
+document
+  .getElementById("addBtn")
+  .addEventListener("click",function(){
 
-      editMode = false;
+    editMode = false;
 
-      originalId = null;
+    originalId = null;
 
-      locationForm.reset();
+    locationForm.reset();
 
-      document.getElementById("f_tipe")
-        .value = "desa";
+    document.getElementById("f_tipe")
+      .value = "desa";
 
-      document.getElementById("f_kabupaten")
-        .value = "Lampung Tengah";
+    document.getElementById("f_kabupaten")
+      .value = "Lampung Tengah";
 
-      document.getElementById("f_provinsi")
-        .value = "Lampung";
+    document.getElementById("f_provinsi")
+      .value = "Lampung";
 
-      document.getElementById("modalTitle")
-        .textContent =
-          "Tambah Desa";
+    document.getElementById("modalTitle")
+      .textContent =
+        "Tambah Desa";
 
-      modal.classList.remove("hidden");
+    modal.classList.remove("hidden");
 
-    }
-  );
+  });
 
 
 /* =====================================================
    EDIT
 ===================================================== */
 
-window.editLocation =
-function(id){
+async function editLocation(id){
 
   const item =
-    locations.find(
-      x => String(x.id) === String(id)
-    );
+    locations.find(x => String(x.id) === String(id));
 
-  if(!item) return;
+  if(!item){
+
+    alert("Data tidak ditemukan.");
+
+    return;
+  }
 
 
   editMode = true;
@@ -1947,174 +1731,180 @@ function(id){
 
   document.getElementById("modalTitle")
     .textContent =
-      "Edit Data Desa";
+      "Edit Desa — " +
+      (item.nama || "");
 
 
-  Object.entries(fieldMap)
-    .forEach(([key,elementId]) => {
+  const fields = [
 
-      const el =
-        document.getElementById(elementId);
+    "id",
+    "nama",
+    "tipe",
+    "kode_kemendagri",
+    "kode_pos",
+    "kabupaten",
+    "provinsi",
 
-      if(!el) return;
+    "latitude",
+    "longitude",
+    "elevasi_m",
+    "luas_km2",
+    "luas_ha",
+
+    "jumlah_penduduk",
+    "laki_laki",
+    "perempuan",
+    "jumlah_kk",
+    "jumlah_keluarga_pengguna_listrik",
+    "jumlah_dusun",
+    "jumlah_rt",
+    "jumlah_rw",
+    "kepadatan_penduduk",
+    "persentase_penduduk",
+    "rasio_jenis_kelamin",
+
+    "jumlah_sekolah",
+    "sekolah_tk",
+    "sekolah_sd",
+    "sekolah_smp",
+    "sekolah_sma",
+    "sekolah_smk",
+    "sekolah_mi",
+    "sekolah_mts",
+    "sekolah_ma",
+
+    "fasilitas_kesehatan",
+    "puskesmas",
+    "posyandu",
+    "tempat_ibadah",
+    "masjid",
+    "mushola",
+    "gereja",
+    "gereja_protestan",
+    "gereja_katholik",
+    "pura",
+    "vihara",
+
+    "pasar",
+    "pasar_dengan_bangunan_permanen",
+    "pasar_dengan_bangunan_semi_permanen",
+    "kelompok_pertokoan",
+    "mini_market",
+    "restoran_rumah_makan",
+    "koperasi",
+    "koperasi_kud",
+    "koperasi_simpan_pinjam",
+    "koperasi_lainnya",
+    "bank",
+    "bpr",
+
+    "jumlah_petani",
+    "luas_sawah_ha",
+
+    "bts",
+    "operator_seluler",
+    "kekuatan_sinyal",
+    "jenis_sinyal_internet",
+    "angkutan_umum",
+    "jenis_jalan",
+    "akses_jalan_sepanjang_tahun",
+
+    "kantor_pos",
+    "agen_ekspedisi_swasta",
+
+    "tahun_data",
+    "sumber",
+    "catatan_data"
+
+  ];
 
 
-      if(el.type === "checkbox"){
+  fields.forEach(field => {
 
-        el.checked =
-          item[key] === true;
+    const element =
+      document.getElementById("f_" + field);
+
+    if(!element) return;
+
+
+    if(field === "akses_jalan_sepanjang_tahun"){
+
+      if(item[field] === true){
+
+        element.value = "true";
+
+      }else if(item[field] === false){
+
+        element.value = "false";
 
       }else{
 
-        el.value =
-          item[key] ?? "";
+        element.value = "";
 
       }
 
-    });
+      return;
+    }
 
 
-  document.getElementById("f_id")
-    .disabled = true;
+    element.value =
+      item[field] ?? "";
+
+  });
 
 
   modal.classList.remove("hidden");
 
-};
+}
 
 
 /* =====================================================
-   BUILD PAYLOAD
+   GET FORM VALUE
 ===================================================== */
 
-function buildPayload(){
+function getValue(id){
 
-  const payload = {};
+  const element =
+    document.getElementById(id);
 
+  if(!element) return null;
 
-  Object.entries(fieldMap)
-    .forEach(([key,elementId]) => {
+  return element.value.trim();
 
-      const el =
-        document.getElementById(elementId);
-
-      if(!el) return;
+}
 
 
-      if(el.type === "checkbox"){
+function getNumber(id){
 
-        payload[key] =
-          el.checked;
+  const value =
+    getValue(id);
 
-        return;
+  if(value === "" || value === null){
 
-      }
+    return null;
 
+  }
 
-      const raw =
-        el.value.trim();
+  const number =
+    Number(value);
 
+  return Number.isFinite(number)
+    ? number
+    : null;
 
-      if(raw === ""){
-
-        payload[key] = null;
-
-        return;
-
-      }
+}
 
 
-      const numericFields = [
+function getBoolean(id){
 
-        "latitude",
-        "longitude",
-        "elevasi_m",
+  const value =
+    getValue(id);
 
-        "jumlah_penduduk",
-        "laki_laki",
-        "perempuan",
-        "jumlah_kk",
-        "jumlah_keluarga_pengguna_listrik",
+  if(value === "true") return true;
 
-        "luas_km2",
-        "luas_ha",
+  if(value === "false") return false;
 
-        "jumlah_dusun",
-        "jumlah_rt",
-        "jumlah_rw",
-
-        "jumlah_sekolah",
-        "sekolah_tk",
-        "sekolah_sd",
-        "sekolah_smp",
-        "sekolah_sma",
-        "sekolah_smk",
-        "sekolah_mi",
-        "sekolah_mts",
-        "sekolah_ma",
-
-        "fasilitas_kesehatan",
-        "puskesmas",
-        "posyandu",
-
-        "tempat_ibadah",
-        "masjid",
-        "mushola",
-        "gereja",
-        "gereja_protestan",
-        "gereja_katholik",
-        "pura",
-        "vihara",
-
-        "pasar",
-        "pasar_dengan_bangunan_permanen",
-        "pasar_dengan_bangunan_semi_permanen",
-        "kelompok_pertokoan",
-        "mini_market",
-        "restoran_rumah_makan",
-
-        "koperasi",
-        "koperasi_kud",
-        "koperasi_simpan_pinjam",
-        "koperasi_lainnya",
-        "bank",
-        "bpr",
-
-        "jumlah_petani",
-        "luas_sawah_ha",
-
-        "kepadatan_penduduk",
-        "persentase_penduduk",
-        "rasio_jenis_kelamin",
-
-        "bts",
-        "operator_seluler",
-
-        "tahun_data"
-
-      ];
-
-
-      if(numericFields.includes(key)){
-
-        payload[key] =
-          Number(raw);
-
-      }else{
-
-        payload[key] =
-          raw;
-
-      }
-
-    });
-
-
-  payload.updated_at =
-    new Date().toISOString();
-
-
-  return payload;
+  return null;
 
 }
 
@@ -2129,11 +1919,232 @@ locationForm.addEventListener(
 
     e.preventDefault();
 
-    const payload =
-      buildPayload();
+
+    saveBtn.disabled = true;
+
+    saveBtn.textContent =
+      "⏳ Menyimpan...";
 
 
-    showLoading(true);
+    const payload = {
+
+      id:getValue("f_id"),
+
+      nama:getValue("f_nama"),
+
+      tipe:getValue("f_tipe") || "desa",
+
+      kode_kemendagri:
+        getValue("f_kode_kemendagri"),
+
+      kode_pos:
+        getValue("f_kode_pos"),
+
+      kabupaten:
+        getValue("f_kabupaten"),
+
+      provinsi:
+        getValue("f_provinsi"),
+
+
+      latitude:
+        getNumber("f_latitude"),
+
+      longitude:
+        getNumber("f_longitude"),
+
+      elevasi_m:
+        getNumber("f_elevasi_m"),
+
+      luas_km2:
+        getNumber("f_luas_km2"),
+
+      luas_ha:
+        getNumber("f_luas_ha"),
+
+
+      jumlah_penduduk:
+        getNumber("f_jumlah_penduduk"),
+
+      laki_laki:
+        getNumber("f_laki_laki"),
+
+      perempuan:
+        getNumber("f_perempuan"),
+
+      jumlah_kk:
+        getNumber("f_jumlah_kk"),
+
+      jumlah_keluarga_pengguna_listrik:
+        getNumber("f_jumlah_keluarga_pengguna_listrik"),
+
+      jumlah_dusun:
+        getNumber("f_jumlah_dusun"),
+
+      jumlah_rt:
+        getNumber("f_jumlah_rt"),
+
+      jumlah_rw:
+        getNumber("f_jumlah_rw"),
+
+      kepadatan_penduduk:
+        getNumber("f_kepadatan_penduduk"),
+
+      persentase_penduduk:
+        getNumber("f_persentase_penduduk"),
+
+      rasio_jenis_kelamin:
+        getNumber("f_rasio_jenis_kelamin"),
+
+
+      jumlah_sekolah:
+        getNumber("f_jumlah_sekolah"),
+
+      sekolah_tk:
+        getNumber("f_sekolah_tk"),
+
+      sekolah_sd:
+        getNumber("f_sekolah_sd"),
+
+      sekolah_smp:
+        getNumber("f_sekolah_smp"),
+
+      sekolah_sma:
+        getNumber("f_sekolah_sma"),
+
+      sekolah_smk:
+        getNumber("f_sekolah_smk"),
+
+      sekolah_mi:
+        getNumber("f_sekolah_mi"),
+
+      sekolah_mts:
+        getNumber("f_sekolah_mts"),
+
+      sekolah_ma:
+        getNumber("f_sekolah_ma"),
+
+
+      fasilitas_kesehatan:
+        getNumber("f_fasilitas_kesehatan"),
+
+      puskesmas:
+        getNumber("f_puskesmas"),
+
+      posyandu:
+        getNumber("f_posyandu"),
+
+      tempat_ibadah:
+        getNumber("f_tempat_ibadah"),
+
+      masjid:
+        getNumber("f_masjid"),
+
+      mushola:
+        getNumber("f_mushola"),
+
+      gereja:
+        getNumber("f_gereja"),
+
+      gereja_protestan:
+        getNumber("f_gereja_protestan"),
+
+      gereja_katholik:
+        getNumber("f_gereja_katholik"),
+
+      pura:
+        getNumber("f_pura"),
+
+      vihara:
+        getNumber("f_vihara"),
+
+
+      pasar:
+        getNumber("f_pasar"),
+
+      pasar_dengan_bangunan_permanen:
+        getNumber("f_pasar_dengan_bangunan_permanen"),
+
+      pasar_dengan_bangunan_semi_permanen:
+        getNumber("f_pasar_dengan_bangunan_semi_permanen"),
+
+      kelompok_pertokoan:
+        getNumber("f_kelompok_pertokoan"),
+
+      mini_market:
+        getNumber("f_mini_market"),
+
+      restoran_rumah_makan:
+        getNumber("f_restoran_rumah_makan"),
+
+      koperasi:
+        getNumber("f_koperasi"),
+
+      koperasi_kud:
+        getNumber("f_koperasi_kud"),
+
+      koperasi_simpan_pinjam:
+        getNumber("f_koperasi_simpan_pinjam"),
+
+      koperasi_lainnya:
+        getNumber("f_koperasi_lainnya"),
+
+      bank:
+        getNumber("f_bank"),
+
+      bpr:
+        getNumber("f_bpr"),
+
+
+      jumlah_petani:
+        getNumber("f_jumlah_petani"),
+
+      luas_sawah_ha:
+        getNumber("f_luas_sawah_ha"),
+
+
+      bts:
+        getNumber("f_bts"),
+
+      operator_seluler:
+        getNumber("f_operator_seluler"),
+
+      kekuatan_sinyal:
+        getValue("f_kekuatan_sinyal"),
+
+      jenis_sinyal_internet:
+        getValue("f_jenis_sinyal_internet"),
+
+      angkutan_umum:
+        getValue("f_angkutan_umum"),
+
+      jenis_jalan:
+        getValue("f_jenis_jalan"),
+
+      akses_jalan_sepanjang_tahun:
+        getBoolean("f_akses_jalan_sepanjang_tahun"),
+
+
+      kantor_pos:
+        getValue("f_kantor_pos"),
+
+      agen_ekspedisi_swasta:
+        getValue("f_agen_ekspedisi_swasta"),
+
+
+      tahun_data:
+        getNumber("f_tahun_data"),
+
+      sumber:
+        getValue("f_sumber"),
+
+      catatan_data:
+        getValue("f_catatan_data"),
+
+      updated_at:
+        new Date().toISOString()
+
+    };
 
 
     let result;
@@ -2157,15 +2168,17 @@ locationForm.addEventListener(
     }
 
 
-    showLoading(false);
-
-
     if(result.error){
 
       alert(
         "Gagal menyimpan data:\n\n" +
         result.error.message
       );
+
+      saveBtn.disabled = false;
+
+      saveBtn.textContent =
+        "💾 Simpan";
 
       return;
     }
@@ -2175,10 +2188,17 @@ locationForm.addEventListener(
 
     await loadLocations();
 
+
+    saveBtn.disabled = false;
+
+    saveBtn.textContent =
+      "💾 Simpan";
+
+
     alert(
       editMode
         ? "Data desa berhasil diperbarui."
-        : "Desa berhasil ditambahkan."
+        : "Data desa berhasil ditambahkan."
     );
 
   }
@@ -2189,8 +2209,7 @@ locationForm.addEventListener(
    DELETE
 ===================================================== */
 
-window.deleteLocation =
-async function(id){
+async function deleteLocation(id){
 
   const item =
     locations.find(
@@ -2202,17 +2221,13 @@ async function(id){
 
   const confirmed =
     confirm(
-      "Hapus data desa \"" +
+      "Hapus data desa berikut?\n\n" +
       item.nama +
-      "\"?\n\n" +
-      "Data yang dihapus tidak dapat dikembalikan."
+      "\n\nTindakan ini tidak dapat dibatalkan."
     );
 
 
   if(!confirmed) return;
-
-
-  showLoading(true);
 
 
   const {
@@ -2222,9 +2237,6 @@ async function(id){
       .from("locations")
       .delete()
       .eq("id",id);
-
-
-  showLoading(false);
 
 
   if(error){
@@ -2240,11 +2252,14 @@ async function(id){
 
   await loadLocations();
 
+
   alert(
-    "Data desa berhasil dihapus."
+    "Data " +
+    item.nama +
+    " berhasil dihapus."
   );
 
-};
+}
 
 
 /* =====================================================
@@ -2255,20 +2270,19 @@ function closeModal(){
 
   modal.classList.add("hidden");
 
-  document.getElementById("f_id")
-    .disabled = false;
-
 }
 
 
-document.getElementById("closeModal")
+document
+  .getElementById("closeModal")
   .addEventListener(
     "click",
     closeModal
   );
 
 
-document.getElementById("cancelBtn")
+document
+  .getElementById("cancelBtn")
   .addEventListener(
     "click",
     closeModal
@@ -2303,7 +2317,8 @@ search.addEventListener(
    REFRESH
 ===================================================== */
 
-document.getElementById("refreshBtn")
+document
+  .getElementById("refreshBtn")
   .addEventListener(
     "click",
     loadLocations
@@ -2314,7 +2329,8 @@ document.getElementById("refreshBtn")
    LOGOUT
 ===================================================== */
 
-document.getElementById("logoutBtn")
+document
+  .getElementById("logoutBtn")
   .addEventListener(
     "click",
     async function(){
@@ -2323,8 +2339,33 @@ document.getElementById("logoutBtn")
 
       showLogin();
 
+      loginForm.reset();
+
     }
   );
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHtml(value){
+
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+function escapeAttr(value){
+
+  return escapeHtml(value);
+
+}
 
 
 /* =====================================================
@@ -2336,4 +2377,4 @@ checkSession();
 </script>
 
 </body>
-                                                    </html>
+  </html>
