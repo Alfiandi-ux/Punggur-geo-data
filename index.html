@@ -1,1581 +1,1055 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Punggur Geo Data</title>
-
-<link rel="preconnect" href="https://unpkg.com">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-
-<style>
-:root{
-  --primary:#2563eb;
-  --primary-dark:#1d4ed8;
-  --bg:#f4f6f8;
-  --card:#ffffff;
-  --text:#1f2937;
-  --muted:#6b7280;
-  --border:#e5e7eb;
-  --success:#16a34a;
-  --danger:#dc2626;
-  --warning:#d97706;
-  --shadow:0 4px 18px rgba(0,0,0,.08);
-}
-
-*{
-  box-sizing:border-box;
-}
-
-body{
-  margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-}
-
-header{
-  background:var(--card);
-  border-bottom:1px solid var(--border);
-  padding:18px 20px;
-  position:sticky;
-  top:0;
-  z-index:1000;
-  box-shadow:0 2px 10px rgba(0,0,0,.05);
-}
-
-.header-inner{
-  max-width:1400px;
-  margin:auto;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-}
-
-.logo h1{
-  margin:0;
-  font-size:24px;
-}
-
-.logo p{
-  margin:4px 0 0;
-  color:var(--muted);
-  font-size:13px;
-}
-
-.container{
-  max-width:1400px;
-  margin:auto;
-  padding:18px;
-}
-
-.toolbar{
-  background:var(--card);
-  padding:15px;
-  border-radius:14px;
-  box-shadow:var(--shadow);
-  margin-bottom:18px;
-}
-
-.toolbar-grid{
-  display:grid;
-  grid-template-columns:2fr 1fr 1fr 1fr auto;
-  gap:10px;
-}
-
-input,
-select,
-button{
-  width:100%;
-  padding:11px 12px;
-  border:1px solid var(--border);
-  border-radius:9px;
-  font-size:14px;
-  background:white;
-}
-
-button{
-  cursor:pointer;
-  font-weight:600;
-}
-
-button.primary{
-  background:var(--primary);
-  color:white;
-  border-color:var(--primary);
-}
-
-button.primary:hover{
-  background:var(--primary-dark);
-}
-
-button.secondary{
-  background:#eef2ff;
-  color:#3730a3;
-}
-
-button.danger{
-  background:#fee2e2;
-  color:#991b1b;
-}
-
-.stats{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:14px;
-  margin-bottom:18px;
-}
-
-.stat{
-  background:var(--card);
-  border-radius:14px;
-  padding:18px;
-  box-shadow:var(--shadow);
-}
-
-.stat .label{
-  font-size:13px;
-  color:var(--muted);
-}
-
-.stat .value{
-  margin-top:7px;
-  font-size:25px;
-  font-weight:700;
-}
-
-.main-grid{
-  display:grid;
-  grid-template-columns:minmax(0,2fr) minmax(300px,1fr);
-  gap:18px;
-}
-
-.card{
-  background:var(--card);
-  border-radius:14px;
-  box-shadow:var(--shadow);
-  overflow:hidden;
-}
-
-.card-header{
-  padding:15px 17px;
-  border-bottom:1px solid var(--border);
-  font-weight:700;
-}
-
-#map{
-  height:620px;
-  width:100%;
-}
-
-.panel{
-  padding:15px;
-}
-
-.detail-title{
-  font-size:21px;
-  font-weight:700;
-  margin-bottom:5px;
-}
-
-.muted{
-  color:var(--muted);
-  font-size:13px;
-}
-
-.info-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:9px;
-  margin-top:14px;
-}
-
-.info{
-  background:#f8fafc;
-  padding:11px;
-  border-radius:9px;
-}
-
-.info small{
-  display:block;
-  color:var(--muted);
-  font-size:11px;
-}
-
-.info strong{
-  display:block;
-  margin-top:3px;
-}
-
-.action-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-top:14px;
-}
-
-.section{
-  margin-top:18px;
-}
-
-.section h3{
-  margin:0 0 10px;
-  font-size:16px;
-}
-
-.ranking{
-  max-height:350px;
-  overflow:auto;
-}
-
-.rank-item{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  padding:10px 0;
-  border-bottom:1px solid var(--border);
-}
-
-.rank-item:last-child{
-  border-bottom:0;
-}
-
-.rank-name{
-  font-weight:600;
-}
-
-.rank-value{
-  color:var(--primary);
-  font-weight:700;
-  white-space:nowrap;
-}
-
-.bottom-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:18px;
-  margin-top:18px;
-}
-
-.table-wrap{
-  overflow:auto;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:13px;
-}
-
-th,
-td{
-  padding:10px;
-  border-bottom:1px solid var(--border);
-  text-align:left;
-  white-space:nowrap;
-}
-
-th{
-  background:#f8fafc;
-}
-
-.compare-controls{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr auto;
-  gap:8px;
-  padding:15px;
-}
-
-.compare-result{
-  padding:0 15px 15px;
-}
-
-.empty{
-  padding:25px;
-  text-align:center;
-  color:var(--muted);
-}
-
-.loading{
-  position:fixed;
-  inset:0;
-  background:rgba(255,255,255,.88);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
-  font-weight:700;
-}
-
-.legend{
-  background:white;
-  padding:8px 10px;
-  line-height:18px;
-  border-radius:7px;
-  box-shadow:0 1px 5px rgba(0,0,0,.2);
-  font-size:12px;
-}
-
-.legend i{
-  width:14px;
-  height:14px;
-  float:left;
-  margin-right:7px;
-  opacity:.8;
-}
-
-.footer{
-  text-align:center;
-  padding:25px 10px;
-  color:var(--muted);
-  font-size:12px;
-}
-
-@media(max-width:1000px){
-  .toolbar-grid{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .stats{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .main-grid{
-    grid-template-columns:1fr;
-  }
-
-  .bottom-grid{
-    grid-template-columns:1fr;
-  }
-}
-
-@media(max-width:600px){
-  header{
-    padding:14px;
-  }
-
-  .logo h1{
-    font-size:20px;
-  }
-
-  .container{
-    padding:10px;
-  }
-
-  .toolbar-grid{
-    grid-template-columns:1fr;
-  }
-
-  .stats{
-    grid-template-columns:1fr 1fr;
-    gap:9px;
-  }
-
-  .stat{
-    padding:13px;
-  }
-
-  .stat .value{
-    font-size:20px;
-  }
-
-  #map{
-    height:480px;
-  }
-
-  .compare-controls{
-    grid-template-columns:1fr;
-  }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Punggur Geo Data</title>
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f7fa;
+      color: #1f2937;
+    }
+
+    header {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 15px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .title {
+      font-size: 25px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .subtitle {
+      margin: 5px 0 0;
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 18px;
+    }
+
+    .search-box {
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      margin-bottom: 15px;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    input,
+    select,
+    button {
+      font-family: inherit;
+    }
+
+    input,
+    select {
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 11px 12px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #6b7280;
+    }
+
+    #searchInput {
+      flex: 1;
+      min-width: 220px;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 11px 16px;
+      cursor: pointer;
+      background: #374151;
+      color: white;
+      font-weight: 600;
+    }
+
+    button:hover {
+      background: #1f2937;
+    }
+
+    .secondary-btn {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .secondary-btn:hover {
+      background: #d1d5db;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .info-card {
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .info-card .label {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 6px;
+    }
+
+    .info-card .value {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    #map {
+      width: 100%;
+      height: 520px;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      margin-bottom: 15px;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      margin-bottom: 15px;
+    }
+
+    .panel h2 {
+      margin-top: 0;
+      font-size: 19px;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .detail-item {
+      background: #f9fafb;
+      padding: 11px;
+      border-radius: 8px;
+    }
+
+    .detail-item .label {
+      color: #6b7280;
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .detail-item .value {
+      font-weight: 600;
+      font-size: 14px;
+      word-break: break-word;
+    }
+
+    .nearest-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nearest-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .nearest-item:hover {
+      background: #f9fafb;
+    }
+
+    .nearest-name {
+      font-weight: 600;
+    }
+
+    .nearest-distance {
+      color: #6b7280;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .status {
+      text-align: center;
+      padding: 15px;
+      color: #6b7280;
+    }
+
+    .error {
+      color: #b91c1c;
+      background: #fef2f2;
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px 15px;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .leaflet-popup-content {
+      line-height: 1.5;
+    }
+
+    .popup-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .popup-btn {
+      margin-top: 8px;
+      width: 100%;
+      padding: 8px;
+      font-size: 12px;
+    }
+
+    @media (max-width: 800px) {
+      .info-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .detail-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      #map {
+        height: 430px;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .container {
+        padding: 10px;
+      }
+
+      header {
+        padding: 13px;
+      }
+
+      .title {
+        font-size: 21px;
+      }
+
+      .info-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+
+      .info-card {
+        padding: 12px;
+      }
+
+      .info-card .value {
+        font-size: 18px;
+      }
+
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+
+      #map {
+        height: 380px;
+      }
+
+      .search-row {
+        flex-direction: column;
+      }
+
+      input,
+      select,
+      button {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<div id="loading" class="loading">
-  Memuat Punggur Geo Data...
-</div>
-
 <header>
-  <div class="header-inner">
-    <div class="logo">
-      <h1>📍 Punggur Geo Data</h1>
-      <p>Data geospasial desa Kecamatan Punggur</p>
-    </div>
-
-    <button id="locateBtn" class="primary" style="width:auto">
-      📍 Lokasi Saya
-    </button>
+  <div class="header-container">
+    <h1 class="title">Punggur Geo Data</h1>
+    <p class="subtitle">
+      Data geografis dan informasi desa Kecamatan Punggur, Lampung Tengah
+    </p>
   </div>
 </header>
 
 <div class="container">
 
-  <!-- TOOLBAR -->
-  <div class="toolbar">
-    <div class="toolbar-grid">
+  <div class="search-box">
+
+    <div class="search-row">
 
       <input
+        type="text"
         id="searchInput"
-        type="search"
-        placeholder="🔍 Cari nama desa..."
+        placeholder="Cari nama desa..."
       >
 
-      <select id="themeSelect">
-        <option value="default">📍 Semua Desa</option>
-        <option value="population">👥 Jumlah Penduduk</option>
-        <option value="density">🏘️ Kepadatan Penduduk</option>
-        <option value="area">📐 Luas Wilayah</option>
-        <option value="bts">📡 Jumlah BTS</option>
-        <option value="market">🏪 Pasar</option>
-        <option value="worship">🕌 Tempat Ibadah</option>
-      </select>
+      <button onclick="searchLocation()">
+        🔎 Cari
+      </button>
 
-      <select id="radiusSelect">
-        <option value="0">Radius: Nonaktif</option>
-        <option value="1">Radius 1 km</option>
-        <option value="3">Radius 3 km</option>
-        <option value="5">Radius 5 km</option>
-        <option value="10">Radius 10 km</option>
-        <option value="20">Radius 20 km</option>
-      </select>
+      <button
+        class="secondary-btn"
+        onclick="showAllLocations()"
+      >
+        Tampilkan Semua
+      </button>
 
-      <select id="sortSelect">
-        <option value="population">Ranking Penduduk</option>
-        <option value="density">Ranking Kepadatan</option>
-        <option value="area">Ranking Luas</option>
-        <option value="bts">Ranking BTS</option>
-        <option value="market">Ranking Pasar</option>
-      </select>
-
-      <button id="resetBtn" class="secondary">
-        Reset
+      <button
+        class="secondary-btn"
+        onclick="findMyLocation()"
+      >
+        📍 Lokasi Saya
       </button>
 
     </div>
+
   </div>
 
-  <!-- STATISTIK -->
-  <div class="stats">
+  <div class="info-grid">
 
-    <div class="stat">
+    <div class="info-card">
       <div class="label">Jumlah Desa</div>
-      <div id="totalDesa" class="value">0</div>
+      <div class="value" id="totalDesa">-</div>
     </div>
 
-    <div class="stat">
-      <div class="label">Total Penduduk</div>
-      <div id="totalPenduduk" class="value">0</div>
+    <div class="info-card">
+      <div class="label">Jumlah Penduduk</div>
+      <div class="value" id="totalPenduduk">-</div>
     </div>
 
-    <div class="stat">
-      <div class="label">Total Luas</div>
-      <div id="totalLuas" class="value">0 km²</div>
+    <div class="info-card">
+      <div class="label">Luas Wilayah</div>
+      <div class="value" id="totalLuas">-</div>
     </div>
 
-    <div class="stat">
-      <div class="label">Total BTS</div>
-      <div id="totalBts" class="value">0</div>
+    <div class="info-card">
+      <div class="label">Data Tahun</div>
+      <div class="value" id="tahunData">-</div>
     </div>
 
-    <div class="stat">
-      <div class="label">Desa Terdekat</div>
-      <div id="nearestName" class="value" style="font-size:17px">
-        -
+  </div>
+
+  <div id="map"></div>
+
+  <div class="panel">
+
+    <h2>📍 Desa Terdekat</h2>
+
+    <div id="nearestContainer">
+      <div class="status">
+        Pilih lokasi atau gunakan tombol "Lokasi Saya" untuk melihat desa terdekat.
       </div>
     </div>
 
   </div>
 
-  <!-- PETA + DETAIL -->
-  <div class="main-grid">
+  <div class="panel">
 
-    <div class="card">
-      <div class="card-header">
-        🗺️ Peta Interaktif
-      </div>
+    <h2>📋 Detail Lokasi</h2>
 
-      <div id="map"></div>
-    </div>
-
-    <div class="card">
-
-      <div class="card-header">
-        📋 Informasi Desa
-      </div>
-
-      <div id="detailPanel" class="panel">
-        <div class="empty">
-          Klik marker desa pada peta untuk melihat detail.
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-
-  <!-- RANKING + DESA TERDEKAT -->
-  <div class="bottom-grid">
-
-    <div class="card">
-
-      <div class="card-header">
-        🏆 Ranking Desa
-      </div>
-
-      <div id="ranking" class="panel ranking"></div>
-
-    </div>
-
-    <div class="card">
-
-      <div class="card-header">
-        📍 Desa Terdekat
-      </div>
-
-      <div id="nearestList" class="panel ranking">
-        <div class="empty">
-          Aktifkan lokasi untuk melihat desa terdekat.
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-
-  <!-- PERBANDINGAN -->
-  <div class="card section">
-
-    <div class="card-header">
-      ⚖️ Perbandingan Desa
-    </div>
-
-    <div class="compare-controls">
-
-      <select id="compare1">
-        <option value="">Pilih Desa 1</option>
-      </select>
-
-      <select id="compare2">
-        <option value="">Pilih Desa 2</option>
-      </select>
-
-      <select id="compare3">
-        <option value="">Pilih Desa 3</option>
-      </select>
-
-      <button id="compareBtn" class="primary">
-        Bandingkan
-      </button>
-
-    </div>
-
-    <div id="compareResult" class="compare-result">
-      <div class="empty">
-        Pilih desa untuk melakukan perbandingan.
+    <div id="detailContainer">
+      <div class="status">
+        Pilih salah satu lokasi pada peta untuk melihat informasi.
       </div>
     </div>
 
-  </div>
-
-  <!-- DATA -->
-  <div class="card section">
-
-    <div class="card-header">
-      📊 Data Desa
-    </div>
-
-    <div class="table-wrap">
-
-      <table>
-
-        <thead>
-          <tr>
-            <th>Desa</th>
-            <th>Penduduk</th>
-            <th>Luas</th>
-            <th>Kepadatan</th>
-            <th>BTS</th>
-            <th>Pasar</th>
-            <th>Internet</th>
-          </tr>
-        </thead>
-
-        <tbody id="dataTable"></tbody>
-
-      </table>
-
-    </div>
-
-  </div>
-
-  <div class="footer">
-    Punggur Geo Data · Data observasi 2023 · Kecamatan Punggur, Lampung Tengah
   </div>
 
 </div>
 
+<footer>
+  Punggur Geo Data • Data desa berdasarkan sumber BPS Kabupaten Lampung Tengah
+</footer>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
 
 <script>
 
 let locations = [];
+let map;
 let markers = [];
-let heatLayer = null;
-let radiusCircle = null;
 let userMarker = null;
-let userLocation = null;
-let currentTheme = "default";
+let selectedLocation = null;
 
-const map = L.map("map").setView(
-  [-5.035,105.275],
+/* ==========================================
+   INISIALISASI PETA
+========================================== */
+
+map = L.map("map").setView(
+  [-5.035, 105.28],
   12
 );
 
-/* ===============================
-   BASE MAP
-================================ */
+
+/* ==========================================
+   PETA DEFAULT
+========================================== */
 
 const standardLayer = L.tileLayer(
   "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
   {
-    maxZoom:19,
-    attribution:"© OpenStreetMap contributors"
-  }
-);
-
-const satelliteLayer = L.tileLayer(
-  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-  {
-    maxZoom:19,
-    attribution:"Tiles © Esri"
-  }
-);
-
-standardLayer.addTo(map);
-
-L.control.layers(
-  {
-    "🗺️ Peta Standar":standardLayer,
-    "🛰️ Citra Satelit":satelliteLayer
-  },
-  {},
-  {
-    collapsed:true
+    attribution: '&copy; OpenStreetMap contributors'
   }
 ).addTo(map);
 
 
-/* ===============================
-   UTILITIES
-================================ */
+/* ==========================================
+   CITRA SATELIT
+========================================== */
 
-function formatNumber(value){
-
-  if(value === null || value === undefined || value === ""){
-    return "-";
+const satelliteLayer = L.tileLayer(
+  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+  {
+    attribution: "Tiles &copy; Esri"
   }
-
-  return Number(value).toLocaleString("id-ID");
-}
+);
 
 
-function kmDistance(lat1,lon1,lat2,lon2){
+/* ==========================================
+   KONTROL PETA
+========================================== */
 
-  const R = 6371;
-
-  const dLat =
-    (lat2-lat1) * Math.PI/180;
-
-  const dLon =
-    (lon2-lon1) * Math.PI/180;
-
-  const a =
-    Math.sin(dLat/2)**2 +
-    Math.cos(lat1*Math.PI/180) *
-    Math.cos(lat2*Math.PI/180) *
-    Math.sin(dLon/2)**2;
-
-  return R * 2 *
-    Math.atan2(
-      Math.sqrt(a),
-      Math.sqrt(1-a)
-    );
-}
+L.control.layers(
+  {
+    "Peta Jalan": standardLayer,
+    "Citra Satelit": satelliteLayer
+  },
+  {},
+  {
+    collapsed: true
+  }
+).addTo(map);
 
 
-/* ===============================
-   LOAD JSON
-================================ */
+/* ==========================================
+   LOAD LOCATIONS.JSON
+========================================== */
 
-async function loadData(){
+fetch("locations.json")
 
-  try{
+  .then(response => {
 
-    const response =
-      await fetch("locations.json");
-
-    if(!response.ok){
+    if (!response.ok) {
       throw new Error(
-        "locations.json tidak ditemukan"
+        "File locations.json tidak ditemukan."
       );
     }
 
-    locations =
-      await response.json();
+    return response.json();
 
-    locations =
-      locations.filter(
-        d =>
-          Number.isFinite(
-            Number(d.latitude)
-          ) &&
-          Number.isFinite(
-            Number(d.longitude)
-          )
-      );
+  })
 
-    document.getElementById("loading").style.display="none";
+  .then(data => {
 
-    initialize();
+    locations = data;
 
-  }catch(error){
+    initializeData();
 
-    document.getElementById("loading").innerHTML = `
-      <div style="text-align:center;padding:20px">
-        <h2>❌ Gagal memuat data</h2>
-        <p>${error.message}</p>
-        <p>Pastikan <b>locations.json</b> berada satu folder dengan index.html.</p>
+  })
+
+  .catch(error => {
+
+    console.error(error);
+
+    document.getElementById("detailContainer").innerHTML = `
+      <div class="error">
+        ❌ Gagal memuat locations.json.<br><br>
+        Pastikan file <b>locations.json</b> berada
+        satu folder dengan index.html.
       </div>
     `;
 
-    console.error(error);
-  }
+  });
+
+
+/* ==========================================
+   INISIALISASI DATA
+========================================== */
+
+function initializeData() {
+
+  updateStatistics();
+
+  showAllLocations();
 
 }
 
 
-/* ===============================
-   INITIALIZE
-================================ */
+/* ==========================================
+   STATISTIK
+========================================== */
 
-function initialize(){
+function updateStatistics() {
 
-  updateStats(locations);
+  const totalDesa = locations.length;
 
-  populateCompare();
-
-  renderTable(locations);
-
-  renderRanking();
-
-  renderMarkers(locations);
-
-  if(locations.length){
-
-    const bounds =
-      L.latLngBounds(
-        locations.map(
-          d => [
-            Number(d.latitude),
-            Number(d.longitude)
-          ]
-        )
-      );
-
-    map.fitBounds(bounds.pad(.12));
-
-  }
-
-}
-
-
-/* ===============================
-   MARKER COLOR
-================================ */
-
-function getThemeValue(d){
-
-  switch(currentTheme){
-
-    case "population":
-      return Number(d.jumlah_penduduk) || 0;
-
-    case "density":
-      return Number(d.kepadatan_penduduk) || 0;
-
-    case "area":
-      return Number(d.luas_km2) || 0;
-
-    case "bts":
-      return Number(d.bts) || 0;
-
-    case "market":
-      return Number(d.pasar) || 0;
-
-    case "worship":
-      return Number(d.tempat_ibadah) || 0;
-
-    default:
-      return 1;
-
-  }
-
-}
-
-
-function themeColor(value){
-
-  if(currentTheme === "default"){
-    return "#2563eb";
-  }
-
-  if(value >= 5000) return "#991b1b";
-  if(value >= 3000) return "#dc2626";
-  if(value >= 2000) return "#ea580c";
-  if(value >= 1000) return "#f59e0b";
-
-  return "#16a34a";
-}
-
-
-/* ===============================
-   MARKERS
-================================ */
-
-function renderMarkers(data){
-
-  markers.forEach(
-    marker => map.removeLayer(marker)
+  const totalPenduduk = locations.reduce(
+    (sum, item) =>
+      sum + Number(item.jumlah_penduduk || 0),
+    0
   );
+
+  const totalLuas = locations.reduce(
+    (sum, item) =>
+      sum + Number(item.luas_km2 || 0),
+    0
+  );
+
+  const tahun = Math.max(
+    ...locations.map(
+      item => Number(item.tahun_data || 0)
+    )
+  );
+
+  document.getElementById("totalDesa").textContent =
+    totalDesa;
+
+  document.getElementById("totalPenduduk").textContent =
+    totalPenduduk.toLocaleString("id-ID");
+
+  document.getElementById("totalLuas").textContent =
+    totalLuas.toFixed(2) + " km²";
+
+  document.getElementById("tahunData").textContent =
+    tahun || "-";
+}
+
+
+/* ==========================================
+   MARKER
+========================================== */
+
+function clearMarkers() {
+
+  markers.forEach(marker => {
+    map.removeLayer(marker);
+  });
 
   markers = [];
 
-  if(heatLayer){
-    map.removeLayer(heatLayer);
-    heatLayer = null;
-  }
+}
 
-  const heatData = [];
 
-  data.forEach(d => {
+/* ==========================================
+   TAMPILKAN SEMUA LOKASI
+========================================== */
 
-    const lat = Number(d.latitude);
-    const lng = Number(d.longitude);
+function showAllLocations() {
 
-    const value =
-      getThemeValue(d);
+  if (!locations.length) return;
 
-    const color =
-      themeColor(value);
+  clearMarkers();
 
-    const marker =
-      L.circleMarker(
-        [lat,lng],
-        {
-          radius:8,
-          fillColor:color,
-          color:"#ffffff",
-          weight:2,
-          opacity:1,
-          fillOpacity:.85
-        }
-      );
+  const bounds = [];
 
-    marker.bindPopup(`
-      <div style="min-width:220px">
+  locations.forEach(location => {
 
-        <h3 style="margin:0 0 5px">
-          ${d.nama}
-        </h3>
+    if (
+      typeof location.latitude !== "number" ||
+      typeof location.longitude !== "number"
+    ) {
+      return;
+    }
 
-        <div style="color:#6b7280;font-size:12px">
-          ${d.kabupaten}, ${d.provinsi}
-        </div>
-
-        <hr>
-
-        <b>👥 Penduduk:</b>
-        ${formatNumber(d.jumlah_penduduk)}
-        <br>
-
-        <b>📐 Luas:</b>
-        ${formatNumber(d.luas_km2)} km²
-        <br>
-
-        <b>🏘️ Kepadatan:</b>
-        ${formatNumber(d.kepadatan_penduduk)}
-        <br>
-
-        <b>📡 BTS:</b>
-        ${formatNumber(d.bts)}
-        <br><br>
-
-        <button
-          onclick="showDetail('${d.id}')"
-          style="background:#2563eb;color:white;border:0;padding:8px;border-radius:6px"
-        >
-          Lihat Detail
-        </button>
-
-      </div>
-    `);
-
-    marker.on(
-      "click",
-      () => showDetail(d.id)
-    );
+    const marker = createMarker(location);
 
     marker.addTo(map);
 
     markers.push(marker);
 
-    heatData.push([
-      lat,
-      lng,
-      Math.max(
-        0.2,
-        Math.min(
-          1,
-          (Number(d.kepadatan_penduduk)||1)/3000
-        )
-      )
+    bounds.push([
+      location.latitude,
+      location.longitude
     ]);
 
   });
 
-  /* HEATMAP */
+  if (bounds.length) {
 
-  heatLayer =
-    L.heatLayer(
-      heatData,
-      {
-        radius:35,
-        blur:25,
-        maxZoom:15,
-        minOpacity:.25
-      }
-    );
+    map.fitBounds(bounds, {
+      padding: [30, 30]
+    });
 
-  /*
-    Heatmap hanya dinyalakan ketika
-    mode kepadatan dipilih.
-  */
-
-  if(currentTheme === "density"){
-    heatLayer.addTo(map);
   }
 
 }
 
 
-/* ===============================
-   DETAIL
-================================ */
+/* ==========================================
+   BUAT MARKER
+========================================== */
 
-function showDetail(id){
+function createMarker(location) {
 
-  const d =
-    locations.find(
-      x => String(x.id) === String(id)
-    );
+  const marker = L.marker([
+    location.latitude,
+    location.longitude
+  ]);
 
-  if(!d) return;
+  const popup = `
 
-  document.getElementById("detailPanel").innerHTML = `
+    <div>
 
-    <div class="detail-title">
-      ${d.nama}
-    </div>
-
-    <div class="muted">
-      ${d.kode_kemendagri || "-"}
-      · Kode Pos ${d.kode_pos || "-"}
-    </div>
-
-    <div class="info-grid">
-
-      <div class="info">
-        <small>Penduduk</small>
-        <strong>
-          ${formatNumber(d.jumlah_penduduk)}
-        </strong>
+      <div class="popup-title">
+        ${escapeHtml(location.nama)}
       </div>
 
-      <div class="info">
-        <small>Laki-laki</small>
-        <strong>
-          ${formatNumber(d.laki_laki)}
-        </strong>
+      <div>
+        ${escapeHtml(location.kabupaten || "")}
       </div>
 
-      <div class="info">
-        <small>Perempuan</small>
-        <strong>
-          ${formatNumber(d.perempuan)}
-        </strong>
+      <div>
+        Penduduk:
+        <b>
+          ${formatNumber(location.jumlah_penduduk)}
+        </b>
       </div>
 
-      <div class="info">
-        <small>Luas</small>
-        <strong>
-          ${formatNumber(d.luas_km2)} km²
-        </strong>
+      <div>
+        Luas:
+        <b>
+          ${formatNumber(location.luas_km2)} km²
+        </b>
       </div>
-
-      <div class="info">
-        <small>Kepadatan</small>
-        <strong>
-          ${formatNumber(d.kepadatan_penduduk)}
-        </strong>
-      </div>
-
-      <div class="info">
-        <small>Elevasi</small>
-        <strong>
-          ${formatNumber(d.elevasi_m)} mdpl
-        </strong>
-      </div>
-
-      <div class="info">
-        <small>Tempat Ibadah</small>
-        <strong>
-          ${formatNumber(d.tempat_ibadah)}
-        </strong>
-      </div>
-
-      <div class="info">
-        <small>Pasar</small>
-        <strong>
-          ${formatNumber(d.pasar)}
-        </strong>
-      </div>
-
-      <div class="info">
-        <small>BTS</small>
-        <strong>
-          ${formatNumber(d.bts)}
-        </strong>
-      </div>
-
-      <div class="info">
-        <small>Operator</small>
-        <strong>
-          ${formatNumber(d.operator_seluler)}
-        </strong>
-      </div>
-
-      <div class="info">
-        <small>Sinyal</small>
-        <strong>
-          ${d.kekuatan_sinyal || "-"}
-        </strong>
-      </div>
-
-      <div class="info">
-        <small>Internet</small>
-        <strong>
-          ${d.jenis_sinyal_internet || "-"}
-        </strong>
-      </div>
-
-    </div>
-
-    <div class="section">
-
-      <h3>🛣️ Infrastruktur</h3>
-
-      <div class="info-grid">
-
-        <div class="info">
-          <small>Jenis Jalan</small>
-          <strong>
-            ${d.jenis_jalan || "-"}
-          </strong>
-        </div>
-
-        <div class="info">
-          <small>Akses Sepanjang Tahun</small>
-          <strong>
-            ${d.akses_jalan_sepanjang_tahun ? "Ya" : "Tidak"}
-          </strong>
-        </div>
-
-        <div class="info">
-          <small>Angkutan Umum</small>
-          <strong>
-            ${d.angkutan_umum || "-"}
-          </strong>
-        </div>
-
-        <div class="info">
-          <small>Kantor Pos</small>
-          <strong>
-            ${d.kantor_pos || "-"}
-          </strong>
-        </div>
-
-      </div>
-
-    </div>
-
-    <div class="action-grid">
 
       <button
-        class="primary"
-        onclick="navigateTo(${d.latitude},${d.longitude})"
+        class="popup-btn"
+        onclick="selectLocation('${location.id}')"
       >
-        🧭 Navigasi
-      </button>
-
-      <button
-        class="secondary"
-        onclick="focusVillage(${d.latitude},${d.longitude})"
-      >
-        🔎 Fokus Peta
+        Lihat Detail
       </button>
 
     </div>
-
-    <div class="section muted">
-      <b>Sumber:</b><br>
-      ${d.sumber || "-"}
-    </div>
-
   `;
 
+  marker.bindPopup(popup);
+
+  marker.on("click", function() {
+
+    selectLocation(location.id);
+
+  });
+
+  return marker;
+
 }
 
 
-/* ===============================
-   FOCUS VILLAGE
-================================ */
+/* ==========================================
+   PILIH LOKASI
+========================================== */
 
-function focusVillage(lat,lng){
+function selectLocation(id) {
+
+  const location = locations.find(
+    item => item.id === id
+  );
+
+  if (!location) return;
+
+  selectedLocation = location;
+
+  showDetail(location);
 
   map.setView(
-    [Number(lat),Number(lng)],
-    15
+    [
+      location.latitude,
+      location.longitude
+    ],
+    14
+  );
+
+  showNearestFromPoint(
+    location.latitude,
+    location.longitude,
+    location.id
   );
 
 }
 
 
-/* ===============================
-   NAVIGATION
-================================ */
+/* ==========================================
+   DETAIL LOKASI
+========================================== */
 
-function navigateTo(lat,lng){
+function showDetail(location) {
 
-  const url =
-    `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+  const fields = [
 
-  window.open(
-    url,
-    "_blank"
-  );
+    ["Nama Desa", location.nama],
+    ["Tipe", location.tipe],
+    ["Kode Kemendagri", location.kode_kemendagri],
+    ["Kode Pos", location.kode_pos],
+
+    ["Kabupaten", location.kabupaten],
+    ["Provinsi", location.provinsi],
+
+    ["Latitude", location.latitude],
+    ["Longitude", location.longitude],
+
+    ["Elevasi", formatNumber(location.elevasi_m) + " mdpl"],
+
+    ["Jumlah Penduduk", formatNumber(location.jumlah_penduduk)],
+    ["Laki-laki", formatNumber(location.laki_laki)],
+    ["Perempuan", formatNumber(location.perempuan)],
+
+    ["Jumlah KK", formatNull(location.jumlah_kk)],
+
+    [
+      "Keluarga Pengguna Listrik",
+      formatNumber(
+        location.jumlah_keluarga_pengguna_listrik
+      )
+    ],
+
+    [
+      "Luas",
+      formatNumber(location.luas_km2) + " km²"
+    ],
+
+    [
+      "Luas",
+      formatNumber(location.luas_ha) + " ha"
+    ],
+
+    ["Jumlah RT", formatNull(location.jumlah_rt)],
+
+    [
+      "Tempat Ibadah",
+      formatNumber(location.tempat_ibadah)
+    ],
+
+    ["Masjid", formatNumber(location.masjid)],
+    ["Mushola", formatNumber(location.mushola)],
+    ["Gereja", formatNumber(location.gereja)],
+
+    ["Pasar", formatNumber(location.pasar)],
+
+    [
+      "Mini Market",
+      formatNumber(location.mini_market)
+    ],
+
+    [
+      "Rumah Makan",
+      formatNumber(location.restoran_rumah_makan)
+    ],
+
+    [
+      "Koperasi",
+      formatNumber(location.koperasi)
+    ],
+
+    [
+      "Bank",
+      formatNumber(location.bank)
+    ],
+
+    [
+      "BPR",
+      formatNumber(location.bpr)
+    ],
+
+    [
+      "Kepadatan Penduduk",
+      formatNumber(location.kepadatan_penduduk)
+    ],
+
+    [
+      "Persentase Penduduk",
+      formatNumber(location.persentase_penduduk) + "%"
+    ],
+
+    [
+      "Rasio Jenis Kelamin",
+      formatNumber(location.rasio_jenis_kelamin)
+    ],
+
+    [
+      "BTS",
+      formatNumber(location.bts)
+    ],
+
+    [
+      "Operator Seluler",
+      formatNumber(location.operator_seluler)
+    ],
+
+    [
+      "Kekuatan Sinyal",
+      location.kekuatan_sinyal
+    ],
+
+    [
+      "Internet",
+      location.jenis_sinyal_internet
+    ],
+
+    [
+      "Angkutan Umum",
+      location.angkutan_umum
+    ],
+
+    [
+      "Jenis Jalan",
+      location.jenis_jalan
+    ],
+
+    [
+      "Akses Jalan Sepanjang Tahun",
+      location.akses_jalan_sepanjang_tahun
+        ? "Ya"
+        : "Tidak"
+    ],
+
+    [
+      "Kantor Pos",
+      location.kantor_pos
+    ],
+
+    [
+      "Agen Ekspedisi",
+      location.agen_ekspedisi_swasta
+    ],
+
+    [
+      "Tahun Data",
+      location.tahun_data
+    ]
+
+  ];
+
+  let html = `
+    <div class="detail-grid">
+  `;
+
+  fields.forEach(field => {
+
+    html += `
+
+      <div class="detail-item">
+
+        <div class="label">
+          ${escapeHtml(field[0])}
+        </div>
+
+        <div class="value">
+          ${escapeHtml(
+            formatNull(field[1])
+          )}
+        </div>
+
+      </div>
+
+    `;
+
+  });
+
+  html += `
+    </div>
+
+    <br>
+
+    <div class="detail-item">
+
+      <div class="label">
+        Sumber
+      </div>
+
+      <div class="value">
+        ${escapeHtml(
+          location.sumber || "-"
+        )}
+      </div>
+
+    </div>
+
+    <br>
+
+    <div class="detail-item">
+
+      <div class="label">
+        Catatan Data
+      </div>
+
+      <div class="value">
+        ${escapeHtml(
+          location.catatan_data || "-"
+        )}
+      </div>
+
+    </div>
+  `;
+
+  document.getElementById(
+    "detailContainer"
+  ).innerHTML = html;
 
 }
 
 
-/* ===============================
-   STATS
-================================ */
+/* ==========================================
+   PENCARIAN
+========================================== */
 
-function updateStats(data){
+function searchLocation() {
 
-  const totalPopulation =
-    data.reduce(
-      (sum,d) =>
-        sum + (Number(d.jumlah_penduduk)||0),
-      0
-    );
+  const keyword =
+    document.getElementById(
+      "searchInput"
+    ).value
+    .trim()
+    .toLowerCase();
 
-  const totalArea =
-    data.reduce(
-      (sum,d) =>
-        sum + (Number(d.luas_km2)||0),
-      0
-    );
+  if (!keyword) {
 
-  const totalBts =
-    data.reduce(
-      (sum,d) =>
-        sum + (Number(d.bts)||0),
-      0
-    );
-
-  document.getElementById("totalDesa")
-    .textContent =
-      formatNumber(data.length);
-
-  document.getElementById("totalPenduduk")
-    .textContent =
-      formatNumber(totalPopulation);
-
-  document.getElementById("totalLuas")
-    .textContent =
-      totalArea.toLocaleString(
-        "id-ID",
-        {
-          maximumFractionDigits:2
-        }
-      ) + " km²";
-
-  document.getElementById("totalBts")
-    .textContent =
-      formatNumber(totalBts);
-
-}
-
-
-/* ===============================
-   SEARCH
-================================ */
-
-document.getElementById("searchInput")
-.addEventListener(
-  "input",
-  applyFilters
-);
-
-
-/* ===============================
-   THEME
-================================ */
-
-document.getElementById("themeSelect")
-.addEventListener(
-  "change",
-  function(){
-
-    currentTheme =
-      this.value;
-
-    applyFilters();
-
-  }
-);
-
-
-/* ===============================
-   RADIUS
-================================ */
-
-document.getElementById("radiusSelect")
-.addEventListener(
-  "change",
-  function(){
-
-    if(!userLocation){
-
-      alert(
-        "Aktifkan Lokasi Saya terlebih dahulu."
-      );
-
-      this.value="0";
-
-      return;
-    }
-
-    updateRadius();
-
-  }
-);
-
-
-function updateRadius(){
-
-  if(radiusCircle){
-    map.removeLayer(radiusCircle);
-    radiusCircle=null;
-  }
-
-  const radius =
-    Number(
-      document.getElementById("radiusSelect").value
-    );
-
-  if(!radius || !userLocation){
-
-    applyFilters();
+    showAllLocations();
 
     return;
 
   }
 
-  radiusCircle =
-    L.circle(
-      userLocation,
-      {
-        radius:radius*1000,
-        color:"#2563eb",
-        fillColor:"#2563eb",
-        fillOpacity:.08
-      }
-    ).addTo(map);
+  const results = locations.filter(
+    location =>
+      location.nama
+        .toLowerCase()
+        .includes(keyword)
+  );
 
-  applyFilters();
+  if (!results.length) {
 
-}
-
-
-/* ===============================
-   FILTER
-================================ */
-
-function applyFilters(){
-
-  const query =
-    document.getElementById("searchInput")
-      .value
-      .toLowerCase()
-      .trim();
-
-  const radius =
-    Number(
-      document.getElementById("radiusSelect").value
-    );
-
-  let filtered =
-    locations.filter(
-      d =>
-        String(d.nama)
-          .toLowerCase()
-          .includes(query)
-    );
-
-  if(radius && userLocation){
-
-    filtered =
-      filtered.filter(d => {
-
-        const distance =
-          kmDistance(
-            userLocation[0],
-            userLocation[1],
-            Number(d.latitude),
-            Number(d.longitude)
-          );
-
-        return distance <= radius;
-
-      });
-
-  }
-
-  renderMarkers(filtered);
-
-  renderTable(filtered);
-
-  updateStats(filtered);
-
-  renderRanking(filtered);
-
-}
-
-
-/* ===============================
-   TABLE
-================================ */
-
-function renderTable(data){
-
-  const tbody =
-    document.getElementById("dataTable");
-
-  if(!data.length){
-
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="7" class="empty">
-          Data tidak ditemukan.
-        </td>
-      </tr>
+    document.getElementById(
+      "detailContainer"
+    ).innerHTML = `
+      <div class="status">
+        ❌ Desa tidak ditemukan.
+      </div>
     `;
 
     return;
 
   }
 
-  tbody.innerHTML =
-    data.map(
-      d => `
+  clearMarkers();
 
-      <tr>
+  const bounds = [];
 
-        <td>
-          <b>${d.nama}</b>
-        </td>
+  results.forEach(location => {
 
-        <td>
-          ${formatNumber(d.jumlah_penduduk)}
-        </td>
+    const marker =
+      createMarker(location);
 
-        <td>
-          ${formatNumber(d.luas_km2)} km²
-        </td>
+    marker.addTo(map);
 
-        <td>
-          ${formatNumber(d.kepadatan_penduduk)}
-        </td>
+    markers.push(marker);
 
-        <td>
-          ${formatNumber(d.bts)}
-        </td>
+    bounds.push([
+      location.latitude,
+      location.longitude
+    ]);
 
-        <td>
-          ${formatNumber(d.pasar)}
-        </td>
+  });
 
-        <td>
-          ${d.jenis_sinyal_internet || "-"}
-        </td>
+  map.fitBounds(bounds, {
+    padding: [30, 30]
+  });
 
-      </tr>
+  if (results.length === 1) {
 
-    `
-    ).join("");
+    selectLocation(results[0].id);
+
+  }
 
 }
 
 
-/* ===============================
-   RANKING
-================================ */
+/* ==========================================
+   ENTER UNTUK SEARCH
+========================================== */
 
-function renderRanking(data=locations){
+document
+  .getElementById("searchInput")
+  .addEventListener(
+    "keydown",
+    function(event) {
 
-  const type =
-    document.getElementById("sortSelect").value;
+      if (event.key === "Enter") {
 
-  let sorted =
-    [...data];
+        searchLocation();
 
-  sorted.sort(
-    (a,b) => {
-
-      let av=0;
-      let bv=0;
-
-      if(type==="population"){
-        av=Number(a.jumlah_penduduk)||0;
-        bv=Number(b.jumlah_penduduk)||0;
       }
-
-      if(type==="density"){
-        av=Number(a.kepadatan_penduduk)||0;
-        bv=Number(b.kepadatan_penduduk)||0;
-      }
-
-      if(type==="area"){
-        av=Number(a.luas_km2)||0;
-        bv=Number(b.luas_km2)||0;
-      }
-
-      if(type==="bts"){
-        av=Number(a.bts)||0;
-        bv=Number(b.bts)||0;
-      }
-
-      if(type==="market"){
-        av=Number(a.pasar)||0;
-        bv=Number(b.pasar)||0;
-      }
-
-      return bv-av;
 
     }
   );
 
-  const titleMap={
-    population:"penduduk",
-    density:"kepadatan",
-    area:"km²",
-    bts:"BTS",
-    market:"pasar"
-  };
 
-  const title =
-    titleMap[type];
+/* ==========================================
+   LOKASI USER
+========================================== */
 
-  document.getElementById("ranking")
-    .innerHTML =
-      sorted.slice(0,10)
-      .map(
-        (d,i)=>`
+function findMyLocation() {
 
-        <div class="rank-item">
-
-          <div>
-
-            <div class="rank-name">
-              ${i+1}. ${d.nama}
-            </div>
-
-            <div class="muted">
-              ${d.kabupaten}
-            </div>
-
-          </div>
-
-          <div class="rank-value">
-
-            ${
-              type==="population"
-                ? formatNumber(d.jumlah_penduduk)
-                : type==="density"
-                ? formatNumber(d.kepadatan_penduduk)
-                : type==="area"
-                ? formatNumber(d.luas_km2)
-                : type==="bts"
-                ? formatNumber(d.bts)
-                : formatNumber(d.pasar)
-            }
-
-            ${type==="area" ? " km²" : ""}
-
-          </div>
-
-        </div>
-
-      `
-      ).join("");
-
-}
-
-
-/* ===============================
-   SORT CHANGE
-================================ */
-
-document.getElementById("sortSelect")
-.addEventListener(
-  "change",
-  () => renderRanking()
-);
-
-
-/* ===============================
-   USER LOCATION
-================================ */
-
-document.getElementById("locateBtn")
-.addEventListener(
-  "click",
-  locateUser
-);
-
-
-function locateUser(){
-
-  if(!navigator.geolocation){
+  if (!navigator.geolocation) {
 
     alert(
-      "Browser tidak mendukung GPS."
+      "Browser Anda tidak mendukung lokasi."
     );
 
     return;
@@ -1584,7 +1058,7 @@ function locateUser(){
 
   navigator.geolocation.getCurrentPosition(
 
-    position => {
+    function(position) {
 
       const lat =
         position.coords.latitude;
@@ -1592,46 +1066,46 @@ function locateUser(){
       const lng =
         position.coords.longitude;
 
-      userLocation =
-        [lat,lng];
+      if (userMarker) {
 
-      if(userMarker){
         map.removeLayer(userMarker);
+
       }
 
       userMarker =
-        L.marker(
-          [lat,lng]
-        )
-        .addTo(map)
-        .bindPopup(
-          "📍 Lokasi Anda"
-        )
-        .openPopup();
+        L.marker([lat, lng])
+          .addTo(map)
+          .bindPopup(
+            "<b>📍 Lokasi Anda</b>"
+          )
+          .openPopup();
 
       map.setView(
-        [lat,lng],
-        14
+        [lat, lng],
+        13
       );
 
-      updateNearest();
-
-      updateRadius();
+      showNearestFromPoint(
+        lat,
+        lng
+      );
 
     },
 
-    error => {
+    function(error) {
 
       alert(
-        "Lokasi tidak dapat diakses. Pastikan GPS aktif dan izinkan akses lokasi."
+        "Tidak dapat mendapatkan lokasi Anda. Pastikan izin lokasi sudah diberikan."
       );
+
+      console.error(error);
 
     },
 
     {
-      enableHighAccuracy:true,
-      timeout:10000,
-      maximumAge:60000
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
     }
 
   );
@@ -1639,302 +1113,277 @@ function locateUser(){
 }
 
 
-/* ===============================
-   NEAREST
-================================ */
+/* ==========================================
+   DESA TERDEKAT
+========================================== */
 
-function updateNearest(){
+function showNearestFromPoint(
+  latitude,
+  longitude,
+  excludeId = null
+) {
 
-  if(!userLocation) return;
+  const nearest = locations
 
-  const list =
-    locations
-      .map(d => {
+    .filter(location =>
+      location.id !== excludeId
+    )
 
-        const distance =
-          kmDistance(
-            userLocation[0],
-            userLocation[1],
-            Number(d.latitude),
-            Number(d.longitude)
-          );
+    .map(location => {
 
-        return {
-          ...d,
-          distance
-        };
+      const distance =
+        calculateDistance(
+          latitude,
+          longitude,
+          location.latitude,
+          location.longitude
+        );
 
-      })
-      .sort(
-        (a,b) =>
-          a.distance-b.distance
-      );
+      return {
+        ...location,
+        distance
+      };
 
-  if(list.length){
+    })
 
-    document.getElementById("nearestName")
-      .textContent =
-        list[0].nama;
+    .sort(
+      (a, b) =>
+        a.distance - b.distance
+    )
 
-  }
+    .slice(0, 5);
 
-  document.getElementById("nearestList")
-    .innerHTML =
-      list
-      .slice(0,10)
-      .map(
-        (d,i)=>`
+  if (!nearest.length) {
 
-        <div class="rank-item">
-
-          <div>
-
-            <div class="rank-name">
-              ${i+1}. ${d.nama}
-            </div>
-
-            <div class="muted">
-              ${formatNumber(d.jumlah_penduduk)}
-              penduduk
-            </div>
-
-          </div>
-
-          <div class="rank-value">
-
-            ${d.distance.toFixed(2)}
-            km
-
-          </div>
-
-        </div>
-
-      `
-      ).join("");
-
-}
-
-
-/* ===============================
-   COMPARE SELECT
-================================ */
-
-function populateCompare(){
-
-  const selects=[
-    document.getElementById("compare1"),
-    document.getElementById("compare2"),
-    document.getElementById("compare3")
-  ];
-
-  selects.forEach(select => {
-
-    locations.forEach(d => {
-
-      const option =
-        document.createElement("option");
-
-      option.value=d.id;
-
-      option.textContent=d.nama;
-
-      select.appendChild(option);
-
-    });
-
-  });
-
-}
-
-
-/* ===============================
-   COMPARE
-================================ */
-
-document.getElementById("compareBtn")
-.addEventListener(
-  "click",
-  compareVillages
-);
-
-
-function compareVillages(){
-
-  const ids=[
-    document.getElementById("compare1").value,
-    document.getElementById("compare2").value,
-    document.getElementById("compare3").value
-  ].filter(Boolean);
-
-  if(!ids.length){
-
-    document.getElementById("compareResult")
-      .innerHTML=`
-        <div class="empty">
-          Pilih minimal satu desa.
-        </div>
-      `;
+    document.getElementById(
+      "nearestContainer"
+    ).innerHTML = `
+      <div class="status">
+        Tidak ada data desa terdekat.
+      </div>
+    `;
 
     return;
 
   }
 
-  const selected =
-    ids.map(
-      id =>
-        locations.find(
-          d =>
-            String(d.id)===String(id)
-        )
-    );
-
-  const rows=[
-    ["Penduduk","jumlah_penduduk"],
-    ["Laki-laki","laki_laki"],
-    ["Perempuan","perempuan"],
-    ["Luas (km²)","luas_km2"],
-    ["Kepadatan","kepadatan_penduduk"],
-    ["BTS","bts"],
-    ["Operator Seluler","operator_seluler"],
-    ["Tempat Ibadah","tempat_ibadah"],
-    ["Masjid","masjid"],
-    ["Mushola","mushola"],
-    ["Pasar","pasar"],
-    ["Koperasi","koperasi"],
-    ["Mini Market","mini_market"],
-    ["Rasio Jenis Kelamin","rasio_jenis_kelamin"]
-  ];
-
-  let html=`
-    <div class="table-wrap">
-
-      <table>
-
-        <thead>
-
-          <tr>
-            <th>Indikator</th>
-
-            ${selected.map(
-              d=>`<th>${d.nama}</th>`
-            ).join("")}
-
-          </tr>
-
-        </thead>
-
-        <tbody>
+  let html = `
+    <div class="nearest-list">
   `;
 
-  rows.forEach(
-    ([label,key]) => {
+  nearest.forEach(location => {
 
-      html+=`
-        <tr>
+    html += `
 
-          <td>
-            <b>${label}</b>
-          </td>
+      <div
+        class="nearest-item"
+        onclick="selectLocation('${location.id}')"
+      >
 
-          ${selected.map(
-            d=>`
+        <div>
 
-              <td>
-                ${formatNumber(d[key])}
-              </td>
+          <div class="nearest-name">
+            ${escapeHtml(location.nama)}
+          </div>
 
-            `
-          ).join("")}
+          <div>
+            ${escapeHtml(
+              location.kabupaten || ""
+            )}
+          </div>
 
-        </tr>
-      `;
+        </div>
 
-    }
-  );
+        <div class="nearest-distance">
+          ${formatDistance(
+            location.distance
+          )}
+        </div>
 
-  html+=`
-        </tbody>
+      </div>
 
-      </table>
+    `;
 
+  });
+
+  html += `
     </div>
   `;
 
-  document.getElementById("compareResult")
-    .innerHTML=html;
+  document.getElementById(
+    "nearestContainer"
+  ).innerHTML = html;
 
 }
 
 
-/* ===============================
-   RESET
-================================ */
+/* ==========================================
+   HITUNG JARAK
+   HAVERSINE
+========================================== */
 
-document.getElementById("resetBtn")
-.addEventListener(
-  "click",
-  () => {
+function calculateDistance(
+  lat1,
+  lon1,
+  lat2,
+  lon2
+) {
 
-    document.getElementById("searchInput")
-      .value="";
+  const R = 6371;
 
-    document.getElementById("themeSelect")
-      .value="default";
+  const dLat =
+    toRadians(lat2 - lat1);
 
-    document.getElementById("radiusSelect")
-      .value="0";
+  const dLon =
+    toRadians(lon2 - lon1);
 
-    currentTheme="default";
+  const a =
+    Math.sin(dLat / 2) *
+    Math.sin(dLat / 2) +
 
-    if(radiusCircle){
+    Math.cos(toRadians(lat1)) *
+    Math.cos(toRadians(lat2)) *
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2);
 
-      map.removeLayer(
-        radiusCircle
-      );
+  const c =
+    2 * Math.atan2(
+      Math.sqrt(a),
+      Math.sqrt(1 - a)
+    );
 
-      radiusCircle=null;
+  return R * c;
 
-    }
+}
 
-    if(heatLayer){
 
-      map.removeLayer(
-        heatLayer
-      );
+function toRadians(degrees) {
 
-    }
+  return degrees *
+    Math.PI /
+    180;
 
-    applyFilters();
+}
 
-    if(locations.length){
 
-      const bounds =
-        L.latLngBounds(
-          locations.map(
-            d=>[
-              Number(d.latitude),
-              Number(d.longitude)
-            ]
-          )
-        );
+/* ==========================================
+   FORMAT ANGKA
+========================================== */
 
-      map.fitBounds(
-        bounds.pad(.12)
-      );
+function formatNumber(value) {
 
-    }
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+
+    return "-";
 
   }
-);
+
+  if (typeof value === "number") {
+
+    return value.toLocaleString(
+      "id-ID",
+      {
+        maximumFractionDigits: 2
+      }
+    );
+
+  }
+
+  return value;
+
+}
 
 
-/* ===============================
-   START
-================================ */
+/* ==========================================
+   FORMAT NULL
+========================================== */
 
-loadData();
+function formatNull(value) {
+
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+
+    return "Tidak tersedia";
+
+  }
+
+  return value;
+
+}
+
+
+/* ==========================================
+   FORMAT JARAK
+========================================== */
+
+function formatDistance(distance) {
+
+  if (distance < 1) {
+
+    return Math.round(
+      distance * 1000
+    ) + " m";
+
+  }
+
+  return distance.toFixed(2) +
+    " km";
+
+}
+
+
+/* ==========================================
+   KEAMANAN HTML
+========================================== */
+
+function escapeHtml(value) {
+
+  if (
+    value === null ||
+    value === undefined
+  ) {
+
+    return "";
+
+  }
+
+  return String(value)
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
 
 </script>
 
 </body>
-    </html>
+</html>
