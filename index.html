@@ -1,8 +1,8 @@
 <!DOCTYPE html><html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Punggur Geo Data 🇮🇩</title><link rel="stylesheet"
-href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/><style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Punggur Geo Data</title><link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><style>
 
 *{
     box-sizing:border-box;
@@ -11,55 +11,31 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/><style>
 body{
     margin:0;
     font-family:Arial,Helvetica,sans-serif;
-    background:#fff5f5;
-    color:#2b0a0a;
+    background:#f4f6f8;
+    color:#1f2937;
 }
 
 /* =========================
-   HEADER MERAH PUTIH
+   HEADER
 ========================= */
 
 header{
-    background:linear-gradient(
-        to bottom,
-        #d90429 0%,
-        #d90429 50%,
-        #ffffff 50%,
-        #ffffff 100%
-    );
-    min-height:170px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    background:#ffffff;
+    border-bottom:1px solid #e5e7eb;
+    padding:24px 15px;
     text-align:center;
-    padding:20px;
-    position:relative;
-    overflow:hidden;
-}
-
-.header-content{
-    background:rgba(255,255,255,.94);
-    padding:18px 28px;
-    border-radius:18px;
-    box-shadow:0 8px 25px rgba(0,0,0,.15);
-    border:2px solid #d90429;
 }
 
 header h1{
     margin:0;
-    color:#d90429;
+    color:#2563eb;
     font-size:28px;
 }
 
 header p{
     margin:7px 0 0;
-    color:#333;
+    color:#6b7280;
     font-size:14px;
-}
-
-.flag{
-    font-size:24px;
-    margin-bottom:5px;
 }
 
 /* =========================
@@ -77,11 +53,10 @@ header p{
 ========================= */
 
 .controls{
-    background:white;
+    background:#ffffff;
     padding:15px;
-    border-radius:15px;
-    border-top:5px solid #d90429;
-    box-shadow:0 4px 15px rgba(0,0,0,.08);
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.06);
     margin-bottom:15px;
 }
 
@@ -98,44 +73,49 @@ input{
 
 input,
 button{
-    border:1px solid #ddd;
-    border-radius:10px;
+    border:1px solid #d1d5db;
+    border-radius:8px;
     padding:11px 13px;
     font-size:14px;
 }
 
+input:focus{
+    outline:none;
+    border-color:#2563eb;
+    box-shadow:0 0 0 2px rgba(37,99,235,.12);
+}
+
 button{
     cursor:pointer;
-    background:#d90429;
+    background:#2563eb;
     color:white;
     border:none;
-    font-weight:bold;
+    font-weight:600;
     transition:.2s;
 }
 
 button:hover{
-    background:#a80020;
-    transform:translateY(-1px);
+    background:#1d4ed8;
 }
 
-button.white{
-    background:white;
-    color:#d90429;
-    border:2px solid #d90429;
+button.secondary{
+    background:#ffffff;
+    color:#2563eb;
+    border:1px solid #2563eb;
 }
 
-button.black{
-    background:#292929;
+button.dark{
+    background:#374151;
 }
 
-button.blue{
-    background:#2563eb;
+button.dark:hover{
+    background:#1f2937;
 }
 
 .status{
     margin-top:10px;
     font-size:13px;
-    color:#666;
+    color:#6b7280;
 }
 
 /* =========================
@@ -143,37 +123,35 @@ button.blue{
 ========================= */
 
 .nearest-box{
-    background:linear-gradient(
-        135deg,
-        #fff1f2,
-        #ffffff
-    );
-    border:2px solid #d90429;
-    border-radius:15px;
-    padding:16px;
+    background:#ffffff;
+    border-left:4px solid #2563eb;
+    border-radius:10px;
+    padding:15px;
     margin-bottom:15px;
+    box-shadow:0 2px 8px rgba(0,0,0,.06);
     display:none;
 }
 
 .nearest-box h2{
     margin:0 0 8px;
-    color:#d90429;
-    font-size:18px;
+    color:#2563eb;
+    font-size:17px;
 }
 
 .nearest-name{
-    font-size:23px;
+    font-size:22px;
     font-weight:bold;
-    color:#b00020;
+    color:#111827;
 }
 
 .nearest-distance{
     margin-top:5px;
+    color:#6b7280;
     font-size:14px;
 }
 
 /* =========================
-   STATISTIK
+   STATISTICS
 ========================= */
 
 .stats{
@@ -184,15 +162,14 @@ button.blue{
 }
 
 .stat{
-    background:white;
+    background:#ffffff;
     padding:15px;
-    border-radius:13px;
-    border-bottom:4px solid #d90429;
-    box-shadow:0 3px 10px rgba(0,0,0,.07);
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.06);
 }
 
 .stat-title{
-    color:#777;
+    color:#6b7280;
     font-size:12px;
 }
 
@@ -200,7 +177,7 @@ button.blue{
     font-size:21px;
     font-weight:bold;
     margin-top:5px;
-    color:#d90429;
+    color:#2563eb;
 }
 
 /* =========================
@@ -215,18 +192,19 @@ button.blue{
 #map{
     width:100%;
     height:450px;
-    border-radius:15px;
+    border-radius:12px;
     overflow:hidden;
-    box-shadow:0 4px 15px rgba(0,0,0,.12);
-    border:3px solid white;
+    box-shadow:0 2px 10px rgba(0,0,0,.12);
 }
 
-/* MAP SWITCH */
+/* =========================
+   MAP SWITCH
+========================= */
 
 .map-switch{
     position:absolute;
-    top:12px;
-    right:12px;
+    top:10px;
+    right:10px;
     z-index:999;
     display:flex;
     gap:5px;
@@ -235,18 +213,30 @@ button.blue{
 .map-switch button{
     padding:9px 12px;
     font-size:12px;
-    box-shadow:0 3px 10px rgba(0,0,0,.25);
+    background:#ffffff;
+    color:#374151;
+    border:1px solid #d1d5db;
+    box-shadow:0 2px 6px rgba(0,0,0,.2);
+}
+
+.map-switch button:hover{
+    background:#f3f4f6;
 }
 
 .map-switch button.active{
-    background:#ffffff;
-    color:#d90429;
-    border:2px solid #d90429;
+    background:#2563eb;
+    color:#ffffff;
+    border-color:#2563eb;
 }
 
 /* =========================
    LIST
 ========================= */
+
+h2.section-title{
+    font-size:20px;
+    margin:22px 0 12px;
+}
 
 .list{
     display:grid;
@@ -255,29 +245,31 @@ button.blue{
 }
 
 .card{
-    background:white;
-    border-radius:14px;
+    background:#ffffff;
+    border-radius:10px;
     padding:16px;
-    border-left:5px solid #d90429;
-    box-shadow:0 3px 10px rgba(0,0,0,.07);
+    border:1px solid #e5e7eb;
+    box-shadow:0 2px 8px rgba(0,0,0,.05);
     cursor:pointer;
     transition:.2s;
 }
 
 .card:hover{
     transform:translateY(-2px);
-    box-shadow:0 6px 15px rgba(0,0,0,.12);
+    box-shadow:0 5px 15px rgba(0,0,0,.10);
+    border-color:#bfdbfe;
 }
 
 .card h3{
     margin:0 0 8px;
-    color:#d90429;
+    color:#2563eb;
+    font-size:18px;
 }
 
 .badge{
     display:inline-block;
-    background:#ffe4e6;
-    color:#b00020;
+    background:#eff6ff;
+    color:#2563eb;
     padding:4px 9px;
     border-radius:20px;
     font-size:11px;
@@ -287,13 +279,14 @@ button.blue{
 .info{
     font-size:13px;
     line-height:1.7;
+    color:#374151;
 }
 
 .distance{
     display:inline-block;
     margin-top:8px;
-    background:#fff1f2;
-    color:#b00020;
+    background:#eff6ff;
+    color:#2563eb;
     padding:5px 9px;
     border-radius:20px;
     font-size:12px;
@@ -305,18 +298,18 @@ button.blue{
 ========================= */
 
 .detail{
-    background:white;
-    border-radius:15px;
+    background:#ffffff;
+    border-radius:12px;
     padding:18px;
     margin-top:15px;
-    border-top:5px solid #d90429;
-    box-shadow:0 4px 15px rgba(0,0,0,.08);
+    border:1px solid #e5e7eb;
+    box-shadow:0 2px 8px rgba(0,0,0,.06);
     display:none;
 }
 
 .detail h2{
     margin-top:0;
-    color:#d90429;
+    color:#2563eb;
 }
 
 .detail-grid{
@@ -326,20 +319,21 @@ button.blue{
 }
 
 .detail-item{
-    background:#fff8f8;
+    background:#f9fafb;
     padding:11px;
-    border-radius:9px;
-    border-left:3px solid #d90429;
+    border-radius:8px;
+    border:1px solid #e5e7eb;
 }
 
 .detail-label{
     font-size:11px;
-    color:#777;
+    color:#6b7280;
 }
 
 .detail-value{
     font-weight:bold;
     margin-top:3px;
+    color:#1f2937;
 }
 
 /* =========================
@@ -348,10 +342,12 @@ button.blue{
 
 .weather{
     margin-top:15px;
-    background:#fff1f2;
-    border:1px solid #fecdd3;
-    border-radius:12px;
+    background:#eff6ff;
+    border:1px solid #bfdbfe;
+    border-radius:10px;
     padding:14px;
+    line-height:1.7;
+    color:#1e3a8a;
 }
 
 /* =========================
@@ -360,14 +356,16 @@ button.blue{
 
 footer{
     margin-top:30px;
-    background:#d90429;
-    color:white;
+    background:#ffffff;
+    border-top:1px solid #e5e7eb;
+    color:#6b7280;
     text-align:center;
-    padding:25px 15px;
+    padding:22px 15px;
     font-size:12px;
 }
 
 footer strong{
+    color:#2563eb;
     font-size:15px;
 }
 
@@ -392,20 +390,13 @@ footer strong{
     #map{
         height:400px;
     }
+
 }
 
 @media(max-width:500px){
 
-    header{
-        min-height:150px;
-    }
-
     header h1{
-        font-size:22px;
-    }
-
-    .header-content{
-        padding:14px 18px;
+        font-size:23px;
     }
 
     .search-row{
@@ -413,7 +404,7 @@ footer strong{
     }
 
     input,
-    button{
+    .search-row button{
         width:100%;
     }
 
@@ -437,23 +428,41 @@ footer strong{
 
 }
 
-</style></head><body><header><div class="header-content">
+/* =========================
+   LEAFLET POPUP
+========================= */
 
-    <div class="flag">🇮🇩 🇮🇩 🇮🇩</div>
+.leaflet-popup-content{
+    line-height:1.6;
+}
 
-    <h1>Punggur Geo Data</h1>
+.popup-title{
+    color:#2563eb;
+    font-size:17px;
+    font-weight:bold;
+}
 
-    <p>
-        Data Geospasial Desa Kecamatan Punggur
-    </p>
+.popup-button{
+    width:100%;
+    margin-top:8px;
+    padding:8px;
+    border-radius:7px;
+    background:#2563eb;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
 
-    <p>
-        <b>Dirgahayu Republik Indonesia 🇮🇩</b>
-    </p>
+</style></head><body><header><h1>📍 Punggur Geo Data</h1>
 
-</div>
+<p>
+    Data Geospasial Desa Kecamatan Punggur,
+    Lampung Tengah
+</p>
 
-</header><div class="container"><div class="controls">
+</header><div class="container"><!-- CONTROL -->
+
+<div class="controls">
 
     <div class="search-row">
 
@@ -464,34 +473,42 @@ footer strong{
         >
 
         <button
-            onclick="gunakanLokasi()"
-            class="blue">
+            onclick="gunakanLokasi()">
             📍 Lokasi Saya
         </button>
 
         <button
-            onclick="urutkanTerdekat()">
+            onclick="urutkanTerdekat()"
+            class="secondary">
             📏 Desa Terdekat
         </button>
 
         <button
             onclick="resetData()"
-            class="black">
+            class="dark">
             🔄 Reset
         </button>
 
     </div>
 
-    <div id="status" class="status">
-        🇮🇩 Memuat data Punggur...
+    <div
+        id="status"
+        class="status">
+        Memuat data...
     </div>
 
 </div>
 
 
-<div id="nearestBox" class="nearest-box">
+<!-- DESA TERDEKAT -->
 
-    <h2>🇮🇩 Desa Terdekat dari Lokasi Anda</h2>
+<div
+    id="nearestBox"
+    class="nearest-box">
+
+    <h2>
+        📏 Desa Terdekat dari Lokasi Anda
+    </h2>
 
     <div
         id="nearestName"
@@ -508,9 +525,12 @@ footer strong{
 </div>
 
 
+<!-- STATISTIK -->
+
 <div class="stats">
 
     <div class="stat">
+
         <div class="stat-title">
             Jumlah Desa
         </div>
@@ -520,10 +540,12 @@ footer strong{
             id="totalDesa">
             0
         </div>
+
     </div>
 
 
     <div class="stat">
+
         <div class="stat-title">
             Total Penduduk
         </div>
@@ -533,10 +555,12 @@ footer strong{
             id="totalPenduduk">
             0
         </div>
+
     </div>
 
 
     <div class="stat">
+
         <div class="stat-title">
             Luas Wilayah
         </div>
@@ -546,12 +570,14 @@ footer strong{
             id="totalLuas">
             0
         </div>
+
     </div>
 
 
     <div class="stat">
+
         <div class="stat-title">
-            GPS
+            Status GPS
         </div>
 
         <div
@@ -559,10 +585,13 @@ footer strong{
             id="gpsStatus">
             -
         </div>
+
     </div>
 
 </div>
 
+
+<!-- MAP -->
 
 <div class="map-wrapper">
 
@@ -588,16 +617,19 @@ footer strong{
 </div>
 
 
+<!-- DETAIL -->
+
 <div
     id="detail"
     class="detail">
 </div>
 
 
-<h2>
-    🇮🇩 Daftar Desa Punggur
-</h2>
+<!-- LIST -->
 
+<h2 class="section-title">
+    Daftar Desa Punggur
+</h2>
 
 <div
     id="list"
@@ -605,18 +637,18 @@ footer strong{
 </div>
 
 </div><footer><strong>
-    🇮🇩 PUNGGUR GEO DATA 🇮🇩
+    Punggur Geo Data
 </strong>
 
 <br><br>
 
-Data desa Kecamatan Punggur, Lampung Tengah
+Data desa Kecamatan Punggur,
+Kabupaten Lampung Tengah
 
 <br>
 
-<span>
-    Merdeka! Merdeka! Merdeka!
-</span>
+Data observasi 2023
+berdasarkan Kecamatan Punggur Dalam Angka 2024
 
 </footer><script
 src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
@@ -628,10 +660,10 @@ src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
 
 const map =
     L.map('map')
-     .setView(
+    .setView(
         [-5.04,105.28],
         13
-     );
+    );
 
 
 /* PETA JALAN */
@@ -641,19 +673,19 @@ const roadLayer =
         'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         {
             attribution:
-            '© OpenStreetMap contributors'
+            '&copy; OpenStreetMap contributors'
         }
     );
 
 
-/* CITRA SATELIT ESRI */
+/* CITRA SATELIT */
 
 const satelliteLayer =
     L.tileLayer(
         'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
         {
             attribution:
-            'Tiles © Esri'
+            'Tiles &copy; Esri'
         }
     );
 
@@ -677,14 +709,16 @@ let userMarker = null;
 
 
 /* =====================================================
-   GANTI PETA
+   GANTI JENIS PETA
 ===================================================== */
 
 function setMapType(type){
 
     if(type === 'satellite'){
 
-        map.removeLayer(roadLayer);
+        if(map.hasLayer(roadLayer)){
+            map.removeLayer(roadLayer);
+        }
 
         satelliteLayer.addTo(map);
 
@@ -698,7 +732,9 @@ function setMapType(type){
 
     }else{
 
-        map.removeLayer(satelliteLayer);
+        if(map.hasLayer(satelliteLayer)){
+            map.removeLayer(satelliteLayer);
+        }
 
         roadLayer.addTo(map);
 
@@ -723,7 +759,8 @@ function angka(value){
 
     if(
         value === null ||
-        value === undefined
+        value === undefined ||
+        value === ''
     ){
 
         return '-';
@@ -744,7 +781,7 @@ function formatJarak(km){
 
     if(km < 1){
 
-        return Math.round(km*1000)
+        return Math.round(km * 1000)
             + ' meter';
 
     }
@@ -756,7 +793,7 @@ function formatJarak(km){
 
 
 /* =====================================================
-   HAVERSINE
+   HITUNG JARAK HAVERSINE
 ===================================================== */
 
 function hitungJarak(
@@ -770,11 +807,11 @@ function hitungJarak(
 
     const dLat =
         (lat2-lat1)
-        * Math.PI/180;
+        * Math.PI / 180;
 
     const dLon =
         (lon2-lon1)
-        * Math.PI/180;
+        * Math.PI / 180;
 
     const a =
         Math.sin(dLat/2) *
@@ -782,11 +819,17 @@ function hitungJarak(
 
         +
 
-        Math.cos(lat1*Math.PI/180) *
-        Math.cos(lat2*Math.PI/180) *
+        Math.cos(
+            lat1 * Math.PI / 180
+        ) *
+
+        Math.cos(
+            lat2 * Math.PI / 180
+        ) *
 
         Math.sin(dLon/2) *
         Math.sin(dLon/2);
+
 
     const c =
         2 *
@@ -796,13 +839,14 @@ function hitungJarak(
             Math.sqrt(1-a)
         );
 
+
     return R*c;
 
 }
 
 
 /* =====================================================
-   LOAD JSON
+   LOAD LOCATIONS.JSON
 ===================================================== */
 
 async function loadData(){
@@ -838,21 +882,24 @@ async function loadData(){
         document
             .getElementById('status')
             .innerText =
-            '🇮🇩 Data berhasil dimuat. '
+            'Data berhasil dimuat: '
             +
             locations.length
             +
-            ' desa tersedia.';
+            ' desa.';
 
 
     }catch(error){
 
+        console.error(error);
+
+
         document
             .getElementById('status')
             .innerText =
-            '❌ Gagal memuat locations.json';
-
-        console.error(error);
+            '❌ Gagal memuat locations.json. '
+            +
+            'Pastikan file berada di folder yang sama dengan index.html.';
 
     }
 
@@ -860,7 +907,7 @@ async function loadData(){
 
 
 /* =====================================================
-   STATISTIK
+   UPDATE STATISTIK
 ===================================================== */
 
 function updateStats(){
@@ -873,11 +920,11 @@ function updateStats(){
 
     const totalPenduduk =
         locations.reduce(
-            (sum,x)=>
+            (sum, desa) =>
                 sum +
                 (
                     Number(
-                        x.jumlah_penduduk
+                        desa.jumlah_penduduk
                     ) || 0
                 ),
             0
@@ -886,11 +933,11 @@ function updateStats(){
 
     const totalLuas =
         locations.reduce(
-            (sum,x)=>
+            (sum, desa) =>
                 sum +
                 (
                     Number(
-                        x.luas_km2
+                        desa.luas_km2
                     ) || 0
                 ),
             0
@@ -920,8 +967,13 @@ function updateStats(){
 function tampilkanMarker(data){
 
     markers.forEach(
-        marker =>
-            map.removeLayer(marker)
+        marker => {
+
+            map.removeLayer(
+                marker
+            );
+
+        }
     );
 
 
@@ -951,18 +1003,13 @@ function tampilkanMarker(data){
 
             marker.bindPopup(`
 
-                <div style="
-                    min-width:190px;
-                ">
+                <div>
 
-                    <b style="
-                        color:#d90429;
-                        font-size:17px;
-                    ">
-                        🇮🇩 ${desa.nama}
-                    </b>
+                    <div class="popup-title">
+                        📍 ${desa.nama}
+                    </div>
 
-                    <br><br>
+                    <br>
 
                     👥 Penduduk:
                     <b>
@@ -973,30 +1020,32 @@ function tampilkanMarker(data){
 
                     <br>
 
-                    📐 Luas:
+                    🗺️ Luas:
                     <b>
-                        ${desa.luas_km2 ?? '-'} km²
+                        ${desa.luas_km2 ?? '-'}
+                        km²
                     </b>
 
                     <br>
 
                     ⛰️ Elevasi:
                     <b>
-                        ${desa.elevasi_m ?? '-'} m
+                        ${desa.elevasi_m ?? '-'}
+                        m
                     </b>
 
-                    <br><br>
+                    <br>
+
+                    📡 Internet:
+                    <b>
+                        ${desa.jenis_sinyal_internet || '-'}
+                    </b>
+
+                    <br>
 
                     <button
-                        onclick="bukaDetailDariId('${desa.id}')"
-                        style="
-                            width:100%;
-                            background:#d90429;
-                            color:white;
-                            border:0;
-                            padding:8px;
-                            border-radius:7px;
-                        ">
+                        class="popup-button"
+                        onclick="bukaDetailDariId('${desa.id}')">
                         Lihat Detail
                     </button>
 
@@ -1007,8 +1056,12 @@ function tampilkanMarker(data){
 
             marker.on(
                 'click',
-                ()=>{
-                    tampilkanDetail(desa);
+                function(){
+
+                    tampilkanDetail(
+                        desa
+                    );
+
                 }
             );
 
@@ -1022,16 +1075,37 @@ function tampilkanMarker(data){
 
 
 /* =====================================================
-   LIST DATA
+   TAMPILKAN DATA
 ===================================================== */
 
 function tampilkanData(){
 
     const list =
-        document.getElementById('list');
+        document.getElementById(
+            'list'
+        );
 
 
     list.innerHTML = '';
+
+
+    if(filteredLocations.length === 0){
+
+        list.innerHTML = `
+
+            <div class="card">
+
+                Data desa tidak ditemukan.
+
+            </div>
+
+        `;
+
+        tampilkanMarker([]);
+
+        return;
+
+    }
 
 
     filteredLocations.forEach(
@@ -1087,22 +1161,16 @@ function tampilkanData(){
             card.innerHTML = `
 
                 <span class="badge">
-
                     ${desa.tipe || 'desa'}
-
                 </span>
 
-
                 <h3>
-
-                    🇮🇩 ${desa.nama}
-
+                    📍 ${desa.nama}
                 </h3>
-
 
                 <div class="info">
 
-                    📍 Kode Pos:
+                    📮 Kode Pos:
                     <b>
                         ${desa.kode_pos || '-'}
                     </b>
@@ -1147,10 +1215,12 @@ function tampilkanData(){
 
 
             card.onclick =
-                ()=>{
+                function(){
+
                     tampilkanDetail(
                         desa
                     );
+
 
                     map.setView(
                         [
@@ -1159,10 +1229,13 @@ function tampilkanData(){
                         ],
                         15
                     );
+
                 };
 
 
-            list.appendChild(card);
+            list.appendChild(
+                card
+            );
 
         }
     );
@@ -1179,7 +1252,7 @@ function tampilkanData(){
 
 
 /* =====================================================
-   DETAIL
+   DETAIL DESA
 ===================================================== */
 
 function tampilkanDetail(desa){
@@ -1197,7 +1270,7 @@ function tampilkanDetail(desa){
     detail.innerHTML = `
 
         <h2>
-            🇮🇩 ${desa.nama}
+            📍 ${desa.nama}
         </h2>
 
 
@@ -1222,6 +1295,28 @@ function tampilkanDetail(desa){
 
                 <div class="detail-value">
                     ${desa.kode_pos || '-'}
+                </div>
+            </div>
+
+
+            <div class="detail-item">
+                <div class="detail-label">
+                    Kabupaten
+                </div>
+
+                <div class="detail-value">
+                    ${desa.kabupaten || '-'}
+                </div>
+            </div>
+
+
+            <div class="detail-item">
+                <div class="detail-label">
+                    Provinsi
+                </div>
+
+                <div class="detail-value">
+                    ${desa.provinsi || '-'}
                 </div>
             </div>
 
@@ -1267,6 +1362,29 @@ function tampilkanDetail(desa){
 
             <div class="detail-item">
                 <div class="detail-label">
+                    Kepadatan Penduduk
+                </div>
+
+                <div class="detail-value">
+                    ${desa.kepadatan_penduduk ?? '-'}
+                    jiwa/km²
+                </div>
+            </div>
+
+
+            <div class="detail-item">
+                <div class="detail-label">
+                    Rasio Jenis Kelamin
+                </div>
+
+                <div class="detail-value">
+                    ${desa.rasio_jenis_kelamin ?? '-'}
+                </div>
+            </div>
+
+
+            <div class="detail-item">
+                <div class="detail-label">
                     Luas Wilayah
                 </div>
 
@@ -1279,7 +1397,7 @@ function tampilkanDetail(desa){
 
             <div class="detail-item">
                 <div class="detail-label">
-                    Luas Hektare
+                    Luas Wilayah
                 </div>
 
                 <div class="detail-value">
@@ -1303,7 +1421,7 @@ function tampilkanDetail(desa){
 
             <div class="detail-item">
                 <div class="detail-label">
-                    RT
+                    Jumlah RT
                 </div>
 
                 <div class="detail-value">
@@ -1347,6 +1465,17 @@ function tampilkanDetail(desa){
 
             <div class="detail-item">
                 <div class="detail-label">
+                    Gereja
+                </div>
+
+                <div class="detail-value">
+                    ${desa.gereja ?? '-'}
+                </div>
+            </div>
+
+
+            <div class="detail-item">
+                <div class="detail-label">
                     Pasar
                 </div>
 
@@ -1363,6 +1492,39 @@ function tampilkanDetail(desa){
 
                 <div class="detail-value">
                     ${desa.mini_market ?? '-'}
+                </div>
+            </div>
+
+
+            <div class="detail-item">
+                <div class="detail-label">
+                    Restoran / Rumah Makan
+                </div>
+
+                <div class="detail-value">
+                    ${desa.restoran_rumah_makan ?? '-'}
+                </div>
+            </div>
+
+
+            <div class="detail-item">
+                <div class="detail-label">
+                    Koperasi
+                </div>
+
+                <div class="detail-value">
+                    ${desa.koperasi ?? '-'}
+                </div>
+            </div>
+
+
+            <div class="detail-item">
+                <div class="detail-label">
+                    Bank
+                </div>
+
+                <div class="detail-value">
+                    ${desa.bank ?? '-'}
                 </div>
             </div>
 
@@ -1402,7 +1564,7 @@ function tampilkanDetail(desa){
 
             <div class="detail-item">
                 <div class="detail-label">
-                    Internet
+                    Jenis Internet
                 </div>
 
                 <div class="detail-value">
@@ -1424,7 +1586,7 @@ function tampilkanDetail(desa){
 
             <div class="detail-item">
                 <div class="detail-label">
-                    Akses Sepanjang Tahun
+                    Akses Jalan Sepanjang Tahun
                 </div>
 
                 <div class="detail-value">
@@ -1444,6 +1606,39 @@ function tampilkanDetail(desa){
 
                 <div class="detail-value">
                     ${desa.angkutan_umum || '-'}
+                </div>
+            </div>
+
+
+            <div class="detail-item">
+                <div class="detail-label">
+                    Kantor Pos
+                </div>
+
+                <div class="detail-value">
+                    ${desa.kantor_pos || '-'}
+                </div>
+            </div>
+
+
+            <div class="detail-item">
+                <div class="detail-label">
+                    Agen Ekspedisi
+                </div>
+
+                <div class="detail-value">
+                    ${desa.agen_ekspedisi_swasta || '-'}
+                </div>
+            </div>
+
+
+            <div class="detail-item">
+                <div class="detail-label">
+                    Tahun Data
+                </div>
+
+                <div class="detail-value">
+                    ${desa.tahun_data || '-'}
                 </div>
             </div>
 
@@ -1470,21 +1665,23 @@ function tampilkanDetail(desa){
 
 
     detail.scrollIntoView({
-        behavior:'smooth'
+        behavior:'smooth',
+        block:'start'
     });
 
 }
 
 
 /* =====================================================
-   DETAIL DARI ID
+   BUKA DETAIL BERDASARKAN ID
 ===================================================== */
 
 function bukaDetailDariId(id){
 
     const desa =
         locations.find(
-            x => x.id === id
+            item =>
+                item.id === id
         );
 
 
@@ -1500,7 +1697,7 @@ function bukaDetailDariId(id){
 
 
 /* =====================================================
-   CUACA
+   CUACA OPEN-METEO
 ===================================================== */
 
 async function ambilCuaca(
@@ -1515,14 +1712,46 @@ async function ambilCuaca(
         );
 
 
+    if(!weather){
+        return;
+    }
+
+
     try{
 
         const url =
-            `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&timezone=Asia%2FBangkok`;
+            'https://api.open-meteo.com/v1/forecast'
+            +
+            '?latitude=' + lat
+            +
+            '&longitude=' + lon
+            +
+            '&current='
+            +
+            'temperature_2m,'
+            +
+            'relative_humidity_2m,'
+            +
+            'apparent_temperature,'
+            +
+            'weather_code,'
+            +
+            'wind_speed_10m'
+            +
+            '&timezone=Asia%2FBangkok';
 
 
         const response =
             await fetch(url);
+
+
+        if(!response.ok){
+
+            throw new Error(
+                'Weather API error'
+            );
+
+        }
 
 
         const data =
@@ -1563,7 +1792,7 @@ async function ambilCuaca(
 
             <br>
 
-            💨 Angin:
+            💨 Kecepatan angin:
             <b>
                 ${current.wind_speed_10m}
                 km/jam
@@ -1583,10 +1812,11 @@ async function ambilCuaca(
 
     }catch(error){
 
-        weather.innerHTML =
-            '⚠️ Informasi cuaca tidak tersedia.';
-
         console.error(error);
+
+
+        weather.innerHTML =
+            '⚠️ Informasi cuaca sementara tidak tersedia.';
 
     }
 
@@ -1602,33 +1832,33 @@ function deskripsiCuaca(code){
     if(code === 0)
         return 'Cerah';
 
-    if([1,2,3].includes(code))
+    if(
+        [1,2,3].includes(code)
+    )
         return 'Berawan';
 
-    if([45,48].includes(code))
+    if(
+        [45,48].includes(code)
+    )
         return 'Berkabut';
 
     if(
-        [51,53,55,56,57]
-        .includes(code)
+        [51,53,55,56,57].includes(code)
     )
         return 'Gerimis';
 
     if(
-        [61,63,65,66,67]
-        .includes(code)
+        [61,63,65,66,67].includes(code)
     )
         return 'Hujan';
 
     if(
-        [80,81,82]
-        .includes(code)
+        [80,81,82].includes(code)
     )
         return 'Hujan deras';
 
     if(
-        [95,96,99]
-        .includes(code)
+        [95,96,99].includes(code)
     )
         return 'Badai petir';
 
@@ -1646,7 +1876,7 @@ function gunakanLokasi(){
     if(!navigator.geolocation){
 
         alert(
-            'Browser tidak mendukung GPS.'
+            'Browser Anda tidak mendukung GPS.'
         );
 
         return;
@@ -1662,7 +1892,7 @@ function gunakanLokasi(){
 
     navigator.geolocation.getCurrentPosition(
 
-        position => {
+        function(position){
 
             userLocation = {
 
@@ -1729,7 +1959,10 @@ function gunakanLokasi(){
         },
 
 
-        error => {
+        function(error){
+
+            console.error(error);
+
 
             document
                 .getElementById(
@@ -1753,7 +1986,7 @@ function gunakanLokasi(){
 
         {
             enableHighAccuracy:true,
-            timeout:10000,
+            timeout:15000,
             maximumAge:0
         }
 
@@ -1763,7 +1996,7 @@ function gunakanLokasi(){
 
 
 /* =====================================================
-   TERDEKAT
+   URUTKAN DESA TERDEKAT
 ===================================================== */
 
 function urutkanTerdekat(){
@@ -1800,7 +2033,7 @@ function urutkanTerdekat(){
 
 
     filteredLocations.sort(
-        (a,b)=>
+        (a,b) =>
             a._jarak -
             b._jarak
     );
@@ -1834,10 +2067,12 @@ function urutkanTerdekat(){
                 'nearestDistance'
             )
             .innerText =
-            'Jarak sekitar ' +
+            'Jarak sekitar '
+            +
             formatJarak(
                 terdekat._jarak
-            ) +
+            )
+            +
             ' dari lokasi Anda.';
 
     }
@@ -1866,12 +2101,22 @@ document
 
             filteredLocations =
                 locations.filter(
-                    desa =>
-                        desa.nama
-                            .toLowerCase()
+                    desa => {
+
+                        const nama =
+                            (
+                                desa.nama
+                                || ''
+                            )
+                            .toLowerCase();
+
+
+                        return nama
                             .includes(
                                 keyword
-                            )
+                            );
+
+                    }
                 );
 
 
@@ -1898,7 +2143,7 @@ document
 
 
                 filteredLocations.sort(
-                    (a,b)=>
+                    (a,b) =>
                         a._jarak -
                         b._jarak
                 );
@@ -1951,7 +2196,7 @@ function resetData(){
 
 
 /* =====================================================
-   START
+   MULAI
 ===================================================== */
 
 loadData();
