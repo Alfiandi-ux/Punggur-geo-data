@@ -1,5 +1,0 @@
-geopandas
-shapely
-folium
-matplotlib
-jupyter
