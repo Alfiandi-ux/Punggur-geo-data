@@ -467,31 +467,31 @@
 "longitude": 105.2860963,
 "elevasi_m": null,
 
-"jumlah_penduduk": null,
-"laki_laki": null,
-"perempuan": null,
+"jumlah_penduduk": 4591,
+"laki_laki": 2287,
+"perempuan": 2304,
 "jumlah_kk": null,
 
-"luas_km2": null,
-"luas_ha": null,
+"luas_km2": 5.98,
+"luas_ha": 598,
 
-"jumlah_dusun": null,
-"jumlah_rt": null,
-"jumlah_rw": null,
+"jumlah_dusun": 6,
+"jumlah_rt": 12,
+"jumlah_rw": 22,
 
 "jumlah_sekolah": null,
 "sekolah_tk": null,
-"sekolah_sd": null,
+"sekolah_sd": 3,
 "sekolah_smp": null,
 "sekolah_sma": null,
 "sekolah_smk": null,
 "sekolah_mi": null,
-"sekolah_mts": null,
-"sekolah_ma": null,
+"sekolah_mts": 1,
+"sekolah_ma": 1,
 
 "fasilitas_kesehatan": null,
 "puskesmas": null,
-"posyandu": null,
+"posyandu": 3,
 
 "tempat_ibadah": null,
 "masjid": null,
@@ -500,7 +500,7 @@
 "vihara": null,
 
 "pasar": null,
-"koperasi": null,
+"koperasi": 1,
 
 "jumlah_petani": null,
 "luas_sawah_ha": null,
